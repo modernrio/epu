@@ -1,0 +1,12 @@
+_start:
+	load r0, 0xabcd
+	load r1, 0x1234
+	push r0
+	push r1
+	call.i $add
+	jmp.i $_start
+add:
+	pop r5
+	pop r6
+	add r7, r6, r5
+	ret

@@ -1,0 +1,18 @@
+start:
+	load r0, 0xfeed
+	load r1, 0x1234
+	add r2, r0, r1
+	sub r3, r0, r1
+	addi r4, r1, 0x1111
+	and r5, r0, r1
+	or r6, r0, r1
+	xor r7, r0, r1
+	not r8, r0
+	load r15, 0xaffe
+	shl.i r15, r15, 0d2
+	shr.i r15, r15, 0d2
+	test r15
+	jnz.i $func
+	jmp.i $start
+func:
+	jmp.o 0xFFFC

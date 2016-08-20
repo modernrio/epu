@@ -1,0 +1,46 @@
+\chapter{Befehlssatzarchitektur}
+\label{c:befehlssatzarchitektur}
+\section{Grundgedanken}
+Die Befehlssatzarchitektur beschreibt die Schnittstelle zwischen Hardwaredesign und
+Anwendungssoftware. Da die Veränderungen der Befehlssatzarchitektur Einfluss sowohl auf das
+Hardwaredesign als auch die Anwendungssoftware hat, wird diese hier zuerst beschrieben.
+Das Endergebnis der Befehlssatzarchitektur ist ein auf den Rechner angepassten Befehlssatz,
+welcher die Hardware mit der Software verbindet. Das Hauptziel des Befehlssatzes der EPU ist es,
+möglichst viele elemantere Operationen mit möglichst wenigen Befehlen auszuführen. Dabei wird auch
+auf einen einfachen Hardwareaufbau zur Implementierung des Befehlssatzes geachtet, um die Anzahl
+der genutzten Logikeinheiten zu reduzieren. Über die Anzahl der Logikeinheiten wird in
+Kapitel~\ref{c:hardwaredesign} genaueres beschrieben.
+\subsection{Registerbelegung}
+Die \ac{EPU} besitzt 16 Register, welche durch Selektion von $\log_2(16) = 4$ Adressbits
+angesprochen werden. Mithilfe der Tabelle~\ref{tab:registerbelegung} soll
+eine Übersicht aller Register dargestellt werden.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+Selektion & Name & Zweck\\
+\midrule
+0000 & R0  & Akkumulator\\
+0001 & R1  & Allgemeine Verwendung\\
+0010 & R2  & Laufvariable\\
+0011 & R3  & Datenregister\\
+0100 & R4  & Allgemeine Verwendung\\
+0101 & R5  & Allgemeine Verwendung\\
+0110 & R6  & Allgemeine Verwendung\\
+0111 & R7  & Allgemeine Verwendung\\
+1000 & R8  & Allgemeine Verwendung\\
+1001 & R9  & Allgemeine Verwendung\\
+1010 & R10 & Allgemeine Verwendung\\
+1010 & R11 & Allgemeine Verwendung\\
+1100 & R12 & Allgemeine Verwendung\\
+1101 & R13 & Allgemeine Verwendung\\
+1110 & FLA & Flagregister\\
+1111 & ID  & Interruptdaten Verwendung\\
+\bottomrule
+\end{tabular}
+\caption{Registerbelegung}
+\label{tab:registerbelegung}
+\end{table}
+\clearpage
+\section{Befehlsformen}

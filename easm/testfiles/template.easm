@@ -1,0 +1,5 @@
+_boot:
+	jmp.i $_start
+_int:
+	ret
+_code:

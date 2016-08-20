@@ -1,0 +1,9 @@
+_start:
+	load r4, 0xBEEF
+	load r5, 0xDEAD
+	push r4
+	push r5
+	pop r4
+	pop r5
+	add r0, r4, r5
+	jnz.i $_start

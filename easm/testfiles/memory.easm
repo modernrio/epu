@@ -1,0 +1,10 @@
+_start:
+load r0, 0xABCD
+load r1, $data
+write.l r1, r0, 0x0
+write.h r1, r0, 0x0001
+read.l r15, r1, 0x0
+read.h r15, r1, 0x1
+
+data:
+
