@@ -17,11 +17,13 @@ use ieee.numeric_std.all;
 
 package constants is
 
+function divide (a : unsigned; b : unsigned) return unsigned;
+function modulo (a : unsigned; b : unsigned) return unsigned;
+
 -- Adresskonstanten
 constant ADDR_RESET            : std_logic_vector(15 downto 0) := X"0000";
 constant ADDR_INT			   : std_logic_vector(15 downto 0) := X"0004";
 
-constant RAM_MAX			   : integer := 63;
 
 -- Opcodes
 constant OPCODE_NOP            : std_logic_vector(4 downto 0) := "00000";
@@ -47,6 +49,8 @@ constant OPCODE_PUSH           : std_logic_vector(4 downto 0) := "10011";
 constant OPCODE_POP            : std_logic_vector(4 downto 0) := "10100";
 constant OPCODE_INT            : std_logic_vector(4 downto 0) := "10111";
 constant OPCODE_TEST           : std_logic_vector(4 downto 0) := "11000";
+constant OPCODE_DIV            : std_logic_vector(4 downto 0) := "11001";
+constant OPCODE_MOD            : std_logic_vector(4 downto 0) := "11010";
 
 -- PC-Operationen
 constant PC_OP_NOP             : std_logic_vector(1 downto 0) := "00";
@@ -135,4 +139,38 @@ constant IFO_REL_IMM8_B3_END   : integer := 0;
 constant IFO_IMM16_BEGIN       : integer := 15;
 constant IFO_IMM16_END         : integer := 0;
 
+end constants;
+
+package body constants is
+	function divide (a : unsigned; b : unsigned) return unsigned is
+		variable a1 : unsigned(a'length-1 downto 0) := a;
+		variable b1 : unsigned(b'length-1 downto 0) := b;
+		variable p1 : unsigned(b'length downto 0) := (others => '0');
+		variable i  : integer := 0;
+
+	begin
+		for i in 0 to b'length-1 loop
+			p1(b'length-1 downto 1) := p1(b'length-2 downto 0);
+			p1(0) := a1(a'length-1);
+			a1(a'length-1 downto 1) := a1(a'length-2 downto 0);
+			p1 := p1-b1;
+			if(p1(b'length-1) ='1') then
+				a1(0) :='0';
+				p1 := p1+b1;
+			else
+				a1(0) :='1';
+			end if;
+		end loop;
+		return a1;
+
+	end divide;
+
+	function modulo (a : unsigned; b : unsigned) return unsigned is
+		variable x : unsigned(a'length-1 downto 0) := a;
+		variable y : unsigned(b'length-1 downto 0) := b;
+		variable r : unsigned(a'length-1 + b'length downto 0) := (others => '0');
+	begin
+		r := x - (divide(x, y) * y);
+		return r(b'length-1 downto 0);
+	end modulo;
 end constants;

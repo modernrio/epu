@@ -1,0 +1,18 @@
+_start:
+	load r0, 0d20
+	load r1, 0d5
+	load r2, 0d48
+	load r3, 0d6
+	load r4, 0d24
+	load r5, 0d7
+	load r6, 0d6497
+	load r7, 0d67
+	div r15, r0, r1
+	mod r15, r0, r1
+	div r15, r2, r3
+	mod r15, r2, r3
+	div r15, r4, r5
+	mod r15, r4, r5
+	div r15, r6, r7
+	mod r15, r6, r7
+	jmp.i $_start

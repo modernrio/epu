@@ -304,6 +304,10 @@ begin
 					end if;
 
 					S_SB <= '0';
+				when OPCODE_DIV =>
+					S_Res(15 downto 0) <= std_logic_vector(divide(unsigned(I_DataA), unsigned(I_DataB)));
+				when OPCODE_MOD =>
+					S_Res(15 downto 0) <= std_logic_vector(modulo(unsigned(I_DataA), unsigned(I_DataB)));
 				when others =>
 					S_Res <= "00" & X"EEEE";
 			end case;

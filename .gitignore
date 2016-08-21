@@ -27,3 +27,4 @@ doc/notes
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+*.bin
