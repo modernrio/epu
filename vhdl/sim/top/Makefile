@@ -14,7 +14,7 @@ GTKWAVE_VIEW=view.sav
 all: top
 
 # Elaboration target
-top: /home/whoami/Projects/EPU/vhdl/work/constants.o /home/whoami/Projects/EPU/vhdl/work/top.o /home/whoami/Projects/EPU/vhdl/work/core.o /home/whoami/Projects/EPU/vhdl/work/memory_control.o /home/whoami/Projects/EPU/vhdl/work/alu.o /home/whoami/Projects/EPU/vhdl/work/control_unit.o /home/whoami/Projects/EPU/vhdl/work/decoder.o /home/whoami/Projects/EPU/vhdl/work/regfile.o /home/whoami/Projects/EPU/vhdl/work/pc_unit.o /home/whoami/Projects/EPU/vhdl/work/stack.o /home/whoami/Projects/EPU/vhdl/work/ram_sim.o
+top: /home/whoami/Projects/EPU/vhdl/work/epu_pack.o /home/whoami/Projects/EPU/vhdl/work/top.o /home/whoami/Projects/EPU/vhdl/work/core.o /home/whoami/Projects/EPU/vhdl/work/memory_control.o /home/whoami/Projects/EPU/vhdl/work/alu.o /home/whoami/Projects/EPU/vhdl/work/control_unit.o /home/whoami/Projects/EPU/vhdl/work/decoder.o /home/whoami/Projects/EPU/vhdl/work/regfile.o /home/whoami/Projects/EPU/vhdl/work/pc_unit.o /home/whoami/Projects/EPU/vhdl/work/stack.o /home/whoami/Projects/EPU/vhdl/work/ram_sim.o
 	$(GHDL) -m $(GHDLFLAGS) $@
 	rm e~*
 
@@ -27,7 +27,7 @@ sim: run
 	$(GTKWAVE) $(SIMFILE) $(GTKWAVE_VIEW) &
 
 # Targets to analyze files
-/home/whoami/Projects/EPU/vhdl/work/constants.o: /home/whoami/Projects/EPU/vhdl/core/constants.vhdl
+/home/whoami/Projects/EPU/vhdl/work/epu_pack.o: /home/whoami/Projects/EPU/vhdl/core/epu_pack.vhdl
 	$(GHDL) -a $(GHDLFLAGS) $<
 /home/whoami/Projects/EPU/vhdl/work/top.o: /home/whoami/Projects/EPU/vhdl/top/top.vhdl
 	$(GHDL) -a $(GHDLFLAGS) $<
@@ -51,14 +51,14 @@ sim: run
 	$(GHDL) -a $(GHDLFLAGS) $<
 
 # Files dependences
-/home/whoami/Projects/EPU/vhdl/work/constants.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o
-/home/whoami/Projects/EPU/vhdl/work/top.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164_body.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std-body.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/core.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/memory_control.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/alu.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/control_unit.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/decoder.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/regfile.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/pc_unit.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/stack.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
-/home/whoami/Projects/EPU/vhdl/work/ram_sim.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/constants.o
+/home/whoami/Projects/EPU/vhdl/work/epu_pack.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o
+/home/whoami/Projects/EPU/vhdl/work/top.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164_body.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std-body.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/core.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/memory_control.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/alu.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/control_unit.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/decoder.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/regfile.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/pc_unit.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/stack.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o
+/home/whoami/Projects/EPU/vhdl/work/ram_sim.o:  /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/std_logic_1164.o /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.3/vhdl//v93/ieee/numeric_std.o /home/whoami/Projects/EPU/vhdl/work/epu_pack.o

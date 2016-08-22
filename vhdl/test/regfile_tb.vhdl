@@ -1,14 +1,4 @@
 ----------------------------------------------------------------------------------------------------
--- Name: Registerdatei-Testbench
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 29.07.2016
---
--- Version: 1.1
---
 -- Beschreibung: Testen der Registerdatei
 ----------------------------------------------------------------------------------------------------
 library ieee;

@@ -1,14 +1,4 @@
 ----------------------------------------------------------------------------------------------------
--- Name: Befehlszähler
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 23.07.2016
---
--- Version: 1.1
---
 -- Beschreibung: Zeiger auf den nächsten auszuführenden Befehl
 ----------------------------------------------------------------------------------------------------
 library ieee;
@@ -16,7 +6,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
-use work.constants.all;
+use work.epu_pack.all;
 
 entity pc_unit is
 	port(

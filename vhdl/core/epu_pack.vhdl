@@ -1,21 +1,11 @@
 ----------------------------------------------------------------------------------------------------
--- Name: Konstanten des Befehlssatzes
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 23.07.2016
---
--- Version: 1.1
---
--- Beschreibung: Konstante Werte mit konstanten Variablen schnell zugänglich machen
+-- Beschreibung: Deklaration und Definition verschiedener Hilfsfunktionen und Konstanten
 ----------------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package constants is
+package epu_pack is
 
 function divide (a : unsigned; b : unsigned) return unsigned;
 function modulo (a : unsigned; b : unsigned) return unsigned;
@@ -23,7 +13,6 @@ function modulo (a : unsigned; b : unsigned) return unsigned;
 -- Adresskonstanten
 constant ADDR_RESET            : std_logic_vector(15 downto 0) := X"0000";
 constant ADDR_INT			   : std_logic_vector(15 downto 0) := X"0004";
-
 
 -- Opcodes
 constant OPCODE_NOP            : std_logic_vector(4 downto 0) := "00000";
@@ -139,9 +128,9 @@ constant IFO_REL_IMM8_B3_END   : integer := 0;
 constant IFO_IMM16_BEGIN       : integer := 15;
 constant IFO_IMM16_END         : integer := 0;
 
-end constants;
+end epu_pack;
 
-package body constants is
+package body epu_pack is
 	function divide (a : unsigned; b : unsigned) return unsigned is
 		variable a1 : unsigned(a'length-1 downto 0) := a;
 		variable b1 : unsigned(b'length-1 downto 0) := b;
@@ -173,4 +162,4 @@ package body constants is
 		r := x - (divide(x, y) * y);
 		return r(b'length-1 downto 0);
 	end modulo;
-end constants;
+end epu_pack;

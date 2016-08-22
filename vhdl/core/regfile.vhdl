@@ -1,22 +1,12 @@
 ----------------------------------------------------------------------------------------------------
--- Name: Registerdatei (8x16-Bit-Register)
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 23.07.2016
---
--- Version: 1.1
---
--- Beschreibung: Registerdatei als "Black Box" für das Auswählen der Register
+-- Beschreibung: Registerdatei für das Auswählen der Register
 ----------------------------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
-use work.constants.all;
+use work.epu_pack.all;
 
 entity regfile is
 	port(

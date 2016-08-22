@@ -1,14 +1,4 @@
 --------------------------------------------------------------------------------
--- Name: Decoder-Testbench
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 08.07.2016
---
--- Version: 1.0
---
 -- Beschreibung: Testen des Decoders
 --------------------------------------------------------------------------------
 library ieee;
@@ -16,7 +6,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
-use work.constants.all;
+use work.epu_pack.all;
 
 entity decoder_tb is
 end decoder_tb;

@@ -1,21 +1,12 @@
 --------------------------------------------------------------------------------
--- Name: Ram-Testbench
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 18.07.2016
---
--- Version: 1.0
--- Beschreibung: RAM-Testmodul mit fest eingetragenen Instruktionen
+-- Beschreibung: RAM-Testmodul
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
-use work.constants.all;
+use work.epu_pack.all;
 
 entity ram_sim is
 	port(

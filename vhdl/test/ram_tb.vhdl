@@ -1,13 +1,4 @@
 --------------------------------------------------------------------------------
--- Name: Ram-Testbench
---
--- Projekt: EPU
---
--- Autor: Markus Schneider
---
--- Erstellungsdatum: 18.07.2016
---
--- Version: 1.0
 -- Beschreibung: RAM-Testmodul mit fest eingetragenen Instruktionen
 --------------------------------------------------------------------------------
 library ieee;
@@ -15,7 +6,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
-use work.constants.all;
+use work.epu_pack.all;
 
 entity ram_tb is
 	port(
@@ -32,7 +23,8 @@ entity ram_tb is
 end ram_tb;
 
 architecture behav_ram_tb of ram_tb is
-	type store_t is array(0 to RAM_MAX) of std_logic_vector(7 downto 0);
+	constant RAM_MAX : integer := 64;
+	type store_t is array(0 to RAM_MAX-1) of std_logic_vector(7 downto 0);
 
 	signal ram : store_t := (
 	X"77", -- 0x0000: jmp.i 0x5
