@@ -43,7 +43,6 @@ architecture behav_decoder of decoder is
 	signal S_Count : integer := 0;
 begin
 	process(I_Clk, I_En)
-	-- variable S_Count : integer := 0;
 	begin
 		if rising_edge(I_Clk) and I_En = '1' then
 			case S_Count is
