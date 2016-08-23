@@ -1,0 +1,4 @@
+_start:
+	load r0, 0x0
+	load r1, 0x1
+	hlt

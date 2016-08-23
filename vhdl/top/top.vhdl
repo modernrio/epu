@@ -23,6 +23,8 @@ architecture behav_top of top is
 			I_MEM_Data    : in std_logic_vector(7 downto 0); 	-- Datenausgang
 
 			-- Ausgänge
+			O_CORE_HLT	  : out std_logic;						-- Stopsignal
+
 			O_MEM_Reset   : out std_logic;						-- Rücksetzsignal
 			O_MEM_En	  : out std_logic;						-- Aktivierung
 			O_MEM_We	  : out std_logic;						-- Schreibfreigabe
@@ -52,6 +54,7 @@ architecture behav_top of top is
 	signal MainClk		  : std_logic := '0';
 		-- Core
 	signal CoreReset	  : std_logic := '0';
+	signal CoreHLT		  : std_logic := '0';
 		-- Speichercontroller
 	signal MemReady		  : std_logic := '0';
 	signal MemReset		  : std_logic := '0';
@@ -70,6 +73,7 @@ begin
 		I_CORE_Reset => CoreReset,
 		I_MEM_Ready => MemReady,
 		I_MEM_Data => MemRData,
+		O_CORE_HLT => CoreHLT,
 		O_MEM_Reset => MemReset,
 		O_MEM_En => MemEn,
 		O_MEM_We => MemWe,
@@ -89,13 +93,7 @@ begin
 		O_MEM_Data => MemRData
 	);
 
-	clk_process : process
-	begin
-		MainClk <= '0';
-		wait for CLK_PERIOD/2;
-		MainClk <= '1';
-		wait for CLK_PERIOD/2;
-	end process;
+	MainClk <= not MainClk after CLK_PERIOD/2 when CoreHLT = '0' else '0'; 
 
 	test_process : process
 	begin

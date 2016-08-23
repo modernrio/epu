@@ -65,7 +65,7 @@ opcodebits = [
     "0b11000",  # OPCODE_TEST
     "0b11001",  # OPCODE_DIV
     "0b11010",  # OPCODE_MOD
-    # "0b11011",  # UNUSED
+    "0b11011",  # OPCODE_HLT
     # "0b11100",  # UNUSED
     # "0b11101",  # UNUSED
     # "0b11110",  # UNUSED
@@ -729,6 +729,9 @@ opcode = {
 
     # MOD
     "mod":     FORM_RRR("0b11010", False),
+
+    # HLT
+    "hlt":     FORM_VOID("0b11011", False),
 }
 
 

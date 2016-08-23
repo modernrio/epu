@@ -18,6 +18,8 @@ entity core is
 		I_MEM_Data        : in std_logic_vector(7 downto 0); 	-- Datenausgang
 
 		-- Ausgänge
+		O_CORE_HLT		  : out std_logic;						-- Stopsignal
+
 		O_MEM_Reset       : out std_logic;						-- Rücksetzsignal
 		O_MEM_En	      : out std_logic;						-- Aktivierung
 		O_MEM_We		  : out std_logic;						-- Schreibfreigabe
@@ -170,6 +172,8 @@ architecture behav_core of core is
 
 begin
 	-- Ein-/Ausgänge verbinden
+	O_CORE_HLT <= '1' when AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_HLT
+				  else '0';
 	O_MEM_Reset <= MEM_Reset;
 	O_MEM_En <= MEM_En;
 	O_MEM_We <= MEM_We;

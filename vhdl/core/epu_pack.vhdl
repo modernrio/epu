@@ -40,6 +40,7 @@ constant OPCODE_INT            : std_logic_vector(4 downto 0) := "10111";
 constant OPCODE_TEST           : std_logic_vector(4 downto 0) := "11000";
 constant OPCODE_DIV            : std_logic_vector(4 downto 0) := "11001";
 constant OPCODE_MOD            : std_logic_vector(4 downto 0) := "11010";
+constant OPCODE_HLT            : std_logic_vector(4 downto 0) := "11011";
 
 -- PC-Operationen
 constant PC_OP_NOP             : std_logic_vector(1 downto 0) := "00";
