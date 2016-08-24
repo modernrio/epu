@@ -35,6 +35,8 @@ jumpcondition = {
     "NOOF":       "0b1011",
     "ZERO":       "0b1100",
     "NOTZERO":    "0b1101",
+    "BITHIGH":    "0b1110",
+    "BITLOW":     "0b1110",
 }
 
 opcodebits = [
@@ -515,11 +517,13 @@ class FORM_RRI:
 
 
 class FORM_RRO:
-    def __init__(self, opcode, flag):
+    def __init__(self, opcode, flag, reg=None, offset=None):
         self.opcode = str(opcode)
         self.flag = bool(flag)
         self.data = BitArray(length=8)
         self.count = 0
+        self.reg = reg
+        self.offset = offset
 
     def retLength(self):
         return 3
@@ -540,15 +544,25 @@ class FORM_RRO:
             self.count = self.count + 1
         elif self.count == 1:
             self.data = BitArray(length=0)
-            self.data.append(RO(args, line, 0))
-            self.data.append(RO(args, line, 0))
+            if self.reg is not None:
+                self.data.append(BitArray(self.reg))
+                self.data.append(RO(args, line, 0))
+            elif self.offset is not None:
+                self.data.append(R(args, line, 0))
+                self.data.append(R(args, line, 0))
+            else:
+                self.data.append(RO(args, line, 0))
+                self.data.append(RO(args, line, 0))
 
             self.count = self.count + 1
 
         elif self.count == 2:
             self.data = BitArray(length=0)
             self.data.append(BitArray("0b0000"))
-            self.data.append(RO(args, line, 1))
+            if self.offset is not None:
+                self.data.append(BitArray(self.offset))
+            else:
+                self.data.append(RO(args, line, 1))
 
             self.count = 0
 
@@ -776,6 +790,18 @@ opcode = {
     "jnz.o":   FORM_RRI("0b01111", False, jumpcondition["NOTZERO"], "0b1110"),
     "jnz.i":   FORM_RRI("0b01111", True, jumpcondition["NOTZERO"], "0b1110"),
 
+    # JB
+    "jb":     FORM_RRR("0b01111", False, jumpcondition["BITHIGH"], "0b1110"),
+    "jb.r":   FORM_RRR("0b01111", False, jumpcondition["BITHIGH"], "0b1110"),
+    "jb.o":   FORM_RRI("0b01111", False, jumpcondition["BITHIGH"], "0b1110"),
+    "jb.i":   FORM_RRI("0b01111", True, jumpcondition["BITHIGH"], "0b1110"),
+
+    # JNB
+    "jnb":     FORM_RRR("0b01111", False, jumpcondition["BITLOW"], "0b1110"),
+    "jnb.r":   FORM_RRR("0b01111", False, jumpcondition["BITLOW"], "0b1110"),
+    "jnb.o":   FORM_RRI("0b01111", False, jumpcondition["BITLOW"], "0b1110"),
+    "jnb.i":   FORM_RRI("0b01111", True, jumpcondition["BITLOW"], "0b1110"),
+
     # MUL
     "mul":     FORM_RRR("0b10000", False),
 
@@ -798,7 +824,9 @@ opcode = {
     "int":     FORM_RRI("0b10111", False, "0b1111", "0b0000"),
 
     # TEST
-    "test":    FORM_RR("0b11000", False, "0b1110"),
+    "test":    FORM_RRO("0b11000", False, "0b1110", "0b0000"),
+    "test.r":  FORM_RRO("0b11000", False, "0b1110", "0b0000"),
+    "test.b":  FORM_RRO("0b11000", False, "0b1110"),
 
     # DIV
     "div":     FORM_RRR("0b11001", False),

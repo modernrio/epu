@@ -2,4 +2,14 @@ _start:
 	load r10, 0xabcd
 	clr r10.0
 	set r10.4
+	test r10
+	test.b r10.4
+	# jump should be triggered
+	jb.i $_cont
+	hlt
+_cont:
+	clr r4.12
+	test.b r4.12
+	# jump should not be triggered
+	jb.i $_start
 	hlt

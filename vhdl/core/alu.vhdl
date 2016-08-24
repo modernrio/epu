@@ -236,6 +236,10 @@ begin
 							S_SB <= I_DataA(TEST_BIT_ZF);
 						when CJF_NOTZERO =>
 							S_SB <= not I_DataA(TEST_BIT_ZF);
+						when CJF_BITHIGH =>
+							S_SB <= I_DataA(TEST_BIT_BF);
+						when CJF_BITLOW =>
+							S_SB <= not I_DataA(TEST_BIT_BF);
 						when others =>
 							S_SB <= '0';
 					end case;
@@ -293,17 +297,32 @@ begin
 						S_Res(TEST_BIT_ZF) <= '0';
 					end if;
 
+					-- Bit Flag
+					if I_DataA(to_integer(unsigned(I_Imm(IFO_IMM4_B2_BEGIN downto IFO_IMM4_B2_END)))) = '1' then
+						S_Res(TEST_BIT_BF) <= '1';
+					else
+						S_Res(TEST_BIT_BF) <= '0';
+					end if;
+
 					S_SB <= '0';
 				when OPCODE_DIV =>
 					S_Res(15 downto 0) <= std_logic_vector(divide(unsigned(I_DataA), unsigned(I_DataB)));
+
+					S_SB <= '0';
 				when OPCODE_MOD =>
 					S_Res(15 downto 0) <= std_logic_vector(modulo(unsigned(I_DataA), unsigned(I_DataB)));
+
+					S_SB <= '0';
 				when OPCODE_SET =>
 					S_Res(15 downto 0) <= I_DataA;
 					S_Res(to_integer(unsigned(I_Imm(IFO_IMM4_B2_BEGIN downto IFO_IMM4_B2_END)))) <= '1';
+
+					S_SB <= '0';
 				when OPCODE_CLR =>
 					S_Res(15 downto 0) <= I_DataA;
 					S_Res(to_integer(unsigned(I_Imm(IFO_IMM4_B2_BEGIN downto IFO_IMM4_B2_END)))) <= '0';
+
+					S_SB <= '0';
 				when others =>
 					S_Res <= "00" & X"EEEE";
 			end case;

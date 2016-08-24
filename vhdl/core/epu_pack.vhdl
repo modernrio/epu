@@ -62,6 +62,7 @@ constant CMP_BIT_BZ            : integer := 11;
 constant TEST_BIT_SF           : integer :=  7;
 constant TEST_BIT_PF           : integer :=  6;
 constant TEST_BIT_ZF           : integer :=  5;
+constant TEST_BIT_BF		   : integer :=  4;
 
 -- Bedingungssprungflags
 constant CJF_EQ                : std_logic_vector(3 downto 0) := "0000";
@@ -78,6 +79,8 @@ constant CJF_OVERFLOW          : std_logic_vector(3 downto 0) := "1010";
 constant CJF_NOOVERFLOW        : std_logic_vector(3 downto 0) := "1011";
 constant CJF_ZERO              : std_logic_vector(3 downto 0) := "1100";
 constant CJF_NOTZERO           : std_logic_vector(3 downto 0) := "1101";
+constant CJF_BITHIGH           : std_logic_vector(3 downto 0) := "1110";
+constant CJF_BITLOW            : std_logic_vector(3 downto 0) := "1111";
 
 -- Befehlsformoffsets
 	-- Byte 0
