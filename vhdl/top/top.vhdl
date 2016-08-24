@@ -101,6 +101,6 @@ begin
 		wait for CLK_PERIOD;
 		CoreReset <= '0';
 
-		wait;
+		wait until CoreHLT = '1';
 	end process;
 end behav_top;
