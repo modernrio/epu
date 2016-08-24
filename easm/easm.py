@@ -66,8 +66,8 @@ opcodebits = [
     "0b11001",  # OPCODE_DIV
     "0b11010",  # OPCODE_MOD
     "0b11011",  # OPCODE_HLT
-    # "0b11100",  # UNUSED
-    # "0b11101",  # UNUSED
+    "0b11100",  # OPCODE_SET
+    "0b11101",  # OPCODE_CLR
     # "0b11110",  # UNUSED
     # "0b11111",  # UNUSED
 ]
@@ -175,6 +175,41 @@ def R(args, line, sel):
             return BitArray("0b0000")
         R = "0x" + hex(int(R[1:]))
         bitargs.append(R)
+
+    return bitargs
+
+
+def RO(args, line, sel):
+    bitargs = BitArray(length=0)
+
+    RO = ""
+    try:
+        RO = args.split(".", 2)[int(sel)].replace(" ", "")
+    except:
+        print("(line " + str(line).rjust(3, " ") + ") " +
+              "Reg-Offset syntax error: Expected format: rXX.Y")
+        return BitArray("0b0000")
+
+    if sel == 0:
+        bitargs.append(R(str(RO), line, 0))
+    elif sel == 1:
+        # Check syntax
+        if not re.fullmatch("[0-9]+", RO):
+            print("(line " + str(line).rjust(3, " ") + ") " +
+                  "Offset is not a decimal number")
+
+        # Check length and if neccessary correct it
+        if int(RO) > 15:
+            print("(line " + str(line).rjust(3, " ") + ") " +
+                  "Offset needs to be in range 0 to 15")
+            return bitargs
+        else:
+            # Fill unused space with 0's
+            RO = RO.rjust(5, '0')
+
+        # Set the immediate
+        tmp = BitArray("0x" + hex(int(RO)))
+        bitargs = BitArray("0x" + tmp.hex.rjust(1, '0'))
 
     return bitargs
 
@@ -479,6 +514,47 @@ class FORM_RRI:
         return "X\"" + self.data.hex + "\","
 
 
+class FORM_RRO:
+    def __init__(self, opcode, flag):
+        self.opcode = str(opcode)
+        self.flag = bool(flag)
+        self.data = BitArray(length=8)
+        self.count = 0
+
+    def retLength(self):
+        return 3
+
+    def retData(self, args, line):
+        if self.count == 0:
+            self.data = BitArray(length=8)
+            if self.opcode in opcodebits:
+                self.data[0:5] = BitArray(self.opcode)
+
+            if self.flag:
+                self.data[5] = BitArray("0b1")
+            else:
+                self.data[5] = BitArray("0b0")
+
+            self.data[6:8] = BitArray("0b10")
+
+            self.count = self.count + 1
+        elif self.count == 1:
+            self.data = BitArray(length=0)
+            self.data.append(RO(args, line, 0))
+            self.data.append(RO(args, line, 0))
+
+            self.count = self.count + 1
+
+        elif self.count == 2:
+            self.data = BitArray(length=0)
+            self.data.append(BitArray("0b0000"))
+            self.data.append(RO(args, line, 1))
+
+            self.count = 0
+
+        return "X\"" + self.data.hex + "\","
+
+
 class FORM_RRR:
     def __init__(self, opcode, flag, rD=None, rA=None):
         self.opcode = str(opcode)
@@ -732,6 +808,12 @@ opcode = {
 
     # HLT
     "hlt":     FORM_VOID("0b11011", False),
+
+    # SET
+    "set":     FORM_RRO("0b11100", False),
+
+    # CLR
+    "clr":     FORM_RRO("0b11101", False),
 }
 
 

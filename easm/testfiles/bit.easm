@@ -1,0 +1,5 @@
+_start:
+	load r10, 0xabcd
+	clr r10.0
+	set r10.4
+	hlt

@@ -41,6 +41,8 @@ constant OPCODE_TEST           : std_logic_vector(4 downto 0) := "11000";
 constant OPCODE_DIV            : std_logic_vector(4 downto 0) := "11001";
 constant OPCODE_MOD            : std_logic_vector(4 downto 0) := "11010";
 constant OPCODE_HLT            : std_logic_vector(4 downto 0) := "11011";
+constant OPCODE_SET            : std_logic_vector(4 downto 0) := "11100";
+constant OPCODE_CLR            : std_logic_vector(4 downto 0) := "11101";
 
 -- PC-Operationen
 constant PC_OP_NOP             : std_logic_vector(1 downto 0) := "00";
@@ -112,6 +114,8 @@ constant IFO_RB_BEGIN          : integer := 15;
 constant IFO_RB_END            : integer := 12;
 constant IFO_IMM8_B2_BEGIN     : integer := 15;
 constant IFO_IMM8_B2_END       : integer := 8;
+constant IFO_IMM4_B2_BEGIN     : integer := 11;
+constant IFO_IMM4_B2_END       : integer := 8;
 
 		-- Relative Konstanten
 constant IFO_REL_RB_BEGIN      : integer := 7;

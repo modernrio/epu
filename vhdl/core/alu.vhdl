@@ -298,6 +298,12 @@ begin
 					S_Res(15 downto 0) <= std_logic_vector(divide(unsigned(I_DataA), unsigned(I_DataB)));
 				when OPCODE_MOD =>
 					S_Res(15 downto 0) <= std_logic_vector(modulo(unsigned(I_DataA), unsigned(I_DataB)));
+				when OPCODE_SET =>
+					S_Res(15 downto 0) <= I_DataA;
+					S_Res(to_integer(unsigned(I_Imm(IFO_IMM4_B2_BEGIN downto IFO_IMM4_B2_END)))) <= '1';
+				when OPCODE_CLR =>
+					S_Res(15 downto 0) <= I_DataA;
+					S_Res(to_integer(unsigned(I_Imm(IFO_IMM4_B2_BEGIN downto IFO_IMM4_B2_END)))) <= '0';
 				when others =>
 					S_Res <= "00" & X"EEEE";
 			end case;
