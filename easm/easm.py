@@ -778,12 +778,12 @@ def main():
     lines = content
 
     # Read the template if given
+    template_count = 0
     if tfile is not None:
         with open(tfile) as f:
-            count = 0
             for line in f:
-                content.insert(count, line.strip())
-                count = count + 1
+                content.insert(template_count, line.strip())
+                template_count = template_count + 1
 
         # Remove tabs from template file
         for item in range(len(content)):
@@ -889,12 +889,14 @@ def main():
                 final[count] = opcode[content[item].split(" ", 1)[0]]\
                                      .retData(content[item].split(" ", 1)[1]
                                               .split("#", 1)[0],
-                                              lines.index(content[item]) + 1)
+                                              lines.index(content[item]) + 1
+                                              - template_count)
             except:
                 # Otherwise don't do the space split
                 final[count] = opcode[content[item].split(" ", 1)[0]]\
                                      .retData(content[item].split("#", 1)[0],
-                                              lines.index(content[item]) + 1)
+                                              lines.index(content[item]) + 1
+                                              - template_count)
 
             if length == opcode[content[item].split(" ", 1)[0]].retLength():
                 final[count] += " -- 0x" + str(hex(count))[2:].rjust(4, '0') +\
