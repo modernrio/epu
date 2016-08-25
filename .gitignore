@@ -2,6 +2,7 @@ vhdl/work
 doc/notes
 ise/*
 !ise/EPU.xise
+!ise/WaxwingSpartan6DevBoard.ucf
 vhdl/sim/top/*
 !vhdl/sim/top/Makefile
 !vhdl/sim/top/view.sav
