@@ -35,7 +35,7 @@ architecture behav_regfile of regfile is
 	signal S_DataA : std_logic_vector(15 downto 0) := (others => '0');
 	signal S_DataB : std_logic_vector(15 downto 0) := (others => '0');
 begin
-	process(I_Clk)
+	process(I_Clk, I_En)
 	begin
 		if rising_edge(I_Clk) and I_En = '1' then
 			-- Registerinhalt ausgeben (unabhängig von I_We)

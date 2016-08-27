@@ -910,8 +910,11 @@ def main():
     for item in range(len(content)):
         if ":" not in content[item]:
             if content[item].split(" ", 1)[0] not in opcode:
-                print("(line " + str(lines.index(content[item]) + 1)
-                      .rjust(3, " ") + ") Unknown instruction")
+                if content[item].startswith("."):
+                    tmp.append(content[item])
+                else:
+                    print("(line " + str(lines.index(content[item]) + 1)
+                          .rjust(3, " ") + ") Unknown instruction")
             else:
                 tmp.append(content[item])
         else:
@@ -931,7 +934,10 @@ def main():
                       "already exists")
             continue
         tmp.append(content[item])
-        count = count + opcode[content[item].split(" ", 1)[0]].retLength()
+        if not content[item].startswith("."):
+            count = count + opcode[content[item].split(" ", 1)[0]].retLength()
+        else:
+            count = count + 1
     content = tmp
 
     # Translate labels to addresses for line numbers
@@ -948,8 +954,12 @@ def main():
     # Check ram size
     ramsize = 0
     for item in content:
-        if not (item.startswith(".") or item.startswith("#")):
-            ramsize += opcode[item.split(" ", 1)[0]].retLength()
+        if not item.startswith("#"):
+            if not item.startswith("."):
+                ramsize += opcode[item.split(" ", 1)[0]].retLength()
+            else:
+                ramsize += 1
+
     if size is None:
         size = ramsize
     if ramsize > size:
@@ -960,20 +970,6 @@ def main():
 
     # Setup final list
     final = ["X\"00\","] * size
-
-    # Translate directives and remove them from the content list
-    tmp = list()
-    for item in content:
-        if item.startswith(".data"):
-            index = int(item.split(" ", 2)[1], 16)
-            if index >= size:
-                print("RAM too small for .data entry: " + str(item))
-                return
-            final[index] = "X\"" + str(item.split(" ", 2)[2][2:]) + "\"",
-            + " -- " + str(item)
-            continue
-        tmp.append(item)
-    content = tmp
 
     # Translate assembler commands
     count = 0
@@ -989,6 +985,13 @@ def main():
                 if label in labels:
                     content[item] = content[item].replace("$" + str(label),
                                                           hex(labels[label]))
+
+        # Translate directives
+        if content[item].startswith(".data"):
+            final[count] = "X\"" + str(content[item].split(" ", 2)[1][2:]) +\
+                           "\"," + " -- " + str(content[item])
+            count = count + 1
+            continue
 
         # Translate commands based on mnemonic
         length = opcode[content[item].split(" ", 1)[0]].retLength()
@@ -1025,7 +1028,7 @@ def main():
         for item in labels:
             if item.startswith("_"):
                 print("Section: {0:8} Address: 0x{1}"
-                      .format(str(item), str(labels[item]).rjust(4, '0')))
+                        .format(str(item), str(hex(labels[item])[2:]).rjust(4, '0')))
 
     if ofile is None:
         print("\n")

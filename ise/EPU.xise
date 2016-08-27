@@ -32,8 +32,8 @@
       <association xil_pn:name="Implementation" xil_pn:seqID="7"/>
     </file>
     <file xil_pn:name="../vhdl/core/core.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="10"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="10"/>
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="11"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="11"/>
     </file>
     <file xil_pn:name="../vhdl/core/decoder.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="6"/>
@@ -48,16 +48,23 @@
       <association xil_pn:name="Implementation" xil_pn:seqID="4"/>
     </file>
     <file xil_pn:name="../vhdl/mem/memory_control.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="9"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="9"/>
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="10"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="10"/>
     </file>
     <file xil_pn:name="../vhdl/mem/ram_sim.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="2"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="2"/>
     </file>
     <file xil_pn:name="../vhdl/top/top.vhdl" xil_pn:type="FILE_VHDL">
-      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="11"/>
-      <association xil_pn:name="Implementation" xil_pn:seqID="11"/>
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="12"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="12"/>
+    </file>
+    <file xil_pn:name="WaxwingSpartan6DevBoard.ucf" xil_pn:type="FILE_UCF">
+      <association xil_pn:name="Implementation" xil_pn:seqID="0"/>
+    </file>
+    <file xil_pn:name="../vhdl/top/freq_divider.vhdl" xil_pn:type="FILE_VHDL">
+      <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="9"/>
+      <association xil_pn:name="Implementation" xil_pn:seqID="9"/>
     </file>
   </files>
 
@@ -100,7 +107,7 @@
     <property xil_pn:name="Configuration Rate spartan6" xil_pn:value="2" xil_pn:valueState="default"/>
     <property xil_pn:name="Correlate Output to Input Design" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Create ASCII Configuration File" xil_pn:value="false" xil_pn:valueState="default"/>
-    <property xil_pn:name="Create Binary Configuration File" xil_pn:value="false" xil_pn:valueState="default"/>
+    <property xil_pn:name="Create Binary Configuration File" xil_pn:value="true" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Create Bit File" xil_pn:value="true" xil_pn:valueState="default"/>
     <property xil_pn:name="Create I/O Pads from Ports" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Create IEEE 1532 Configuration File spartan6" xil_pn:value="false" xil_pn:valueState="default"/>
@@ -248,6 +255,7 @@
     <property xil_pn:name="Package" xil_pn:value="csg324" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Perform Advanced Analysis" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Perform Advanced Analysis Post Trace" xil_pn:value="false" xil_pn:valueState="default"/>
+    <property xil_pn:name="Perform Timing-Driven Packing and Placement" xil_pn:value="false" xil_pn:valueState="default"/>
     <property xil_pn:name="Place &amp; Route Effort Level (Overall)" xil_pn:value="High" xil_pn:valueState="default"/>
     <property xil_pn:name="Place And Route Mode" xil_pn:value="Normal Place and Route" xil_pn:valueState="default"/>
     <property xil_pn:name="Place MultiBoot Settings into Bitstream spartan6" xil_pn:value="false" xil_pn:valueState="default"/>
@@ -302,8 +310,8 @@
     <property xil_pn:name="Run for Specified Time Translate" xil_pn:value="true" xil_pn:valueState="default"/>
     <property xil_pn:name="Safe Implementation" xil_pn:value="No" xil_pn:valueState="default"/>
     <property xil_pn:name="Security" xil_pn:value="Enable Readback and Reconfiguration" xil_pn:valueState="default"/>
-    <property xil_pn:name="Selected Module Instance Name" xil_pn:value="/top/uut_core/uut_alu" xil_pn:valueState="non-default"/>
-    <property xil_pn:name="Selected Simulation Root Source Node Behavioral" xil_pn:value="work.alu" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Selected Module Instance Name" xil_pn:value="/top" xil_pn:valueState="non-default"/>
+    <property xil_pn:name="Selected Simulation Root Source Node Behavioral" xil_pn:value="work.top" xil_pn:valueState="non-default"/>
     <property xil_pn:name="Selected Simulation Root Source Node Post-Map" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Selected Simulation Root Source Node Post-Route" xil_pn:value="" xil_pn:valueState="default"/>
     <property xil_pn:name="Selected Simulation Root Source Node Post-Translate" xil_pn:value="" xil_pn:valueState="default"/>
@@ -321,7 +329,7 @@
     <property xil_pn:name="Simulator" xil_pn:value="ISim (VHDL/Verilog)" xil_pn:valueState="default"/>
     <property xil_pn:name="Slice Utilization Ratio" xil_pn:value="100" xil_pn:valueState="default"/>
     <property xil_pn:name="Specify 'define Macro Name and Value" xil_pn:value="" xil_pn:valueState="default"/>
-    <property xil_pn:name="Specify Top Level Instance Names Behavioral" xil_pn:value="work.alu" xil_pn:valueState="default"/>
+    <property xil_pn:name="Specify Top Level Instance Names Behavioral" xil_pn:value="work.top" xil_pn:valueState="default"/>
     <property xil_pn:name="Specify Top Level Instance Names Post-Map" xil_pn:value="Default" xil_pn:valueState="default"/>
     <property xil_pn:name="Specify Top Level Instance Names Post-Route" xil_pn:value="Default" xil_pn:valueState="default"/>
     <property xil_pn:name="Specify Top Level Instance Names Post-Translate" xil_pn:value="Default" xil_pn:valueState="default"/>

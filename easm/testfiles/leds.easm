@@ -1,0 +1,10 @@
+_start:
+	load r0, 0xAA55
+	load r1, $_data
+loop:
+	write.l r1, r0, 0x0
+	write.h r1, r0, 0x0
+	jmp.i $loop
+	
+_data:
+.data 0x00

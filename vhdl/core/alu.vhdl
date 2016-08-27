@@ -30,8 +30,6 @@ architecture behav_alu of alu is
 	signal S_Res : std_logic_vector(17 downto 0) := (others => '0');
 begin
 	process(I_Clk, I_En)
-	variable V_ShiftCount : integer range 0 to 15;
-	variable V_Parity     : std_logic := '0';
 	begin
 		if rising_edge(I_Clk) and I_En = '1' then
 			case I_AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) is

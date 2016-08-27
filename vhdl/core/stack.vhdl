@@ -26,7 +26,7 @@ architecture behav_stack of stack is
 	type store_t is array(STACK_MAX downto 0) of std_logic_vector(15 downto 0);
 
 	signal S_Stack   : store_t := (others => X"0000");
-	signal S_Pointer : integer := STACK_MAX;
+	signal S_Pointer : integer range 0 to STACK_MAX := STACK_MAX;
 	signal S_Full    : std_logic := '0';
 	signal S_Empty   : std_logic := '0';
 begin
@@ -47,8 +47,7 @@ begin
 					S_Full <= '0';
 					S_Empty <= '0';
 				end if;
-			end if;
-			if I_We = '0' and S_Empty = '0' then
+			elsif I_We = '0' and S_Empty = '0' then
 				-- POP
 				if S_Pointer /= STACK_MAX then
 					O_Data <= S_Stack(S_Pointer + 1);

@@ -37,7 +37,7 @@ begin
 		if rising_edge(I_Clk) and I_En = '1' then
 			case S_Count is
 				when 0 =>
-					S_Inst <= (others => '0');
+					S_Inst(23 downto 0) <= (others => '0');
 					S_Inst(31 downto 24) <= I_Inst;
 					S_AluOp <= I_Inst;
 

@@ -18,146 +18,45 @@ entity ram_sim is
 
 		-- Ausgänge
 		O_Ready		  : out std_logic;						-- Bereitschaft
-		O_Data        : out std_logic_vector(7 downto 0)	-- Datenausgang
+		O_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
+		O_LED	      : out std_logic_vector(7 downto 0)	-- LEDs
 	);
 end ram_sim;
 
 architecture behav_ram_sim of ram_sim is
-	constant RAM_MAX  : integer := 128;
+	constant RAM_MAX  : integer := 26;
 	type store_t is array(0 to RAM_MAX - 1) of std_logic_vector(7 downto 0);
 
 	signal ram : store_t := (
-X"77", -- 0x0000: jmp.i 0x5
-X"00",
-X"00",
-X"05",
-X"90", -- 0x0004: ret
-X"3b", -- 0x0005: load r10, 0xabcd
-X"a0",
-X"ab",
-X"cd",
-X"ea", -- 0x0009: clr r10.0
-X"aa",
-X"00",
-X"e2", -- 0x000c: set r10.4
-X"aa",
-X"04",
-X"c2", -- 0x000f: test r10
-X"ea",
-X"00",
-X"c2", -- 0x0012: test.b r10.4
-X"ea",
-X"04",
-X"7f", -- 0x0015: jb.i 0x1a
-X"ee",
-X"00",
-X"1a",
-X"d8", -- 0x0019: hlt
-X"ea", -- 0x001a: clr r4.12
-X"44",
-X"0c",
-X"c2", -- 0x001d: test.b r4.12
-X"e4",
-X"0c",
-X"7f", -- 0x0020: jb.i 0x5
-X"ee",
-X"00",
-X"05",
-X"d8", -- 0x0024: hlt
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00",
-X"00" 
+		X"77", -- 0x0000: jmp.i 0x5
+		X"00",
+		X"00",
+		X"05",
+		X"90", -- 0x0004: ret
+		X"3b", -- 0x0005: load r0, 0xAA55
+		X"00",
+		X"aa",
+		X"55",
+		X"3b", -- 0x0009: load r1, 0x19
+		X"10",
+		X"00",
+		X"19",
+		X"53", -- 0x000d: write.l r1, r0, 0x0
+		X"01",
+		X"00",
+		X"00",
+		X"57", -- 0x0011: write.h r1, r0, 0x0
+		X"01",
+		X"00",
+		X"00",
+		X"77", -- 0x0015: jmp.i 0xd
+		X"00",
+		X"00",
+		X"0d",
+		X"00"  -- .data 0x00
 	);
 begin
-	process(I_Clk)
+	ram_proc : process(I_Clk)
 	begin
 		if rising_edge(I_Clk) then
 			if (I_We = '1') then
@@ -167,6 +66,7 @@ begin
 			end if;
 		end if;
 	end process;
-
+	
+	O_LED <= ram(25);
 	O_Ready <= '1'; -- for now not implemented
 end behav_ram_sim;

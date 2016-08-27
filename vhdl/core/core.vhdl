@@ -171,6 +171,8 @@ architecture behav_core of core is
 	signal StackData      : std_logic_vector(15 downto 0) := (others => '0');
 
 begin
+	-- Signale definieren
+	MEM_Reset <= I_CORE_Reset;
 	-- Ein-/Ausgänge verbinden
 	O_CORE_HLT <= '1' when AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_HLT
 				  else '0';

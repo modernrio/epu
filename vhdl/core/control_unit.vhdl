@@ -22,13 +22,18 @@ entity control_unit is
 end control_unit;
 
 architecture behav_control_unit of control_unit is
-	signal S_State : std_logic_vector(6 downto 0) := "0000001";
+	signal S_State : std_logic_vector(6 downto 0) := (others => '0');
+	signal S_Reset : std_logic := '1';
 begin
 	process(I_Clk)
 	begin
 		if rising_edge(I_Clk) then
 			if I_Reset = '1' then
 				S_State <= "0000000";
+				S_Reset <= '1';
+			elsif S_Reset = '1' then
+				S_State <= "0000001";
+				S_Reset <= '0';
 			else
 				case S_State is
 					when "0000001" => -- Fetch
@@ -60,8 +65,11 @@ begin
 						S_State <= "1000000";
 					when "1000000" => -- Reg Write
 						S_State <= "0000001";
-					when others =>
+					when "1111111" => -- Reset State
 						S_State <= "0000001";
+					when others =>
+						S_State <= "0000000";
+						S_Reset <= '1';
 				end case;
 			end if;
 		end if;
