@@ -3,9 +3,7 @@ doc/notes
 ise/*
 !ise/EPU.xise
 !ise/WaxwingSpartan6DevBoard.ucf
-vhdl/sim/top/*
-!vhdl/sim/top/Makefile
-!vhdl/sim/top/view.sav
+vhdl/sim/sim_top_tb.vcd
 *.o
 *.swp
 *.bin

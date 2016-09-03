@@ -12,7 +12,9 @@ entity top is
 	port(
 		MainClk			  : in std_logic;
 		RST				  : in std_logic;
-		LED				  : out std_logic_vector(7 downto 0)
+		SEGEn			  : out std_logic_vector(2 downto 0);
+		LED				  : out std_logic_vector(7 downto 0);
+		SEG				  : out std_logic_vector(7 downto 0)
 	);
 end top;
 
@@ -20,8 +22,9 @@ architecture behav_top of top is
 	-- Komponentendeklaration für das zu testende Gerät (UUT)
 	component freq_divider
 		port(
-			I_Clk : in std_logic;
-			O_Clk : out std_logic
+			I_Clk		  : in std_logic;
+			O_Clk		  : out std_logic;
+			Seg_Clk		  : out std_logic
 		);
 	end component;
 	
@@ -65,7 +68,9 @@ architecture behav_top of top is
 	-- Signale
 		-- Top
 	signal Clk 	 	 	  : std_logic := '0';
+	signal SegClk		  : std_logic := '0';
 	signal leds			  : std_logic_vector(7 downto 0) := (others => '0');
+	signal seg_count	  : integer := 0;
 		-- Core
 	signal CoreReset	  : std_logic := '0';
 	signal CoreHLT		  : std_logic := '0';
@@ -77,14 +82,12 @@ architecture behav_top of top is
 	signal MemWData		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal MemRData		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal MemAddr		  : std_logic_vector(15 downto 0) := (others => '0');
-
-	-- Konstanten
-	constant CLK_PERIOD   : time := 10 ns;
 begin
 	-- Instanz der UUTs erstellen
 	uut_freq_divider : freq_divider port map (
 		I_Clk => MainClk,
-		O_Clk => Clk
+		O_Clk => Clk,
+		Seg_Clk => SegClk
 	);
 	
 	uut_core : core port map (
@@ -115,5 +118,24 @@ begin
 	
 	CoreReset <= RST;
 	LED <= leds;
+	SEG(0) <= '1';
 	
+	seg_proc : process(SegClk)
+	begin
+		if rising_edge(SegClk) then
+			if seg_count = 0 then
+				SEG(7 downto 1) <= bcd2seg(MemAddr(3 downto 0));
+				SEGEn <= "011";
+				seg_count <= seg_count + 1;
+			elsif seg_Count = 1 then
+				SEG(7 downto 1) <= bcd2seg(MemAddr(7 downto 4));
+				SEGEn <= "101";
+				seg_count <= seg_count + 1;
+			else
+				SEG(7 downto 1) <= bcd2seg(MemAddr(11 downto 8));
+				SegEn <= "110";
+				seg_count <= 0;
+			end if;
+		end if;
+	end process;
 end behav_top;

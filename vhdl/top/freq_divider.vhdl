@@ -10,14 +10,15 @@ use work.epu_pack.all;
 
 entity freq_divider is
 	port(
-		I_Clk : in std_logic;
-		O_Clk : out std_logic
+		I_Clk	: in std_logic;
+		O_Clk	: out std_logic;
+		Seg_Clk : out std_logic
 	);
 
 end freq_divider;
 
 architecture behav_freq_divider of freq_divider is
-	signal scaler : std_logic_vector(20 downto 0) := (others => '0');
+	signal scaler : std_logic_vector(22 downto 0) := (others => '0');
 begin
 	freq_div_proc : process(I_Clk)
 	begin
@@ -26,5 +27,6 @@ begin
 		end if;
 	end process;
 
-	O_Clk <= scaler(20);
+	O_Clk <= scaler(21); -- 21-22 for synthesis
+	Seg_Clk <= scaler(18); -- 18 for synthesis
 end behav_freq_divider;

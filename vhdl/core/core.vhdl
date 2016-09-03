@@ -53,6 +53,7 @@ architecture behav_core of core is
 			I_Clk         : in std_logic;						-- Takteingang
 			I_Reset       : in std_logic;						-- Rücksetzsignal
 			I_Done        : in std_logic;						-- Befehl vollständig dekodiert?
+			I_MemReady	  : in std_logic;						-- RAM bereit?
 			I_AluOp		  : in std_logic_vector(7 downto 0);	-- ALU-Operation
 
 			-- Ausgänge
@@ -218,6 +219,7 @@ begin
 		I_Clk => I_CORE_Clk,
 		I_Reset => I_CORE_Reset,
 		I_Done => DecDone,
+		I_MemReady => MEM_Ready,
 		I_AluOp => AluOp,
 		O_State => State
 	);

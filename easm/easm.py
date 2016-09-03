@@ -17,9 +17,6 @@ import argparse
 import re
 from bitstring import BitArray
 
-
-labels = dict()
-final = list()
 jumpcondition = {
     "EQ":         "0b0000",
     "NEQ":        "0b0001",
@@ -249,7 +246,7 @@ class FORM_VOID:
 
         self.data[6:8] = BitArray("0b00")
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_RI:
@@ -296,7 +293,7 @@ class FORM_RI:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_RR:
@@ -347,7 +344,7 @@ class FORM_RR:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_IRR:
@@ -412,7 +409,7 @@ class FORM_IRR:
                       "           " +
                       "Expected " + str(self.parameter) + " parameters, " +
                       str(parametercount) + " were given.")
-                return "X\"" + self.data.hex + "\","
+                return self.data.hex
 
         elif self.count == 2:
             self.data = BitArray(length=0)
@@ -433,7 +430,7 @@ class FORM_IRR:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_RRI:
@@ -500,7 +497,7 @@ class FORM_RRI:
                       "           " +
                       "Expected " + str(self.rCount + 1) + " parameters, " +
                       str(parametercount) + " were given.")
-                return "X\"" + self.data.hex + "\","
+                return self.data.hex
 
         elif self.count == 2:
             self.data = BitArray(length=0)
@@ -513,7 +510,7 @@ class FORM_RRI:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_RRO:
@@ -566,7 +563,7 @@ class FORM_RRO:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 
 class FORM_RRR:
@@ -628,7 +625,7 @@ class FORM_RRR:
                       "           " +
                       "Expected " + str(self.rCount + 1) + " parameters, " +
                       str(parametercount) + " were given.")
-                return "X\"" + self.data.hex + "\","
+                return self.data.hex
 
         elif self.count == 2:
             self.data = BitArray(length=0)
@@ -637,7 +634,7 @@ class FORM_RRR:
 
             self.count = 0
 
-        return "X\"" + self.data.hex + "\","
+        return self.data.hex
 
 opcode = {
     # NOP
@@ -922,6 +919,7 @@ def main():
     content = tmp
 
     # Get labels and remove them from the content list
+    labels = dict()
     tmp = list()
     count = 0
     for item in range(len(content)):
@@ -969,10 +967,10 @@ def main():
         return
 
     # Setup final list
-    final = ["X\"00\","] * size
+    bytelist = [""] * 64
 
     # Translate assembler commands
-    count = 0
+    bytestr = ""
     for item in range(len(content)):
         if ":" in content[item]:
             continue
@@ -988,9 +986,7 @@ def main():
 
         # Translate directives
         if content[item].startswith(".data"):
-            final[count] = "X\"" + str(content[item].split(" ", 2)[1][2:]) +\
-                           "\"," + " -- " + str(content[item])
-            count = count + 1
+            bytestr += str(content[item].split(" ", 2)[1][2:])
             continue
 
         # Translate commands based on mnemonic
@@ -999,28 +995,20 @@ def main():
         while length != 0:
             try:
                 # Try space split(works for all instructions with parameters)
-                final[count] = opcode[content[item].split(" ", 1)[0]]\
+                bytestr += opcode[content[item].split(" ", 1)[0]]\
                                      .retData(content[item].split(" ", 1)[1]
                                               .split("#", 1)[0],
                                               lines.index(content[item]) + 1
-                                              - template_count)
+                                              - template_count).upper()
             except:
                 # Otherwise don't do the space split
-                final[count] = opcode[content[item].split(" ", 1)[0]]\
+                bytestr += opcode[content[item].split(" ", 1)[0]]\
                                      .retData(content[item].split("#", 1)[0],
                                               lines.index(content[item]) + 1
-                                              - template_count)
-
-            if length == opcode[content[item].split(" ", 1)[0]].retLength():
-                final[count] += " -- 0x" + str(hex(count))[2:].rjust(4, '0') +\
-                               ": " + str(content[item])
+                                              - template_count).upper()
 
             length = length - 1
             offset = offset + 1
-            count = count + 1
-
-    # Remove comma from last line
-    final[-1] = final[-1].replace(",", " ")
 
     # Print debug information
     if args.verbose:
@@ -1028,14 +1016,28 @@ def main():
         for item in labels:
             if item.startswith("_"):
                 print("Section: {0:8} Address: 0x{1}"
-                        .format(str(item), str(hex(labels[item])[2:]).rjust(4, '0')))
+                      .format(str(item), str(hex(labels[item])[2:])
+                              .rjust(4, '0')))
+        print("\n")
+
+    # Create final list for printing/writing to file
+    bytestr = "".join(reversed([bytestr[i:i+2]
+                      for i in range(0, len(bytestr), 2)]))
+    for i in range(0, 64, 1):
+        try:
+            bytelist[i] = bytestr[i*64:(i+1)*64]
+        except:
+            bytelist[i] = bytelist[i].zfill(64)
+    for i in range(63, -1, -1):
+        bytelist[i] = bytelist[i].zfill(64)
+        bytelist[i] = "INIT_" + hex(i)[2:].zfill(2).upper() +\
+                      " => X\"" + bytelist[i] + "\","
 
     if ofile is None:
-        print("\n")
-        print("\n".join(final))
+        print("\n".join(bytelist))
     else:
         with open(ofile, "w") as f:
-            for item in final:
+            for item in bytelist:
                 f.write("%s\n" % item)
 
     return

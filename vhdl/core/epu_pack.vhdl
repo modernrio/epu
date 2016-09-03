@@ -9,6 +9,7 @@ package epu_pack is
 
 function divide (a : unsigned; b : unsigned) return unsigned;
 function modulo (a : unsigned; b : unsigned) return unsigned;
+function bcd2seg(bcd : std_logic_vector(3 downto 0)) return std_logic_vector;
 
 -- Adresskonstanten
 constant ADDR_RESET            : std_logic_vector(15 downto 0) := X"0000";
@@ -170,4 +171,44 @@ package body epu_pack is
 		r := x - (divide(x, y) * y);
 		return r(b'length-1 downto 0);
 	end modulo;
+
+	function bcd2seg(bcd : std_logic_vector(3 downto 0)) return std_logic_vector is
+	begin
+		case bcd is
+			when "0000" =>
+				return "0000001"; -- 0
+			when "0001" =>
+				return "1001111"; -- 1
+			when "0010" =>
+				return "0010010"; -- 2
+			when "0011" =>
+				return "0000110"; -- 3
+			when "0100" =>
+				return "1001100"; -- 4
+			when "0101" =>
+				return "0100100"; -- 5
+			when "0110" =>
+				return "0100000"; -- 6
+			when "0111" =>
+				return "0001111"; -- 7
+			when "1000" =>
+				return "0000000"; -- 8
+			when "1001" =>
+				return "0000100"; -- 9
+			when "1010" =>
+				return "0001000"; -- A
+			when "1011" =>
+				return "1100000"; -- B
+			when "1100" =>
+				return "0110001"; -- C
+			when "1101" =>
+				return "1000010"; -- D
+			when "1110" =>
+				return "0110000"; -- E
+			when "1111" =>
+				return "0111000"; -- F
+			when others =>
+				return "1111111";
+		end case;
+	end bcd2seg;
 end epu_pack;
