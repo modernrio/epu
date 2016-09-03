@@ -5,7 +5,7 @@ script: make
 install:
     - sudo apt-get install gnat
     - wget https://github.com/tgingold/ghdl/archive/master.zip
-    - unzip master.zip
+    - unzip -qq master.zip
     - cd ghdl-master
     - ./configure --prefix=/usr/local
     - make
