@@ -27,6 +27,6 @@ begin
 		end if;
 	end process;
 
-	O_Clk <= scaler(21); -- 21-22 for synthesis
+	O_Clk <= scaler(22); -- 21-22 for synthesis
 	Seg_Clk <= scaler(18); -- 18 for synthesis
 end behav_freq_divider;

@@ -1,6 +1,7 @@
 _start:
-	load r0, 0xAA55
 	load r1, $_data
+	read.h r0, r1, 0x1
+	read.l r0, r1, 0x2
 loop:
 	write.l r1, r0, 0x0
 	write.h r1, r0, 0x0
@@ -8,3 +9,5 @@ loop:
 	
 _data:
 .data 0x00
+.data 0xAA
+.data 0x55
