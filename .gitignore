@@ -1,9 +1,11 @@
+TODO.md
 vhdl/work
 doc/notes
 ise/*
 !ise/EPU.xise
 !ise/WaxwingSpartan6DevBoard.ucf
 vhdl/sim/sim_top_tb.vcd
+vhdl/sim/top_tb
 *.o
 *.swp
 *.bin
