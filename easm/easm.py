@@ -1021,14 +1021,14 @@ def main():
         print("\n")
 
     # Create final list for printing/writing to file
-    bytestr = "".join(reversed([bytestr[i:i+2]
-                      for i in range(0, len(bytestr), 2)]))
     for i in range(0, 64, 1):
         try:
             bytelist[i] = bytestr[i*64:(i+1)*64]
         except:
             bytelist[i] = bytelist[i].zfill(64)
     for i in range(63, -1, -1):
+        bytelist[i] = "".join(reversed([bytelist[i][j:j+2]
+                              for j in range(0, len(bytelist[i]), 2)]))
         bytelist[i] = bytelist[i].zfill(64)
         bytelist[i] = "INIT_" + hex(i)[2:].zfill(2).upper() +\
                       " => X\"" + bytelist[i] + "\","
