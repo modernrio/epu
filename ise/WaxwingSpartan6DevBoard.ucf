@@ -33,19 +33,19 @@ CONFIG VCCAUX = "3.3" ;
    	NET "SEGEn[2]"						LOC = M13  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;  #Enable
    	NET "SEGEn[1]"           			LOC = L14  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
    	NET "SEGEn[0]"           			LOC = F17  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-		NET "In_Data[0]"                      LOC = "N11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[1]"                      LOC = "M11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[2]"                      LOC = "T14"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[3]"                      LOC = "V14"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[4]"                      LOC = "N18"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[5]"                      LOC = "N17"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[6]"                      LOC = "V11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "In_Data[7]"                      LOC = "U11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-
-NET "TXE"                             LOC = "U13"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "RXF"                             LOC = "V13"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "RD"                              LOC = "V15"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
-NET "WR"                              LOC = "U15"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
+#		NET "In_Data[0]"                      LOC = "N11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[1]"                      LOC = "M11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[2]"                      LOC = "T14"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[3]"                      LOC = "V14"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[4]"                      LOC = "N18"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[5]"                      LOC = "N17"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[6]"                      LOC = "V11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "In_Data[7]"                      LOC = "U11"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#
+#NET "TXE"                             LOC = "U13"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "RXF"                             LOC = "V13"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "RD"                              LOC = "V15"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ; 
+#NET "WR"                              LOC = "U15"   | IOSTANDARD = LVCMOS33 | SLEW = FAST | DRIVE = 8 ;
 	
 ###################################################################################################################################################
 #                                                  LPDDR MT46H32M16XXXX-5                                                                         #
