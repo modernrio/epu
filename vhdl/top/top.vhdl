@@ -14,7 +14,13 @@ entity top is
 		RST				  : in std_logic;
 		SEGEn			  : out std_logic_vector(2 downto 0);
 		LED				  : out std_logic_vector(7 downto 0);
-		SEG				  : out std_logic_vector(7 downto 0)
+		SEG				  : out std_logic_vector(7 downto 0);
+
+		TXE : in std_logic;
+		RD : out std_logic;
+		WR : out std_logic;
+		RXF : in std_logic;
+		In_Data	: inout std_logic_vector(7 downto 0)
 	);
 end top;
 
@@ -24,6 +30,7 @@ architecture behav_top of top is
 		port(
 			I_Clk		  : in std_logic;
 			O_Clk		  : out std_logic;
+			Uart_Clk : out std_logic;
 			Seg_Clk		  : out std_logic
 		);
 	end component;
@@ -44,6 +51,9 @@ architecture behav_top of top is
 			O_MEM_En	  : out std_logic;						-- Aktivierung
 			O_MEM_We	  : out std_logic;						-- Schreibfreigabe
 			O_MEM_Data	  : out std_logic_vector(7 downto 0);	-- Daten
+			
+			O_LED : out std_logic_vector(7 downto 0);
+			
 			O_MEM_Addr	  : out std_logic_vector(15 downto 0)	-- Adresswahl
 		);
 	end component;
@@ -61,7 +71,14 @@ architecture behav_top of top is
 			-- Ausgänge
 			O_MEM_Ready	  : out std_logic;						-- Bereitschaft
 			O_MEM_Data    : out std_logic_vector(7 downto 0);	-- Datenausgang
-			O_LED		  : out std_logic_vector(7 downto 0)	-- LEDs
+			O_LED		  : out std_logic_vector(7 downto 0);	-- LEDs
+
+			UClk : in std_logic;
+			TXE : in std_logic;
+			RD : out std_logic;
+			WR : out std_logic;
+			RXF : in std_logic;
+			In_Data	: inout std_logic_vector(7 downto 0)
 		);
 	end component;
 
@@ -70,6 +87,7 @@ architecture behav_top of top is
 	signal Clk 	 	 	  : std_logic := '0';
 	signal SegClk		  : std_logic := '0';
 	signal leds			  : std_logic_vector(7 downto 0) := (others => '0');
+	signal core_leds	  : std_logic_vector(7 downto 0) := (others => '0');
 	signal seg_count	  : integer := 0;
 		-- Core
 	signal CoreReset	  : std_logic := '0';
@@ -82,11 +100,13 @@ architecture behav_top of top is
 	signal MemWData		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal MemRData		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal MemAddr		  : std_logic_vector(15 downto 0) := (others => '0');
+	signal UARTClk			: std_logic := '0';
 begin
 	-- Instanz der UUTs erstellen
 	uut_freq_divider : freq_divider port map (
 		I_Clk => MainClk,
 		O_Clk => Clk,
+		Uart_Clk => UARTClk,
 		Seg_Clk => SegClk
 	);
 	
@@ -100,6 +120,7 @@ begin
 		O_MEM_En => MemEn,
 		O_MEM_We => MemWe,
 		O_MEM_Data => MemWData,
+		O_LED => core_leds,
 		O_MEM_Addr => MemAddr
 	);
 
@@ -113,7 +134,13 @@ begin
 		I_MEM_Addr => MemAddr,
 		O_MEM_Ready => MemReady,
 		O_MEM_Data => MemRData,
-		O_LED => leds
+		O_LED => leds,
+		UClk => UARTClk,
+		TXE => TXE,
+		RD => RD,
+		WR => WR,
+		RXF => RXF,
+		In_Data => In_Data
 	);
 	
 	CoreReset <= RST;

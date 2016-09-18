@@ -1,21 +1,24 @@
-_start:
-	load r0, 0xFF00
-	load r1, 0x100
-	load r2, $_data
-	load r3, 0x0
-	write.l r1, r0, 0x0
-loop:
-	read.l r3, r2, 0x0
-	read.l r3, r2, 0x1
-	read.l r3, r2, 0x2
-	read.l r3, r2, 0x3
-	read.l r3, r2, 0x4
-	jmp.i $loop
-
 _data:
-	.data 0x48
-	.data 0x65
-	.data 0x6C
-	.data 0x6C
-	.data 0x6F
 	.data 0x00
+_start:
+	load r2, $_data
+loop:
+	load r3, 0x45
+	write.l r2, r3, 0x0
+	load r1, 0x50
+	write.l r2, r1, 0x0
+	load r4, 0x55
+	write.l r2, r4, 0x0
+	load r5, 0x20
+	write.l r2, r5, 0x0
+	load r6, 0x76
+	write.l r2, r6, 0x0
+	load r7, 0x30
+	write.l r2, r7, 0x0
+	load r8, 0x2E
+	write.l r2, r8, 0x0
+	load r9, 0x31
+	write.l r2, r9, 0x0
+	load r10, 0x0A
+	write.l r2, r10, 0x0
+	jmp.i $loop

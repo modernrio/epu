@@ -21,7 +21,14 @@ entity memory_control is
 		-- Ausgänge
 		O_MEM_Ready		  : out std_logic;						-- Bereitschaft
 		O_MEM_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
-		O_LED			  : out std_logic_vector(7 downto 0)	-- LEDs
+		O_LED			  : out std_logic_vector(7 downto 0);	-- LEDs
+
+		UClk : in std_logic;
+		TXE : in std_logic;
+		RD : out std_logic;
+		WR : out std_logic;
+		RXF : in std_logic;
+		In_Data	: inout std_logic_vector(7 downto 0)
 	);
 end memory_control;
 
@@ -42,6 +49,22 @@ architecture behav_memory_control of memory_control is
 			O_LED         : buffer std_logic_vector(7 downto 0)	-- LEDs
 		);
 	end component;
+	
+	component uart is
+    port(
+        I_Clk   : in std_logic;
+        TXE : in std_logic;
+        RD : out std_logic;
+        WR : out std_logic;
+        RXF : in std_logic;
+        In_Data : inout std_logic_vector(7 downto 0); 
+        TX_Ready : out std_logic;
+        TX : in std_logic;
+        TX_Data : in std_logic_vector(7 downto 0); 
+        T_Clk : out std_logic
+    );  
+	end component;
+
 
 	-- Signale
 	signal S_MEM_Ready    : std_logic := '0';
@@ -50,6 +73,12 @@ architecture behav_memory_control of memory_control is
 	signal S_RAM_Ready    : std_logic := '0';
 	signal S_RAM_Data     : std_logic_vector(7 downto 0) := (others => '0');
 	signal LED			  : std_logic_vector(7 downto 0) := (others => '0');
+
+	signal tx_data : std_logic_vector(7 downto 0) := (others => '0');
+	signal TX_Ready : std_logic := '0';
+	signal TX : std_logic := '0';
+	signal tx_clk : std_logic := '0';
+	signal count : integer := 0;
 
 begin
 	-- Instanz der UUTs erstellen
@@ -63,6 +92,36 @@ begin
 		O_Data => S_RAM_Data,
 		O_LED => LED
 	);
+
+	uut_uart : uart port map (
+		I_Clk => UClk,
+		TXE => TXE,
+		RD => RD,
+		WR => WR,
+		RXF => RXF,
+		In_Data => In_Data,
+		TX_Ready => TX_Ready,
+		TX => TX,
+		TX_Data => tx_data,
+		T_Clk => tx_clk
+	);
+
+--	uart_proc : process(I_MEM_Clk)
+--	begin
+--		if rising_edge(I_MEM_Clk) then
+--			if tx_ready = '1' then
+--				if tx_data(7) = '1' then
+--					TX <= '1';
+--				else
+--					TX <= '0';
+--				end if;
+--			end if;
+--		end if;
+--	end process;
+
+	TX <= '1';
+
+	tx_data <= LED;
 
 	O_MEM_Ready <= S_RAM_Ready;
 	O_MEM_Data  <= S_RAM_Data;

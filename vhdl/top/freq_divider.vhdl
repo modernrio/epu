@@ -12,6 +12,7 @@ entity freq_divider is
 	port(
 		I_Clk	: in std_logic;
 		O_Clk	: out std_logic;
+		Uart_Clk : out std_logic;
 		Seg_Clk : out std_logic
 	);
 
@@ -27,6 +28,8 @@ begin
 		end if;
 	end process;
 
-	O_Clk <= scaler(22); -- 21-22 for synthesis
+	Uart_Clk <= I_Clk;
+	-- O_Clk <= scaler(0); -- 21-22 for synthesis
+	O_Clk <= scaler(16);
 	Seg_Clk <= scaler(18); -- 18 for synthesis
 end behav_freq_divider;

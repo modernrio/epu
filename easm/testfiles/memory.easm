@@ -1,10 +1,26 @@
 _start:
-load r0, 0xABCD
-load r1, $data
-write.l r1, r0, 0x0
-write.h r1, r0, 0x0001
-read.l r15, r1, 0x0
-read.h r15, r1, 0x1
+	load r0, 0x4100
+	load r1, $_data
+	write.h r1, r0, 0x0
 
-data:
+	load r2, 0x0
+	load r3, 0xFFFF
+	load r4, 0x0
+	load r5, 0x1
+loop:
+	add r2, r2, r5
+	write.h r1, r2, 0x0
+	cmp r2, r3
+	jne.i $loop
+loop2:
+	load r2, 0x0
+	add r4, r4, r5
+	cmp r4, r3
+	jne.i $loop
+stop:
+	write.l r1, r0, 0x0
+fin:
+	jmp.i $fin
 
+_data:
+	.data 0x00

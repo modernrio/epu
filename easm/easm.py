@@ -857,6 +857,8 @@ def main():
                         help="Size of RAM in N bytes")
     parser.add_argument("-v", "--verbose", action="store_true",
                         help="Show section addresses")
+    parser.add_argument("-vv", "--all", action="store_true",
+                        help="Show all addresses")
 
     args = parser.parse_args()
     afile = str(args.infile)
@@ -1011,10 +1013,13 @@ def main():
             offset = offset + 1
 
     # Print debug information
-    if args.verbose:
-        print("Section addresses".center(33, "="))
+    if args.verbose or args.all:
+        if not args.all:
+            print("Section addresses".center(33, "="))
+        else:
+            print("Label addresses".center(33, "="))
         for item in labels:
-            if item.startswith("_"):
+            if item.startswith("_") or args.all:
                 print("Section: {0:8} Address: 0x{1}"
                       .format(str(item), str(hex(labels[item])[2:])
                               .rjust(4, '0')))

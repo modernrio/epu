@@ -1,0 +1,17 @@
+_start:
+	load r1, $_data
+	load r2, 0x0
+	load r4, 0x5
+add:
+	addi r2, r2, 0x1
+	write.l r1, r2, 0x0
+	cmp r2, r4
+	jne.i $add
+fin:
+	load r3, 0xFFFF
+	write.h r1, r3, 0x0
+stop:
+	jmp.i $stop
+
+_data:
+	.data 0x00

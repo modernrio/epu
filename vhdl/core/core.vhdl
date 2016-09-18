@@ -24,6 +24,9 @@ entity core is
 		O_MEM_En	      : out std_logic;						-- Aktivierung
 		O_MEM_We		  : out std_logic;						-- Schreibfreigabe
 		O_MEM_Data		  : out std_logic_vector(7 downto 0);	-- Daten
+		
+		O_LED : out std_logic_vector(7 downto 0);
+		
 		O_MEM_Addr		  : out std_logic_vector(15 downto 0)	-- Adresswahl
 	);
 end core;
@@ -184,6 +187,8 @@ begin
 	MEM_RData <= I_MEM_Data;
 	O_MEM_Data <= MEM_WData;
 	O_MEM_Addr <= MEM_Addr;
+	
+	O_LED <= DataB(7 downto 0);
 
 	-- Speichercontroller
 	MEM_En	  <= En_Fetch or En_MemWrite;
