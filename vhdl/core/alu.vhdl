@@ -8,138 +8,6 @@ use ieee.numeric_std.all;
 library work;
 use work.epu_pack.all;
 
-entity fulladder is
-	port(
-		-- Eingänge
-		I_A		: in std_logic;
-		I_B		: in std_logic;
-		I_Carry	: in std_logic;
-
-		-- Ausgänge
-		O_Sum	: out std_logic;
-		O_Carry : out std_logic
-	);
-end entity fulladder;
-
-architecture behav_fulladder of fulladder is
-begin
-	O_Sum <= I_A xor I_B xor I_Carry;
-	O_Carry <= (I_A and I_B) or (I_A and I_Carry) or (I_B and I_Carry);
-end behav_fulladder;
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-library work;
-use work.epu_pack.all;
-
-entity generic_adder is
-	generic(
-		size : integer
-	);
-	port(
-		-- Eingänge
-		I_A		: in std_logic_vector(size-1 downto 0);
-		I_B		: in std_logic_vector(size-1 downto 0);
-		I_Carry : in std_logic;
-
-		-- Ausgänge
-		O_Sum	: out std_logic_vector(size-1 downto 0);
-		O_Carry : out std_logic
-	);
-end entity generic_adder;
-
-architecture behav_generic_adder of generic_adder is
-	component fulladder is
-		port(
-			-- Eingänge
-			I_A		: in std_logic;
-			I_B		: in std_logic;
-			I_Carry	: in std_logic;
-
-			-- Ausgänge
-			O_Sum	: out std_logic;
-			O_Carry : out std_logic
-		);
-	end component fulladder;
-
-	signal S_Sum	: std_logic_vector(size downto 0);
-	signal S_Carry	: std_logic_vector(size downto 0);
-begin
-	adders : for N in 0 to size-1 generate
-		fulladd : fulladder port map(
-			I_A => I_A(N),
-			I_B => I_B(N),
-			I_Carry => S_Carry(N),
-			O_Sum => S_Sum(N),
-			O_Carry => S_Carry(N+1)
-		);
-	end generate;
-
-	S_Carry(0) <= I_Carry;
-
-	O_Sum <= S_Sum(size-1 downto 0);
-	O_Carry <= S_Carry(size);
-end behav_generic_adder;
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-library work;
-use work.epu_pack.all;
-
-entity adder16 is
-	port(
-		-- Eingänge
-		I_A		: in std_logic_vector(15 downto 0);
-		I_B		: in std_logic_vector(15 downto 0);
-		I_Carry : in std_logic;
-
-		-- Ausgänge
-		O_Sum	: in std_logic_vector(15 downto 0);
-		O_Carry : in std_logic
-	);
-end entity adder16;
-
-architecture behav_adder16 of adder16 is
-	component generic_adder is
-		generic(
-			size : integer
-		);
-		port(
-			-- Eingänge
-			I_A		: in std_logic_vector(size-1 downto 0);
-			I_B		: in std_logic_vector(size-1 downto 0);
-			I_Carry : in std_logic;
-
-			-- Ausgänge
-			O_Sum	: in std_logic_vector(size-1 downto 0);
-			O_Carry : in std_logic
-		);
-	end component;
-begin
-	adder : generic_adder
-	generic map(
-		size => 16
-	)
-	port map(
-		I_A => I_A,
-		I_B => I_B,
-		I_Carry => I_Carry,
-		O_Sum => O_Sum,
-		O_Carry => O_Carry
-	);
-end behav_adder16;
-
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-library work;
-use work.epu_pack.all;
-
 entity alu is
 	port(
 		-- Eingänge
@@ -184,30 +52,9 @@ architecture behav_alu of alu is
 	);
 	end component;
 
-	signal S_AI  : std_logic_vector(15 downto 0) := (others => '0');
-	signal C_AI  : std_logic := '0';
 	signal S_SB  : std_logic := '0';
 	signal S_Res : std_logic_vector(17 downto 0) := (others => '0');
-	
-	signal Testsum : std_logic := '0';
-	signal Testcarry : std_logic := '0';
 begin
-	add_test : fulladder port map(
-		I_A => I_DataA(0),
-		I_B => I_Imm(0),
-		I_Carry => '0',
-		O_Sum => Testsum,
-		O_Carry => Testcarry
-	);
-
-	adder_ai : adder16 port map(
-		I_A => I_DataA,
-		I_B => I_Imm,
-		I_Carry => '0',
-		O_Sum => S_AI,
-		O_Carry => C_AI
-	);
-	
 	process(I_Clk, I_En)
 	begin
 		if rising_edge(I_Clk) and I_En = '1' then
@@ -223,9 +70,8 @@ begin
 												+ unsigned('0' & I_DataB));
 						else
 							-- Nicht vorzeichenbehaftet + Form RRI
-							S_Res(15 downto 1) <= S_AI(15 downto 1);
-							S_Res(0) <= Testsum;
-							S_Res(16) <= C_AI;
+							S_Res(16 downto 0) <= std_logic_vector(unsigned('0' & I_DataA)
+												+ unsigned('0' & I_Imm));
 						end if;
 					else
 						if I_AluOp(IFO_REL_LENGTH_END) = '0' then

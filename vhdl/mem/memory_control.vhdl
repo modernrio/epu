@@ -106,19 +106,6 @@ begin
 		T_Clk => tx_clk
 	);
 
---	uart_proc : process(I_MEM_Clk)
---	begin
---		if rising_edge(I_MEM_Clk) then
---			if tx_ready = '1' then
---				if tx_data(7) = '1' then
---					TX <= '1';
---				else
---					TX <= '0';
---				end if;
---			end if;
---		end if;
---	end process;
-
 	TX <= '1';
 
 	tx_data <= LED;
