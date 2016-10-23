@@ -23,12 +23,9 @@ entity memory_control is
 		O_MEM_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
 		O_LED			  : out std_logic_vector(7 downto 0);	-- LEDs
 
-		UClk : in std_logic;
-		TXE : in std_logic;
-		RD : out std_logic;
-		WR : out std_logic;
-		RXF : in std_logic;
-		In_Data	: inout std_logic_vector(7 downto 0)
+		UClk			  : in std_logic;
+		TX				  : out std_logic;
+		RX				  : in std_logic
 	);
 end memory_control;
 
@@ -52,17 +49,23 @@ architecture behav_memory_control of memory_control is
 	
 	component uart is
     port(
-        I_Clk   : in std_logic;
-        TXE : in std_logic;
-        RD : out std_logic;
-        WR : out std_logic;
-        RXF : in std_logic;
-        In_Data : inout std_logic_vector(7 downto 0); 
-        TX_Ready : out std_logic;
-        TX : in std_logic;
-        TX_Data : in std_logic_vector(7 downto 0); 
-        T_Clk : out std_logic
-    );  
+		-- Physical interface
+		I_Clk			: in std_logic;
+		TX				: out std_logic;
+		RX				: in std_logic;
+
+		-- Client Interface
+		I_Reset			: in std_logic;
+			-- TX
+		I_TX_Data		: in std_logic_vector(7 downto 0);
+		I_TX_Enable		: in std_logic;
+		O_TX_Ready		: out std_logic;
+			-- RX
+		I_RX_Cont		: in std_logic;
+		O_RX_Data		: out std_logic_vector(7 downto 0);
+		O_RX_Sig		: out std_logic;
+		O_RX_FrameError	: out std_logic
+    );
 	end component;
 
 
@@ -73,12 +76,11 @@ architecture behav_memory_control of memory_control is
 	signal S_RAM_Ready    : std_logic := '0';
 	signal S_RAM_Data     : std_logic_vector(7 downto 0) := (others => '0');
 	signal LED			  : std_logic_vector(7 downto 0) := (others => '0');
-
-	signal tx_data : std_logic_vector(7 downto 0) := (others => '0');
-	signal TX_Ready : std_logic := '0';
-	signal TX : std_logic := '0';
-	signal tx_clk : std_logic := '0';
-	signal count : integer := 0;
+	
+	signal tx_ready		  : std_logic := '0';
+	signal rx_data		  : std_logic_vector(7 downto 0) := (others => '0');
+	signal rx_ready		  : std_logic := '0';
+	signal rx_error		  : std_logic := '0';
 
 begin
 	-- Instanz der UUTs erstellen
@@ -95,23 +97,20 @@ begin
 
 	uut_uart : uart port map (
 		I_Clk => UClk,
-		TXE => TXE,
-		RD => RD,
-		WR => WR,
-		RXF => RXF,
-		In_Data => In_Data,
-		TX_Ready => TX_Ready,
 		TX => TX,
-		TX_Data => tx_data,
-		T_Clk => tx_clk
+		RX => RX,
+		I_Reset => '0',
+		I_TX_Data => X"7C",
+		I_TX_Enable => '1',
+		O_TX_Ready => tx_ready,
+		I_RX_Cont => '1',
+		O_RX_Data => rx_data,
+		O_RX_Sig => rx_ready,
+		O_RX_FrameError => rx_error
 	);
-
-	TX <= '1';
-
-	tx_data <= LED;
 
 	O_MEM_Ready <= S_RAM_Ready;
 	O_MEM_Data  <= S_RAM_Data;
-	O_LED <= LED;
+	O_LED <= rx_error & rx_data(6 downto 0);
 
 end behav_memory_control;

@@ -7,65 +7,184 @@ use work.epu_pack.all;
 
 entity uart is
 	port(
-		I_Clk	: in std_logic;
-		TXE : in std_logic;
-		RD : out std_logic;
-		WR : out std_logic;
-		RXF : in std_logic;
-		In_Data	: inout std_logic_vector(7 downto 0);
-		TX_Ready : out std_logic;
-		TX : in std_logic;
-		TX_Data : in std_logic_vector(7 downto 0);
-		T_Clk : out std_logic
+		-- Physical interface
+		I_Clk			: in std_logic;
+		TX				: out std_logic;
+		RX				: in std_logic;
+
+		-- Client Interface
+		I_Reset			: in std_logic;
+			-- TX
+		I_TX_Data		: in std_logic_vector(7 downto 0);
+		I_TX_Enable		: in std_logic;
+		O_TX_Ready		: out std_logic;
+			-- RX
+		I_RX_Cont		: in std_logic;
+		O_RX_Data		: out std_logic_vector(7 downto 0);
+		O_RX_Sig		: out std_logic;
+		O_RX_FrameError	: out std_logic
 	);
 end uart;
 
-architecture Behavioral of uart is
-	signal count : integer := 4;
-	signal tx_clk : std_logic := '0';
-	signal tx_count : integer := 0;
-	signal baudrate : std_logic_vector(15 downto 0) := X"28B0";
+architecture uart_behav of uart is
+	type tx_state_t is (idle, active);
+
+	signal rx_clk_count : integer := 0;
+	signal rx_clk_reset : std_logic := '0';
+	signal rx_clk_baud_tick : std_logic := '0';
+	signal rx_state : integer := 0;
+	signal rx_sig : std_logic := '0';
+	signal rx_sample_count : integer := 0;
+	signal rx_sample_offset : integer := 3;
+	signal rx_data : std_logic_vector(7 downto 0) := (others => '0');
+
+	signal tx_clk_count : integer := 0;
+	signal tx_count : integer range 0 to 9 := 0;
+	signal tx_clk	: std_logic := '0';
+	signal tx_state : tx_state_t := idle;
+	-- signal baudrate : std_logic_vector(15 downto 0) := X"006C"; -- 921600bps @ 100Mhz
+	signal baudrate : std_logic_vector(15 downto 0) := X"0364"; -- 115200bps @ 100Mhz
+	-- signal baudrate : std_logic_vector(15 downto 0) := X"28B0"; -- 9600bps @ 100Mhz
+
+	constant OFFSET_START_BIT : integer := 7;
+	constant OFFSET_DATA_BITS : integer := 15;
+	constant OFFSET_STOP_BIT  : integer := 7;
 begin
-	tx_clk_gen : process(I_Clk)
+	clk_gen : process(I_Clk)
 	begin
 		if rising_edge(I_Clk) then
-			if tx_count = 0 then
-				-- Chop off LSB to get a clock
-				tx_count <= to_integer(unsigned(baudrate(15 downto 1)));
+			-- TX
+			if tx_clk_count = 0 then
+				tx_clk_count <= to_integer(unsigned(baudrate(15 downto 1)));
 				tx_clk <= not tx_clk;
 			else
-				tx_count <= tx_count - 1;
+				tx_clk_count <= tx_clk_count - 1;
+			end if;
+
+			-- RX
+			if rx_clk_count = 0 then
+				-- x16-Probe
+				rx_clk_count <= to_integer(unsigned(baudrate(15 downto 4)));
+				rx_clk_baud_tick <= '1';
+			else
+				rx_clk_baud_tick <= '0';
+				if rx_clk_reset = '1' then
+					rx_clk_count <= to_integer(unsigned(baudrate(15 downto 4)));
+				else
+					rx_clk_count <= rx_clk_count - 1;
+				end if;
 			end if;
 		end if;
 	end process;
 
-	hello_proc : process(tx_clk)
+	O_RX_Sig <= rx_sig;
+	rx_proc : process(I_Clk)
 	begin
-		if rising_edge(tx_clk) then
-			case count is
-				when 0 =>
-					if TXE = '0' then
-						count <= count + 1;
+		if rising_edge(I_Clk) then
+			if rx_clk_reset = '1' then
+				rx_clk_reset <= '0';
+			end if;
+			
+			if I_Reset = '1' then
+				rx_state <= 0;
+				rx_sig <= '0';
+				rx_sample_count <= 0;
+				rx_sample_offset <= OFFSET_START_BIT;
+				rx_data <= X"00";
+				O_RX_Data <= X"00";
+			elsif RX = '0' and rx_state = 0 and I_RX_Cont = '1' then
+				rx_state <= 1;
+				rx_sample_offset <= OFFSET_START_BIT;
+				rx_sample_count <= 0;
+				rx_clk_reset <= '1';
+			elsif rx_clk_baud_tick = '1' and RX = '0' and rx_state = 1 then
+				rx_sample_count <= rx_sample_count + 1;
+				if rx_sample_count = rx_sample_offset then
+					rx_sig <= '0';
+					rx_state <= 2;
+					rx_data <= X"00";
+					rx_sample_offset <= OFFSET_DATA_BITS;
+					rx_sample_count <= 0;
+				end if;
+			elsif rx_clk_baud_tick = '1' and rx_state >= 2 and rx_state < 10 then
+				if rx_sample_count = rx_sample_offset then
+					rx_data(6 downto 0) <= rx_data(7 downto 1);
+					rx_data(7) <= RX;
+					rx_sample_count <= 0;
+					rx_state <= rx_state + 1;
+				else
+					rx_sample_count <= rx_sample_count + 1;
+				end if;
+			elsif rx_clk_baud_tick = '1' and rx_state = 10 then
+				if rx_sample_count = OFFSET_STOP_BIT then
+					rx_state <= 0;
+					rx_sig <= '1';
+					O_RX_Data <= rx_data;
+
+					if RX = '1' then
+						-- Stopbit korrekt
+						O_RX_FrameError <= '0';
+					else
+						-- Fehler
+						O_RX_FrameError <= '1';
 					end if;
-					WR <= '1';
-					RD <= '0';
-					TX_Ready <= '0';
-				when 1 =>
-					In_Data <= TX_Data;
-					count <= count + 1;
-				when 2 =>
-					WR <= '0';
-					count <= count + 1;
-				when 3 =>
-					WR <= '1';
-					count <= count + 1;
-				when others =>
-					TX_Ready <= '1';
-					if TX = '1' then
-						count <= 0;
-					end if;
-			end case;
+				else
+					rx_sample_count <= rx_sample_count + 1;
+				end if;
+			end if;
 		end if;
 	end process;
-end Behavioral;
 
+    tx_proc : process(tx_clk)
+    begin
+        if rising_edge(tx_clk) then
+            case tx_state is
+                when idle =>
+                    TX <= '1';
+					if I_TX_Enable = '1' then
+						tx_state <= active;
+					end if;
+                when active =>
+					case tx_count is
+						when 0 =>
+							-- Startbit
+							TX <= '0';
+							tx_count <= tx_count + 1;
+							O_TX_Ready <= '0';
+						when 1 =>
+							TX <= I_TX_Data(0);
+							tx_count <= tx_count + 1;
+						when 2 =>
+							TX <= I_TX_Data(1);
+							tx_count <= tx_count + 1;
+						when 3 =>
+							TX <= I_TX_Data(2);
+							tx_count <= tx_count + 1;
+						when 4 =>
+							TX <= I_TX_Data(3);
+							tx_count <= tx_count + 1;
+						when 5 =>
+							TX <= I_TX_Data(4);
+							tx_count <= tx_count + 1;
+						when 6 =>
+							TX <= I_TX_Data(5);
+							tx_count <= tx_count + 1;
+						when 7 =>
+							TX <= I_TX_Data(6);
+							tx_count <= tx_count + 1;
+						when 8 =>
+							TX <= I_TX_Data(7);
+							tx_count <= tx_count + 1;
+						when 9 =>
+							-- Stopbit
+							TX <= '1';
+							tx_count <= 0;
+							O_TX_Ready <= '1';
+							if I_TX_Enable = '0' then
+								tx_state <= idle;
+							end if;
+				end case;
+            end case;
+        end if;
+    end process;
+end uart_behav;

@@ -16,11 +16,8 @@ entity top is
 		LED				  : out std_logic_vector(7 downto 0);
 		SEG				  : out std_logic_vector(7 downto 0);
 
-		TXE : in std_logic;
-		RD : out std_logic;
-		WR : out std_logic;
-		RXF : in std_logic;
-		In_Data	: inout std_logic_vector(7 downto 0)
+		TX				  : out std_logic;
+		RX				  : in std_logic
 	);
 end top;
 
@@ -30,7 +27,7 @@ architecture behav_top of top is
 		port(
 			I_Clk		  : in std_logic;
 			O_Clk		  : out std_logic;
-			Uart_Clk : out std_logic;
+			Uart_Clk	  : out std_logic;
 			Seg_Clk		  : out std_logic
 		);
 	end component;
@@ -73,12 +70,9 @@ architecture behav_top of top is
 			O_MEM_Data    : out std_logic_vector(7 downto 0);	-- Datenausgang
 			O_LED		  : out std_logic_vector(7 downto 0);	-- LEDs
 
-			UClk : in std_logic;
-			TXE : in std_logic;
-			RD : out std_logic;
-			WR : out std_logic;
-			RXF : in std_logic;
-			In_Data	: inout std_logic_vector(7 downto 0)
+			UClk		  : in std_logic;
+			TX			  : out std_logic;
+			RX			  : in std_logic
 		);
 	end component;
 
@@ -136,11 +130,8 @@ begin
 		O_MEM_Data => MemRData,
 		O_LED => leds,
 		UClk => UARTClk,
-		TXE => TXE,
-		RD => RD,
-		WR => WR,
-		RXF => RXF,
-		In_Data => In_Data
+		TX => TX,
+		RX => RX
 	);
 	
 	CoreReset <= RST;

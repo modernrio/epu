@@ -1,37 +1,27 @@
 #!/usr/bin/env python3
-import serial
+""" Serial communication """
+
 import time
+import serial
+import sys
 
-# baudrate = 1500000  # 1.5Mbit/s
-# baudrate = 12000000 # 12Mbit/s
-
-# One byte takes 10 bits so 10Mbit/s may almost equal 1.0MByte/s.
-
-ser = serial.serial_for_url("spy:///dev/ttyUSB1?file=test.txt", timeout=1,
-                            baudrate=9600)
+ser = serial.serial_for_url("spy:///dev/ttyUSB1?file=test.txt", timeout=1, baudrate=115200)
 
 time.sleep(1)
 
+value = b""
 msg = ""
-value = None
-error = 0
-try:
-    while True:
-        # ser.write(char_to_send.encode())
-        # print("Send: " + char_to_send)
-        oldvalue = value
-        value = ser.read()
-        if len(value) != 0 and oldvalue != value:
-            try:
-                msg += value.decode("ascii")
-                # if error == 0:
-                #     error = 1
-                # else:
-                #     error = 0
-                #     continue
-                print(msg[-1], end="", flush=True)
-            except:
-                pass
-except KeyboardInterrupt:
-    pass
+while True:
+    size = 1
+    cmd = str.encode(input(">> "))
+    size = len(cmd)
+    if cmd == b"exit":
+        sys.exit()
+    ser.write(cmd)
+    value = ser.read(size)
+    if value != b"":
+        try:
+            print(value.decode("ascii"))
+        except:
+            pass
 print("\n")
