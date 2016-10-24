@@ -13,6 +13,7 @@ vhdl/sim/top_tb
 *.aux
 *.bbl
 *.blg
+*.dvi
 *.fdb_latexmk
 *.fls
 *.lof
@@ -20,4 +21,4 @@ vhdl/sim/top_tb
 *.lot
 *.out
 *.toc
-*.aux
+*.swo
