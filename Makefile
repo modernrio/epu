@@ -62,7 +62,6 @@ vhdl/work/top_tb.o: vhdl/sim/top_tb.vhdl vhdl/work
 
 # Files dependences
 vhdl/work/top.o: vhdl/work/epu_pack.o
-vhdl/work/top.o: vhdl/work/epu_pack.o
 vhdl/work/core.o: vhdl/work/epu_pack.o
 vhdl/work/memory_control.o: vhdl/work/epu_pack.o
 vhdl/work/alu.o: vhdl/work/epu_pack.o

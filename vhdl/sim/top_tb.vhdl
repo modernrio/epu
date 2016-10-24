@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   19:17:57 09/19/2016
+-- Create Date:   16:13:01 10/24/2016
 -- Design Name:   
--- Module Name:   /home/whoami/Projects/EPU/vhdl/sim/top_tb.vhdl
+-- Module Name:   /home/whoami/Projects/epu/vhdl/sim/top_tb.vhd
 -- Project Name:  EPU
 -- Target Device:  
 -- Tool versions:  
@@ -46,11 +46,8 @@ ARCHITECTURE behavior OF top_tb IS
          SEGEn : OUT  std_logic_vector(2 downto 0);
          LED : OUT  std_logic_vector(7 downto 0);
          SEG : OUT  std_logic_vector(7 downto 0);
-         TXE : IN  std_logic;
-         RD : OUT  std_logic;
-         WR : OUT  std_logic;
-         RXF : IN  std_logic;
-         In_Data : INOUT  std_logic_vector(7 downto 0)
+         TX : OUT  std_logic;
+         RX : IN  std_logic
         );
     END COMPONENT;
     
@@ -58,18 +55,13 @@ ARCHITECTURE behavior OF top_tb IS
    --Inputs
    signal MainClk : std_logic := '0';
    signal RST : std_logic := '0';
-   signal TXE : std_logic := '0';
-   signal RXF : std_logic := '0';
-
-	--BiDirs
-   signal In_Data : std_logic_vector(7 downto 0);
+   signal RX : std_logic := '0';
 
  	--Outputs
    signal SEGEn : std_logic_vector(2 downto 0);
    signal LED : std_logic_vector(7 downto 0);
    signal SEG : std_logic_vector(7 downto 0);
-   signal RD : std_logic;
-   signal WR : std_logic;
+   signal TX : std_logic;
 
    -- Clock period definitions
    constant MainClk_period : time := 10 ns;
@@ -83,11 +75,8 @@ BEGIN
           SEGEn => SEGEn,
           LED => LED,
           SEG => SEG,
-          TXE => TXE,
-          RD => RD,
-          WR => WR,
-          RXF => RXF,
-          In_Data => In_Data
+          TX => TX,
+          RX => RX
         );
 
    -- Clock process definitions
