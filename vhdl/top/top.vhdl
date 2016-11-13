@@ -17,7 +17,13 @@ entity top is
 		SEG				  : out std_logic_vector(7 downto 0);
 
 		TX				  : out std_logic;
-		RX				  : in std_logic
+		RX				  : in std_logic;
+		
+		hs 				  : out std_logic;
+		vs			   	  : out std_logic;
+		red				  : out std_logic_vector(2 downto 0);
+		green		   	  : out std_logic_vector(2 downto 0);
+		blue		   	  : out std_logic_vector(1 downto 0)
 	);
 end top;
 
@@ -28,7 +34,8 @@ architecture behav_top of top is
 			I_Clk		  : in std_logic;
 			O_Clk		  : out std_logic;
 			Uart_Clk	  : out std_logic;
-			Seg_Clk		  : out std_logic
+			Seg_Clk		  : out std_logic;
+			Video_Clk  : out std_logic
 		);
 	end component;
 	
@@ -75,11 +82,27 @@ architecture behav_top of top is
 			RX			  : in std_logic
 		);
 	end component;
+	
+	component vga
+		port(
+			-- Eingänge
+			I_PClk	: in std_logic;		-- Pixeltakt
+			I_Reset : in std_logic;		-- Reset
+
+			-- Ausgänge
+			O_HS	: out std_logic;					-- Horizontale Synchronisation
+			O_VS	: out std_logic;					-- Vertikale Syncrhonisation
+			O_Red	: out std_logic_vector(2 downto 0);	-- Rotanteil
+			O_Green	: out std_logic_vector(2 downto 0);	-- Grünanteil
+			O_Blue	: out std_logic_vector(1 downto 0)	-- Blauanteil
+		);
+	end component;
 
 	-- Signale
 		-- Top
 	signal Clk 	 	 	  : std_logic := '0';
 	signal SegClk		  : std_logic := '0';
+	signal VidClk		  : std_logic := '0';
 	signal leds			  : std_logic_vector(7 downto 0) := (others => '0');
 	signal core_leds	  : std_logic_vector(7 downto 0) := (others => '0');
 	signal seg_count	  : integer := 0;
@@ -101,7 +124,8 @@ begin
 		I_Clk => MainClk,
 		O_Clk => Clk,
 		Uart_Clk => UARTClk,
-		Seg_Clk => SegClk
+		Seg_Clk => SegClk,
+		Video_Clk => VidClk
 	);
 	
 	uut_core : core port map (
@@ -132,6 +156,16 @@ begin
 		UClk => UARTClk,
 		TX => TX,
 		RX => RX
+	);
+	
+	uut_vga : vga port map (
+		I_PClk => VidClk,
+		I_Reset => RST,
+		O_HS => hs,
+		O_VS => vs,
+		O_Red => red,
+		O_Green => green,
+		O_Blue => blue
 	);
 	
 	CoreReset <= RST;

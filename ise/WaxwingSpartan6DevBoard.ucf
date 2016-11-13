@@ -223,16 +223,16 @@ CONFIG VCCAUX = "3.3" ;
 ###################################################################################################################################################
 #                                              VGA Connector																					  #
 ###################################################################################################################################################
-    #NET "HSync"                           LOC = U8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "VSync"                           LOC = V8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Red[2]"                          LOC = T11  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Red[1]"                          LOC = R11  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Red[0]"                          LOC = M8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Green[2]"                        LOC = N8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Green[1]"                        LOC = P8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Green[0]"                        LOC = N7   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Blue[2]"                         LOC = N6   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
-    #NET "Blue[1]"                         LOC = P7   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "hs"                           LOC = U8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "vs"                           LOC = V8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "red[2]"                          LOC = T11  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "red[1]"                          LOC = R11  | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "red[0]"                          LOC = M8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "green[2]"                        LOC = N8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "green[1]"                        LOC = P8   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "green[0]"                        LOC = N7   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "blue[1]"                         LOC = N6   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
+    NET "blue[0]"                         LOC = P7   | IOSTANDARD = LVCMOS33 | DRIVE = 8 | SLEW = FAST ;
 
 ###################################################################################################################################################
 #                                              Audio																							  #

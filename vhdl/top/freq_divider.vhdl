@@ -13,7 +13,8 @@ entity freq_divider is
 		I_Clk	: in std_logic;
 		O_Clk	: out std_logic;
 		Uart_Clk : out std_logic;
-		Seg_Clk : out std_logic
+		Seg_Clk : out std_logic;
+		Video_Clk : out std_logic
 	);
 
 end freq_divider;
@@ -32,4 +33,5 @@ begin
 	-- O_Clk <= scaler(0); -- 21-22 for synthesis
 	O_Clk <= scaler(16);
 	Seg_Clk <= scaler(18); -- 18 for synthesis
+	Video_Clk <= scaler(1); -- 25Mhz Pixel clock
 end behav_freq_divider;
