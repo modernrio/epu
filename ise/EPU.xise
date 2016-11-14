@@ -82,7 +82,7 @@
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="69"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="2"/>
     </file>
-    <file xil_pn:name="../vhdl/mem/video/prom_DMH.vhdl" xil_pn:type="FILE_VHDL">
+    <file xil_pn:name="../vhdl/mem/video/prom.vhdl" xil_pn:type="FILE_VHDL">
       <association xil_pn:name="BehavioralSimulation" xil_pn:seqID="70"/>
       <association xil_pn:name="Implementation" xil_pn:seqID="4"/>
     </file>
