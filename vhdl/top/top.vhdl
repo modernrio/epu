@@ -15,6 +15,7 @@ entity top is
 		SEGEn			  : out std_logic_vector(2 downto 0);
 		LED				  : out std_logic_vector(7 downto 0);
 		SEG				  : out std_logic_vector(7 downto 0);
+		SW				  : in std_logic_vector(6 downto 0);
 
 		TX				  : out std_logic;
 		RX				  : in std_logic;
@@ -86,8 +87,9 @@ architecture behav_top of top is
 	component vga
 		port(
 			-- Eingänge
-			I_PClk	: in std_logic;		-- Pixeltakt
-			I_Reset : in std_logic;		-- Reset
+			I_PClk	: in std_logic;						-- Pixeltakt
+			I_SW	: in std_logic_vector(6 downto 0);	-- Buttons (SW1-SW7)
+			I_Reset : in std_logic;						-- Reset
 
 			-- Ausgänge
 			O_HS	: out std_logic;					-- Horizontale Synchronisation
@@ -160,6 +162,7 @@ begin
 	
 	uut_vga : vga port map (
 		I_PClk => VidClk,
+		I_SW => SW,
 		I_Reset => RST,
 		O_HS => hs,
 		O_VS => vs,
