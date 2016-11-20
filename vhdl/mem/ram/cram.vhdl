@@ -11,7 +11,7 @@ use unisim.VCOMPONENTS.all;
 library work;
 use work.epu_pack.all;
 
-entity ram_block is
+entity cram is
 	port(
 		-- Eingänge
 		I_Clk         : in std_logic;						-- Takteingang
@@ -23,11 +23,11 @@ entity ram_block is
 		-- Ausgänge
 		O_Ready		  : out std_logic;						-- Bereitschaft
 		O_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
-		O_LED        : buffer std_logic_vector(7 downto 0)		-- LEDs
+		O_PORTB        : buffer std_logic_vector(7 downto 0)		-- LEDs
 	);
-end ram_block;
+end cram;
 
-architecture behav_ram_block of ram_block is
+architecture behav_cram of cram is
 	-- Port A Data: 32-bit (each) output: Port A data
 	signal DOA		: std_logic_vector(31 downto 0) := (others => '0');       -- 32-bit output: A port data output
 	signal DOPA		: std_logic_vector(3 downto 0);          -- 4-bit output: A port parity output
@@ -85,9 +85,9 @@ begin
 		INITP_06 => X"0000000000000000000000000000000000000000000000000000000000000000",
 		INITP_07 => X"0000000000000000000000000000000000000000000000000000000000000000",
       	-- INIT_00 to INIT_3F: Initial memory contents.
-		INIT_00 => X"00503B004002535500403B001002535000103B003002534500303B0000203B00",
-		INIT_01 => X"00903B008002532E00803B007002533000703B006002537600603B0050025320",
-		INIT_02 => X"0000000000000000000000000000000500007700A002530A00A03B0090025331",
+		INIT_00 => X"000000FF110000770030015310320A0500403B0100203B1C00103B9005000077",
+		INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
+		INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
 		INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
 		INIT_04 => X"0000000000000000000000000000000000000000000000000000000000000000",
 		INIT_05 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -207,7 +207,7 @@ begin
 	-- Port B used for LEDs
 	ENB <= '1';
 	WEB <= "0000";
-	ADDRB <= "000" & X"00" & "000";
+	ADDRB <= "000" & X"03" & "000";
 	
 	ADDRA <= I_Addr(10 downto 0) & "000";
 
@@ -236,14 +236,14 @@ begin
 				count <= 0;
 				O_Ready <= '1';
 			end if;
-			S_LED <= O_LED;
+			S_LED <= O_PORTB;
 		end if;
 	end process;
 
 	led_proc : process(I_En)
 	begin
 		if rising_edge(I_En) then
-			O_LED <= DOB(7 downto 0);
+			O_PORTB <= DOB(7 downto 0);
 		end if;
 	end process;
-end behav_ram_block;
+end behav_cram;

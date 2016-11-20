@@ -22,3 +22,4 @@ vhdl/sim/top_tb
 *.out
 *.toc
 *.swo
+e~*

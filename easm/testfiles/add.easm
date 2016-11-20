@@ -14,4 +14,4 @@ stop:
 	jmp.i $stop
 
 _data:
-	.data 0x00
+	.data 0x01

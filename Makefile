@@ -19,7 +19,7 @@ unisim:
 	$(GHDL) -i --workdir=vhdl/work --work=unisim vhdl/dependencies/unisims/primitive/*.vhd
 
 # Elaboration target
-build: vhdl/work/epu_pack.o vhdl/work/top.o vhdl/work/freq_divider.o vhdl/work/core.o vhdl/work/memory_control.o vhdl/work/alu.o vhdl/work/control_unit.o vhdl/work/decoder.o vhdl/work/regfile.o vhdl/work/pc_unit.o vhdl/work/stack.o vhdl/work/ram_block.o vhdl/work/top_tb.o
+build: vhdl/work/epu_pack.o vhdl/work/top.o vhdl/work/freq_divider.o vhdl/work/core.o vhdl/work/memory_control.o vhdl/work/alu.o vhdl/work/control_unit.o vhdl/work/decoder.o vhdl/work/regfile.o vhdl/work/pc_unit.o vhdl/work/stack.o vhdl/work/cram.o vhdl/work/top_tb.o
 	$(GHDL) -m $(GHDLFLAGS) top_tb
 	rm -f e~*
 	mv top_tb vhdl/sim/top_tb 2> /dev/null || true
@@ -55,7 +55,7 @@ vhdl/work/pc_unit.o: vhdl/core/pc_unit.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
 vhdl/work/stack.o: vhdl/core/stack.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
-vhdl/work/ram_block.o: vhdl/mem/ram_block.vhdl vhdl/work unisim
+vhdl/work/cram.o: vhdl/mem/ram/cram.vhdl vhdl/work unisim
 	$(GHDL) -a $(GHDLFLAGS) $<
 vhdl/work/top_tb.o: vhdl/sim/top_tb.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
@@ -70,5 +70,5 @@ vhdl/work/decoder.o: vhdl/work/epu_pack.o
 vhdl/work/regfile.o: vhdl/work/epu_pack.o
 vhdl/work/pc_unit.o: vhdl/work/epu_pack.o
 vhdl/work/stack.o: vhdl/work/epu_pack.o
-vhdl/work/ram_block.o: vhdl/work/epu_pack.o
+vhdl/work/cram.o: vhdl/work/epu_pack.o
 vhdl/work/top_tb.o: vhdl/work/epu_pack.o
