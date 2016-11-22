@@ -849,8 +849,8 @@ def main():
                                                   the EPU")
     parser.add_argument("infile", metavar="<asm file>",
                         help="Assembler file")
-    parser.add_argument("-o", "--out", metavar="<bin file>",
-                        help="Output binary file")
+    parser.add_argument("-o", "--out", metavar="<coe file>", required=True,
+                        help="Output coe file")
     parser.add_argument("-t", "--template", metavar="<template file>",
                         help="Include predefined template")
     parser.add_argument("-s", "--size", metavar="N",
@@ -969,7 +969,7 @@ def main():
         return
 
     # Setup final list
-    bytelist = [""] * 64
+    bytelist = [""] * 1024
 
     # Translate assembler commands
     bytestr = ""
@@ -1026,24 +1026,24 @@ def main():
         print("\n")
 
     # Create final list for printing/writing to file
-    for i in range(0, 64, 1):
+    for i in range(0, len(bytelist), 1):
         try:
-            bytelist[i] = bytestr[i*64:(i+1)*64]
+            bytelist[i] = bytestr[i*128:(i+1)*128]
         except:
-            bytelist[i] = bytelist[i].zfill(64)
-    for i in range(63, -1, -1):
-        bytelist[i] = "".join(reversed([bytelist[i][j:j+2]
-                              for j in range(0, len(bytelist[i]), 2)]))
-        bytelist[i] = bytelist[i].zfill(64)
-        bytelist[i] = "INIT_" + hex(i)[2:].zfill(2).upper() +\
-                      " => X\"" + bytelist[i] + "\","
+            pass
+        bytelist[i] = bytelist[i].ljust(128, "0")
+        bytelist[i] = ",".join([bytelist[i][j:j+2] for j in range(0, len(bytelist[i]), 2)])
+        bytelist[i] += ","
 
-    if ofile is None:
-        print("\n".join(bytelist))
-    else:
-        with open(ofile, "w") as f:
-            for item in bytelist:
-                f.write("%s\n" % item)
+    # Write to file
+    with open(ofile, "w") as f:
+        f.write("; .coe file created by easm assembler\n")
+        f.write("; Generated from file: " + afile + "\n")
+        f.write("; Template file: " + str(tfile) + "\n")
+        f.write("memory_initialization_radix = 16;\n")
+        f.write("memory_initialization_vector =\n")
+        for item in bytelist:
+            f.write("%s\n" % item)
 
     return
 

@@ -3,8 +3,13 @@ test.txt
 vhdl/work
 doc/notes
 ise/*
+!ise/ipcore_dir/
+ise/ipcore_dir/*
+!ise/ipcore_dir/blk_mem.ngc
 !ise/EPU.xise
 !ise/WaxwingSpartan6DevBoard.ucf
+/* ise/ipcore_dir */
+!ise/ipcore_dir/blk_mem.ngc
 vhdl/sim/sim_top_tb.vcd
 vhdl/sim/top_tb
 *.o
