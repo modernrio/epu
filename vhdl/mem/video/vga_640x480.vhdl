@@ -68,7 +68,7 @@ begin
 	O_VS <= '0' when unsigned(vcs) < 2 else '1';
 
 	-- Zähler für die vertikale Synchronisation
-	process(I_PClk, I_Reset)
+	process(I_PClk, I_Reset, vsenable)
 	begin
 		if I_Reset = '1' then
 			vcs <= "0000000000";

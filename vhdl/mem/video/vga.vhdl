@@ -8,16 +8,18 @@ use work.epu_pack.all;
 entity vga is
 	port(
 		-- Eingänge
-		I_PClk	: in std_logic;						-- Pixeltakt
-		I_SW	: in std_logic_vector(6 downto 0);	-- Buttons (SW1-SW7)
-		I_Reset : in std_logic;						-- Reset
+		I_PClk	: in std_logic;							-- Pixeltakt
+		I_SW	: in std_logic_vector(6 downto 0);		-- Buttons (SW1-SW7)
+		I_Reset : in std_logic;							-- Reset
+		I_Data	: in std_logic_vector(7 downto 0);		-- Videospeichereingang
 
 		-- Ausgänge
-		O_HS	: out std_logic;					-- Horizontale Synchronisation
-		O_VS	: out std_logic;					-- Vertikale Syncrhonisation
-		O_Red	: out std_logic_vector(2 downto 0);	-- Rotanteil
-		O_Green	:out std_logic_vector(2 downto 0);	-- Grünanteil
-		O_Blue	: out std_logic_vector(1 downto 0)	-- Blauanteil
+		O_Addr	: out std_logic_vector(15 downto 0);	-- Videospeicheradresse
+		O_HS	: out std_logic;						-- Horizontale Synchronisation
+		O_VS	: out std_logic;						-- Vertikale Syncrhonisation
+		O_Red	: out std_logic_vector(2 downto 0);		-- Rotanteil
+		O_Green	:out std_logic_vector(2 downto 0);		-- Grünanteil
+		O_Blue	: out std_logic_vector(1 downto 0)		-- Blauanteil
 	);
 end vga;
 
@@ -43,19 +45,12 @@ architecture vga_behav of vga is
 		I_VON	: in std_logic;
 		I_HC	: in std_logic_vector(9 downto 0);
 		I_VC	: in std_logic_vector(9 downto 0);
-		I_M		: in std_logic_vector(0 to 31);
+		I_Data	: in std_logic_vector(7 downto 0);
 		I_SW	: in std_logic_vector(6 downto 0);
-		O_Addr	: out std_logic_vector(3 downto 0);
+		O_Addr	: out std_logic_vector(15 downto 0);
 		O_Red	: out std_logic_vector(2 downto 0);
 		O_Green	: out std_logic_vector(2 downto 0);
 		O_Blue	: out std_logic_vector(1 downto 0)
-	);
-	end component;
-
-	component prom
-	port(
-		I_Addr	: in std_logic_vector(3 downto 0);
-		O_M		: out std_logic_vector(0 to 31)
 	);
 	end component;
 
@@ -80,16 +75,11 @@ begin
 		I_VON => von,
 		I_HC => hc,
 		I_VC => vc,
-		I_M => m,
+		I_Data => I_Data,
 		I_SW => I_SW,
-		O_Addr => addr,
+		O_Addr => O_Addr,
 		O_Red => O_Red,
 		O_Green => O_Green,
 		O_Blue => O_Blue
-	);
-
-	uut_vga_prom: prom port map(
-		I_Addr => addr,
-		O_M => m
 	);
 end vga_behav;

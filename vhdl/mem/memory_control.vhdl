@@ -17,10 +17,12 @@ entity memory_control is
 		I_MEM_We		  : in std_logic;						-- Schreibfreigabe
 		I_MEM_Data		  : in std_logic_vector(7 downto 0);	-- Daten
 		I_MEM_Addr		  : in std_logic_vector(15 downto 0);	-- Adresswahl
+		I_VID_Addr		  : in std_logic_vector(15 downto 0);	-- Videoadresswahl
 
 		-- Ausgänge
 		O_MEM_Ready		  : out std_logic;						-- Bereitschaft
 		O_MEM_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
+		O_VID_Data        : out std_logic_vector(7 downto 0);	-- Videodatenausgang
 		O_LED			  : out std_logic_vector(7 downto 0);	-- LEDs
 
 		UClk			  : in std_logic;
@@ -100,9 +102,9 @@ begin
 		clkb => I_MEM_Clk,
 		enb => '1',
 		web => "0",
-		addrb => X"0000",
+		addrb => I_VID_Addr,
 		dinb => X"00",
-		doutb => O_LED
+		doutb => O_VID_Data
 	  );
 
 	uut_uart : uart port map (

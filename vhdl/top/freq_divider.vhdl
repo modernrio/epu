@@ -31,7 +31,7 @@ begin
 
 	Uart_Clk <= I_Clk;
 	-- O_Clk <= scaler(0); -- 21-22 for synthesis
-	O_Clk <= scaler(21);
+	O_Clk <= I_Clk;
 	Seg_Clk <= scaler(18); -- 18 for synthesis
-	Video_Clk <= scaler(1); -- 25Mhz Pixel clock
+	Video_Clk <= scaler(1); -- 25Mhz Pixel clock (1)
 end behav_freq_divider;

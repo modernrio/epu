@@ -57,7 +57,7 @@ architecture behav_top of top is
 			O_MEM_We	  : out std_logic;						-- Schreibfreigabe
 			O_MEM_Data	  : out std_logic_vector(7 downto 0);	-- Daten
 			
-			O_LED : out std_logic_vector(7 downto 0);
+			O_LED		  : out std_logic_vector(7 downto 0);
 			
 			O_MEM_Addr	  : out std_logic_vector(15 downto 0)	-- Adresswahl
 		);
@@ -72,10 +72,12 @@ architecture behav_top of top is
 			I_MEM_We	  : in std_logic;						-- Schreibfreigabe
 			I_MEM_Data	  : in std_logic_vector(7 downto 0);	-- Daten
 			I_MEM_Addr	  : in std_logic_vector(15 downto 0);	-- Adresswahl
+			I_VID_Addr	  : in std_logic_vector(15 downto 0);	-- Videoadresswahl
 
 			-- Ausgänge
 			O_MEM_Ready	  : out std_logic;						-- Bereitschaft
 			O_MEM_Data    : out std_logic_vector(7 downto 0);	-- Datenausgang
+			O_VID_Data    : out std_logic_vector(7 downto 0);	-- Videodatenausgang
 			O_LED		  : out std_logic_vector(7 downto 0);	-- LEDs
 
 			UClk		  : in std_logic;
@@ -87,16 +89,18 @@ architecture behav_top of top is
 	component vga
 		port(
 			-- Eingänge
-			I_PClk	: in std_logic;						-- Pixeltakt
-			I_SW	: in std_logic_vector(6 downto 0);	-- Buttons (SW1-SW7)
-			I_Reset : in std_logic;						-- Reset
+			I_PClk	: in std_logic;							-- Pixeltakt
+			I_SW	: in std_logic_vector(6 downto 0);		-- Buttons (SW1-SW7)
+			I_Reset : in std_logic;							-- Reset
+			I_Data	: in std_logic_vector(7 downto 0);		-- Videospeichereingang
 
 			-- Ausgänge
-			O_HS	: out std_logic;					-- Horizontale Synchronisation
-			O_VS	: out std_logic;					-- Vertikale Syncrhonisation
-			O_Red	: out std_logic_vector(2 downto 0);	-- Rotanteil
-			O_Green	: out std_logic_vector(2 downto 0);	-- Grünanteil
-			O_Blue	: out std_logic_vector(1 downto 0)	-- Blauanteil
+			O_Addr	: out std_logic_vector(15 downto 0);	-- Videospeicheradresse
+			O_HS	: out std_logic;						-- Horizontale Synchronisation
+			O_VS	: out std_logic;						-- Vertikale Syncrhonisation
+			O_Red	: out std_logic_vector(2 downto 0);		-- Rotanteil
+			O_Green	: out std_logic_vector(2 downto 0);		-- Grünanteil
+			O_Blue	: out std_logic_vector(1 downto 0)		-- Blauanteil
 		);
 	end component;
 
@@ -120,6 +124,9 @@ architecture behav_top of top is
 	signal MemRData		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal MemAddr		  : std_logic_vector(15 downto 0) := (others => '0');
 	signal UARTClk			: std_logic := '0';
+
+	signal VidAddr		  : std_logic_vector(15 downto 0) := (others => '0');
+	signal VidData		  : std_logic_vector(7 downto 0) := (others => '0');
 begin
 	-- Instanz der UUTs erstellen
 	uut_freq_divider : freq_divider port map (
@@ -152,8 +159,10 @@ begin
 		I_MEM_We => MemWe,
 		I_MEM_Data => MemWData,
 		I_MEM_Addr => MemAddr,
+		I_VID_Addr => VidAddr,
 		O_MEM_Ready => MemReady,
 		O_MEM_Data => MemRData,
+		O_VID_Data => VidData,
 		O_LED => leds,
 		UClk => UARTClk,
 		TX => TX,
@@ -164,6 +173,8 @@ begin
 		I_PClk => VidClk,
 		I_SW => SW,
 		I_Reset => RST,
+		I_Data => VidData,
+		O_Addr => VidAddr,
 		O_HS => hs,
 		O_VS => vs,
 		O_Red => red,
@@ -172,22 +183,22 @@ begin
 	);
 	
 	CoreReset <= RST;
-	LED <= leds;
+	LED <= VidData;
 	SEG(0) <= '1';
 	
 	seg_proc : process(SegClk)
 	begin
 		if rising_edge(SegClk) then
 			if seg_count = 0 then
-				SEG(7 downto 1) <= bcd2seg(MemAddr(3 downto 0));
+				SEG(7 downto 1) <= bcd2seg(VidAddr(3 downto 0));
 				SEGEn <= "011";
 				seg_count <= seg_count + 1;
 			elsif seg_Count = 1 then
-				SEG(7 downto 1) <= bcd2seg(MemAddr(7 downto 4));
+				SEG(7 downto 1) <= bcd2seg(VidAddr(7 downto 4));
 				SEGEn <= "101";
 				seg_count <= seg_count + 1;
 			else
-				SEG(7 downto 1) <= bcd2seg(MemAddr(11 downto 8));
+				SEG(7 downto 1) <= bcd2seg(VidAddr(11 downto 8));
 				SegEn <= "110";
 				seg_count <= 0;
 			end if;

@@ -106,7 +106,7 @@ END COMPONENT;
       c_has_rstb => 0,
       c_has_softecc_input_regs_a => 0,
       c_has_softecc_output_regs_b => 0,
-      c_init_file => "blk_mem.mif",
+      c_init_file => "BlankString",
       c_init_file_name => "blk_mem.mif",
       c_inita_val => "0",
       c_initb_val => "0",
