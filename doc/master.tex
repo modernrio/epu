@@ -25,10 +25,24 @@
 \usepackage[printonlyused]{acronym}		% Abkürzungsverzeichnis
 \usepackage{booktabs}					% Tabellen ("Publication Quality")
 \usepackage{setspace}					% Abstände
+\usepackage{pgf}						% Makropaket zum Erstellen von Grafiken
+\usepackage{tikz}						% Vektorgrafiksprache
+\usepackage{bm}							% Fettschrift für mathematische Objekte
+\usepackage{mathptmx}					% Adobe Times Roman als Schriftart
+\usepackage{float}						% Verbessert die Schnittstelle für Gleitobjekte
+\usepackage{enumitem}					% Kontrolle über das Layout von Auflistungen
+
+% Vektorgrafikbibliotheken
+\usetikzlibrary{arrows,automata,decorations.pathmorphing,backgrounds,fit,positioning,shapes.symbols,chains,shapes.geometric,shapes.arrows,calc}
+
 
 % Zusätzliche Schriftzeichen der American Mathematical Society
 \usepackage{amsfonts}
 \usepackage{amsmath}
+
+% Zusätzliche Befehle
+\newcommand{\mx}[1]{\mathbf{\bm{#1}}} % Matrix command
+\newcommand{\vc}[1]{\mathbf{\bm{#1}}} % Vector command
 
 % ============ Kopf- und Fußzeile ============
 % Style
