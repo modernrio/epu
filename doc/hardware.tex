@@ -80,7 +80,7 @@ damit in den weiteren Zuständen das Ergebnis an die gewünschte Stelle
 geschrieben werden kann.
 \subsubsection{Memory Write}
 Das Resultat des Rechenwerks wird an die vom Befehl vorgebene Speicheradresse im
-Arbeisspeicher (siehe~\ref{s:ram}) gespeichert.
+Arbeisspeicher (siehe~\ref{s:memorycontrol}) gespeichert.
 \subsubsection{Stack Read/Write}
 Je nach Befehl wird entweder das Resultat des Rechenwerks auf dem Stack gelegt
 oder der oberste Wert des Stacks genommen, um es im nächsten Zustand weier
@@ -108,49 +108,6 @@ Das Rechenwerk ist auch zuständig, bestimmte Statusflaggen wie z.B. `SB' zu
 setzen oder zu löschen, welche angibt, ob ein Sprungbefehl ausgeführt wurde und
 dieser auch die Sprungbedingung erfüllt, da auch der Programmzähler in diesem
 Fall einen neuen Wert bekommt,
-\begin{table}[h]
-\centering
-\begin{tabular}{lll}
-\toprule
-Beschreibung									& Kurzform	& Opcode\\
-\midrule
-Keine Operation									& NOP		& 00000\\
-Addition										& ADD   	& 00001\\
-Subtraktion										& SUB   	& 00010\\
-Logisches UND									& AND   	& 00011\\
-Logisches ODER									& OR    	& 00100\\
-Logisches XOR									& XOR   	& 00101\\
-Logisches NOT									& NOT   	& 00110\\
-Laden eines Registers							& LOAD  	& 00111\\
-Verschieben eines Registerwertes				& MOV   	& 01000\\
-Lesevorgang im Arbeisspeicher					& READ  	& 01001\\
-Schreibvorgang im Arbeisspeicher				& WRITE 	& 01010\\
-Bitweises Verschieben nach links				& SHL   	& 01011\\
-Bitweises Verschieben nach rechts				& SHR   	& 01100\\
-Vergleichen zweier Register						& CMP   	& 01101\\
-Springen zu einer Adresse						& JMP   	& 01110\\
-Bedingtes Springen zu einer Adresse				& JC    	& 01111\\
-Multiplikation									& MUL   	& 10000\\
-Aufrufen einer Funktion							& CALL  	& 10001\\
-Zurückkehren von einer Funktion					& RET   	& 10010\\
-Ein Element auf den Stack schieben				& PUSH  	& 10011\\
-Von dem Stack ein Element entnehmen				& POP   	& 10100\\
-Ausführung eines Interrupts						& INT   	& 10101\\
-Flags für die Beziehung zweier Register setzen	& TEST  	& 10110\\
-Division										& DIV   	& 10111\\
-Modulo											& MOD   	& 11000\\
-Stoppen der Ausführung des Prozessors			& HLT   	& 11001\\
-Setzen eines bestimmten Bits eines Registers	& SET   	& 11010\\
-Löschen eines bestimmten Bits eines Registers	& CLR   	& 11011\\
-Nicht benutzt									& ---   	& 11100\\
-Nicht benutzt									& ---   	& 11101\\
-Nicht benutzt									& ---   	& 11110\\
-Nicht benutzt									& ---   	& 11111\\
-\bottomrule
-\end{tabular}
-\caption{Befehlsliste}
-\label{tab:befehlsliste}
-\end{table}
 \clearpage
 \pagebreak
 \subsection{Dekodierer}
@@ -160,16 +117,118 @@ Operation für das Rechenwerk ausgewählt werden kann und die dafür benötigten
 Register angesprochen werden. Da der Dekodierer einen einfachen Aufbau haben
 sollte, wurde der Aufbau eines Befehls selbst einfach gehalten.
 
+Der Dekodierer ist sehr stark an den Befehlssatz angelehnt, welcher in
+Abschnitt~\ref{s:befehlsstz} genauer beschrieben wird.
+\subsection{Programmzähler}
+\label{s:pc}
+Der Programmzähler (engl. \ac{PC}) ist hardwaretechnisch gesehen ein Register,
+welches aber im Vergleich zu `normalen' Registern ihren Wert um eine bestimmte
+Byteanzahl je nach Länge des ausgeführten Befehls erhöht. Somit hält der \ac{PC}
+immer die Adresse für den nächsten auszuführenden Befehl. Bei einem Sprungbefehl
+wird der Wert des Programmzählers mit dem vom Befehl vorgeschriebenen Wert
+überschrieben.
+
+Im Ganzen lässt sich der Programmzähler als Zustandsautomat realisieren. Dazu
+wurden vier verschiedene Zustände für den \ac{PC} gewählt:
+
+\begin{description}[align=right, labelwidth=1.6cm]
+\item[NOP]		Keine Operation
+\item[INC]		Erhöhe den Zähler um die Byteanzahl des vorherigen Befehls
+\item[ASSIGN]	Setze den Zähler auf die Sprungadresse
+\item[RESET]	Setze den Zähler auf null zurück
+\end{description}
+
+Je nach Befehl wird bei der Ausführung dann der passende Zustand ausgewählt und
+somit sichergestellt, dass die Adresse für den folgenden Befehl korrekt ist.
+\pagebreak
+\subsection{Stack}
+\label{s:stack}
+Der Stack(deutsch: Stapel) ist ein Modell zum Speicher von Daten. Dabei sind
+zwei Operationen zum Speichern und Abrufen der Daten vorhanden: PUSH und POP\@.
+Bei PUSH wird oben auf den Stapel ein neues Element hinzugefügt, bei POP wird
+das oberste Element vom Stapel heruntergenommen. Somit ist der Zugriff auf das
+oberste Element beschränkt. Der Stack wird hauptsächlich von Programmen als
+Zwischenspeicher genutzt, wenn nicht genügend Register zur Verfügung sthen, aber
+auch beim Aufrufen von Funktionen (Befehl CALL) wird auf dem Stack die Rückkehraddresse
+gespeichert, welche beim Verlassen der Funktion (Befehl RET) wieder
+vom Stapel entnommen wird.
+
+Besonders für den Funktionsaufruf eignet sich das Prinzip des Stacks sehr gut,
+da es keine Begrenzung (außer der physischen Größe des Stacks) gibt, wie viele
+Funktionen innerhalb einer Funktionen aufgerufen werden können. Es sind also
+theoretisch unendlich viele Verkettungen möglich, wobei die Theorie nur durch
+die Größe des Speichers limitiert wird.
+\subsection{Speichercontroller}
+\label{s:memorycontrol}
+Der Arbeitsspeicher ist als kontinuierlicher Speicherblock realisert worden. Es
+sind zwei Ports für die Ein- und Ausgabe zur Verfügung, wobei der zweite Port
+ausschließlich für den Videocontroller vorgesehen ist, welcher damit Zugriff auf
+den Videospeicher bekommt. Dies bedeutet auch, dass der Videospeicher nicht
+seperat geändert werden muss und so über allgemein gültige Lese- und
+Schreibbefehle angesprochen werden kann.
+
+Insgesamt wurde der mit 16 Bit verfügbare maximal adressierbare Speicher von
+$2^{16} = 65536$ Bytes ausgenutzt, wobei einzelne Abschnitte, wie beispielsweise
+der Videospeicher, nicht allgemein nutzbar sind.
+\subsection{Videocontroller}
+\label{s:videocontrol}
+Der Videocontroller selbst ist nach außen hin unabhängig von allen anderen
+Elementen der \ac{EPU}, nur der Videospeicher, welche die Informationen über die
+anzuzeigenden Pixel enthält, wird vom Speichercontroller geliefert. Dennoch hat
+der Speichercontroller keine Kontrolle über den Zugang des Videcontrollers zu
+dem Videospeicher, denn wie bereits in~\ref{s:memorycontrol} gesagt, ist der
+Port für den Videocontroller unabhängig vom Speichercontroller.
+\pagebreak
+\subsection{Registerbelegung}
+Die \ac{EPU} besitzt 16 Register, welche durch Selektion von $\log_2(16) = 4$
+Adressbits angesprochen werden. Mithilfe der Tabelle~\ref{tab:registerbelegung}
+soll eine Übersicht aller Register dargestellt werden.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+Selektion & Name & Zweck\\
+\midrule
+0000 & R0  & Akkumulator\\
+0001 & R1  & Allgemeine Verwendung\\
+0010 & R2  & Laufvariable\\
+0011 & R3  & Datenregister\\
+0100 & R4  & Allgemeine Verwendung\\
+0101 & R5  & Allgemeine Verwendung\\
+0110 & R6  & Allgemeine Verwendung\\
+0111 & R7  & Allgemeine Verwendung\\
+1000 & R8  & Allgemeine Verwendung\\
+1001 & R9  & Allgemeine Verwendung\\
+1010 & R10 & Allgemeine Verwendung\\
+1011 & R11 & Allgemeine Verwendung\\
+1100 & R12 & Allgemeine Verwendung\\
+1101 & R13 & Allgemeine Verwendung\\
+1110 & FLA & Flagregister\\
+1111 & ID  & Interruptdaten\\
+\bottomrule
+\end{tabular}
+\caption{Registerbelegung}
+\label{tab:registerbelegung}
+\end{table}
+\pagebreak
+\section{Befehlssatz}
+\label{s:befehlsstz}
+Der Befehlssatz beschreibt den Aufbau und die Menge aller Befehle der \ac{EPU}.
+Nachfolgend soll sowohl der Aufbau und dessen Entstehung erläutert werden, als
+auch ein Überblick über die verschiedenen Befehle vermittelt werden.
+
+\subsection{Aufbau}
 Der Befehl wird byteweise gelesen und die Anzahl an Bytes in einem Befehl sind
 durch die beiden letzten Bits des ersten Bytes angegeben, was es leichter macht,
 die richtige Byteanzahl einzulesen. Alle weiteren Abschnitte jedes Bytes werden
-je nach Opcode (die ersten 5 Bits) bestimmen die Ausgänge des Dekodieres, also
-die Register, die Rechenoperation, ob das Ergebnis auf dem Arbeitsspeicher
-geschrieben werden soll, etc. Wie in Abbildung~\ref{pic:befehlsaufbau} zu sehen,
-ist die Angabe von Konstanten in 4, 8 und 16 Bit möglich. Der Grund für die
-doch sehr platznehmende 16-Bit-Konstante ist, dass ein Register mit einer
-Konstante in einem Befehl befülllt werden soll, wobei alle Register der \ac{EPU}
-16 Bit groß sind.
+je nach Opcode (die ersten 5 Bits) bestimmt, also die Register, die
+Rechenoperation, ob das Ergebnis auf dem Arbeitsspeicher geschrieben werden
+soll, etc. Wie in Abbildung~\ref{pic:befehlsaufbau} zu sehen, ist die Angabe
+von Konstanten in 4, 8 und 16 Bit möglich. Der Grund für die doch sehr
+platznehmende 16-Bit-Konstante ist, dass ein Register mit einer Konstante in
+einem Befehl befülllt werden soll, wobei alle Register der \ac{EPU} 16 Bit groß
+sind.
 \begin{figure}[htb]
 \centering
 \begin{tikzpicture}
@@ -222,82 +281,53 @@ Konstante in einem Befehl befülllt werden soll, wobei alle Register der \ac{EPU
 \caption{Befehlsaufbau}
 \label{pic:befehlsaufbau}
 \end{figure}
-\pagebreak
-\subsection{Programmzähler}
-\label{s:pc}
-Der Programmzähler (engl. \ac{PC}) ist hardwaretechnisch gesehen ein Register,
-welches aber im Vergleich zu `normalen' Registern ihren Wert um eine bestimmte
-Byteanzahl je nach Länge des ausgeführten Befehls erhöht. Somit hält der \ac{PC}
-immer die Adresse für den nächsten auszuführenden Befehl. Bei einem Sprungbefehl
-wird der Wert des Programmzählers mit dem vom Befehl vorgeschriebenen Wert
-überschrieben.
-
-Im Ganzen lässt sich der Programmzähler als Zustandsautomat realisieren. Dazu
-wurden vier verschiedene Zustände für den \ac{PC} gewählt:
-
-\begin{description}[align=right, labelwidth=1.6cm]
-\item[NOP]		Keine Operation
-\item[INC]		Erhöhe den Zähler um die Byteanzahl des vorherigen Befehls
-\item[ASSIGN]	Setze den Zähler auf die Sprungadresse
-\item[RESET]	Setze den Zähler auf null zurück
-\end{description}
-
-Je nach Befehl wird bei der Ausführung dann der passende Zustand ausgewählt und
-somit sichergestellt, dass die Adresse für den folgenden Befehl korrekt ist.
-\subsection{Stack}
-\label{s:stack}
-Der Stack(deutsch: Stapel) ist ein Modell zum Speicher von Daten. Dabei sind
-zwei Operationen zum Speichern und Abrufen der Daten vorhanden: PUSH und POP\@.
-Bei PUSH wird oben auf den Stapel ein neues Element hinzugefügt, bei POP wird
-das oberste Element vom Stapel heruntergenommen. Somit ist der Zugriff auf das
-oberste Element beschränkt. Der Stack wird hauptsächlich von Programmen als
-Zwischenspeicher genutzt, wenn nicht genügend Register zur Verfügung sthen, aber
-auch beim Aufrufen von Funktionen (Befehl CALL) wird auf dem Stack die Rückkehraddresse
-gespeichert, welche beim Verlassen der Funktion (Befehl RET) wieder
-vom Stapel entnommen wird.
-
-Besonders für den Funktionsaufruf eignet sich das Prinzip des Stacks sehr gut,
-da es keine Begrenzung (außer der physischen Größe des Stacks) gibt, wie viele
-Funktionen innerhalb einer Funktionen aufgerufen werden können. Es sind also
-theoretisch unendlich viele Verkettungen möglich, wobei die Theorie nur durch
-die Größe des Speichers limitiert wird.
-\pagebreak
-\subsection{Arbeitsspeicher}
-\label{s:ram}
-\pagebreak
-\subsection{Registerbelegung}
-Die \ac{EPU} besitzt 16 Register, welche durch Selektion von $\log_2(16) = 4$
-Adressbits angesprochen werden. Mithilfe der Tabelle~\ref{tab:registerbelegung}
-soll eine Übersicht aller Register dargestellt werden.
-
+\subsection{Befehlsübersicht}
+Die folgende Tabelle~\ref{tab:befehlsliste} soll einen Überblick über die
+verschiedenen Befehle der \ac{EPU} liefern. Durch die Größe des Opcodes (5 Bit)
+sind insgesamt $2^5 = 32$ Befehle möglich. Dennoch kann ein Befehl durch
+bestimmte Parameter (wie z.B. der Flag im ersten Byte) um gewisse Funktionen
+erweitert werden. Dies ermöglicht beispielsweise vorzeichenbehaftete und
+vorzeichenlose Addition, obwohl der Opcode beider Operationen der gleiche ist.
 \begin{table}[h]
 \centering
 \begin{tabular}{lll}
 \toprule
-Selektion & Name & Zweck\\
+Beschreibung									& Kurzform	& Opcode\\
 \midrule
-0000 & R0  & Akkumulator\\
-0001 & R1  & Allgemeine Verwendung\\
-0010 & R2  & Laufvariable\\
-0011 & R3  & Datenregister\\
-0100 & R4  & Allgemeine Verwendung\\
-0101 & R5  & Allgemeine Verwendung\\
-0110 & R6  & Allgemeine Verwendung\\
-0111 & R7  & Allgemeine Verwendung\\
-1000 & R8  & Allgemeine Verwendung\\
-1001 & R9  & Allgemeine Verwendung\\
-1010 & R10 & Allgemeine Verwendung\\
-1011 & R11 & Allgemeine Verwendung\\
-1100 & R12 & Allgemeine Verwendung\\
-1101 & R13 & Allgemeine Verwendung\\
-1110 & FLA & Flagregister\\
-1111 & ID  & Interruptdaten\\
+Keine Operation									& NOP		& 00000\\
+Addition										& ADD   	& 00001\\
+Subtraktion										& SUB   	& 00010\\
+Logisches UND									& AND   	& 00011\\
+Logisches ODER									& OR    	& 00100\\
+Logisches XOR									& XOR   	& 00101\\
+Logisches NOT									& NOT   	& 00110\\
+Laden eines Registers							& LOAD  	& 00111\\
+Verschieben eines Registerwertes				& MOV   	& 01000\\
+Lesevorgang im Arbeisspeicher					& READ  	& 01001\\
+Schreibvorgang im Arbeisspeicher				& WRITE 	& 01010\\
+Bitweises Verschieben nach links				& SHL   	& 01011\\
+Bitweises Verschieben nach rechts				& SHR   	& 01100\\
+Vergleichen zweier Register						& CMP   	& 01101\\
+Springen zu einer Adresse						& JMP   	& 01110\\
+Bedingtes Springen zu einer Adresse				& JC    	& 01111\\
+Multiplikation									& MUL   	& 10000\\
+Aufrufen einer Funktion							& CALL  	& 10001\\
+Zurückkehren von einer Funktion					& RET   	& 10010\\
+Ein Element auf den Stack schieben				& PUSH  	& 10011\\
+Von dem Stack ein Element entnehmen				& POP   	& 10100\\
+Ausführung eines Interrupts						& INT   	& 10101\\
+Flags für die Beziehung zweier Register setzen	& TEST  	& 10110\\
+Division										& DIV   	& 10111\\
+Modulo											& MOD   	& 11000\\
+Stoppen der Ausführung des Prozessors			& HLT   	& 11001\\
+Setzen eines bestimmten Bits eines Registers	& SET   	& 11010\\
+Löschen eines bestimmten Bits eines Registers	& CLR   	& 11011\\
+Nicht benutzt									& ---   	& 11100\\
+Nicht benutzt									& ---   	& 11101\\
+Nicht benutzt									& ---   	& 11110\\
+Nicht benutzt									& ---   	& 11111\\
 \bottomrule
 \end{tabular}
-\caption{Registerbelegung}
-\label{tab:registerbelegung}
+\caption{Befehlsliste}
+\label{tab:befehlsliste}
 \end{table}
-\section{Befehlssatz}
-\section{Ein- und Ausgabe}
-\subsection{Eingabe}
-\subsection{Ausgabe}
