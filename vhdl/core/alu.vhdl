@@ -348,7 +348,8 @@ begin
 
 					S_SB <= '0';
 				when others =>
-					S_Res <= "00" & X"EEEE";
+					S_Res <= "00" & X"0000";
+					S_SB <= '0';
 			end case;
 		end if;
 	end process;

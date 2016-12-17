@@ -36,6 +36,7 @@ architecture behav_top of top is
 			O_Clk		  : out std_logic;
 			Uart_Clk	  : out std_logic;
 			Seg_Clk		  : out std_logic;
+			Text_Clk : out std_logic;
 			Video_Clk  : out std_logic
 		);
 	end component;
@@ -89,6 +90,7 @@ architecture behav_top of top is
 	component vga
 		port(
 			-- Eingänge
+			I_TClk	: in std_logic;							-- Speichertakt
 			I_PClk	: in std_logic;							-- Pixeltakt
 			I_SW	: in std_logic_vector(6 downto 0);		-- Buttons (SW1-SW7)
 			I_Reset : in std_logic;							-- Reset
@@ -108,6 +110,7 @@ architecture behav_top of top is
 		-- Top
 	signal Clk 	 	 	  : std_logic := '0';
 	signal SegClk		  : std_logic := '0';
+	signal TxtClk		  : std_logic := '0';
 	signal VidClk		  : std_logic := '0';
 	signal leds			  : std_logic_vector(7 downto 0) := (others => '0');
 	signal core_leds	  : std_logic_vector(7 downto 0) := (others => '0');
@@ -134,6 +137,7 @@ begin
 		O_Clk => Clk,
 		Uart_Clk => UARTClk,
 		Seg_Clk => SegClk,
+		Text_Clk => TxtClk,
 		Video_Clk => VidClk
 	);
 	
@@ -170,9 +174,10 @@ begin
 	);
 	
 	uut_vga : vga port map (
+		I_TClk => TxtClk,
 		I_PClk => VidClk,
 		I_SW => SW,
-		I_Reset => RST,
+		I_Reset => '0',
 		I_Data => VidData,
 		O_Addr => VidAddr,
 		O_HS => hs,
@@ -183,22 +188,22 @@ begin
 	);
 	
 	CoreReset <= RST;
-	LED <= VidData;
+	LED <= VidAddr(7 downto 0);
 	SEG(0) <= '1';
 	
 	seg_proc : process(SegClk)
 	begin
 		if rising_edge(SegClk) then
 			if seg_count = 0 then
-				SEG(7 downto 1) <= bcd2seg(VidAddr(3 downto 0));
+				SEG(7 downto 1) <= bcd2seg(MemAddr(3 downto 0));
 				SEGEn <= "011";
 				seg_count <= seg_count + 1;
 			elsif seg_Count = 1 then
-				SEG(7 downto 1) <= bcd2seg(VidAddr(7 downto 4));
+				SEG(7 downto 1) <= bcd2seg(MemAddr(7 downto 4));
 				SEGEn <= "101";
 				seg_count <= seg_count + 1;
 			else
-				SEG(7 downto 1) <= bcd2seg(VidAddr(11 downto 8));
+				SEG(7 downto 1) <= bcd2seg(MemAddr(11 downto 8));
 				SegEn <= "110";
 				seg_count <= 0;
 			end if;

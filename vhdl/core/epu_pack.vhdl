@@ -14,6 +14,7 @@ function bcd2seg(bcd : std_logic_vector(3 downto 0)) return std_logic_vector;
 -- Adresskonstanten
 constant ADDR_RESET            : std_logic_vector(15 downto 0) := X"0000";
 constant ADDR_INT			   : std_logic_vector(15 downto 0) := X"0004";
+constant ADDR_TEXT_BEGIN	   : std_logic_vector(15 downto 0) := X"0000";
 
 -- Opcodes
 constant OPCODE_NOP            : std_logic_vector(4 downto 0) := "00000";

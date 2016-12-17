@@ -14,6 +14,7 @@ entity freq_divider is
 		O_Clk	: out std_logic;
 		Uart_Clk : out std_logic;
 		Seg_Clk : out std_logic;
+		Text_Clk : out std_logic;
 		Video_Clk : out std_logic
 	);
 
@@ -33,5 +34,6 @@ begin
 	-- O_Clk <= scaler(0); -- 21-22 for synthesis
 	O_Clk <= I_Clk;
 	Seg_Clk <= scaler(18); -- 18 for synthesis
+	Text_Clk <= scaler(0); -- 50Mhz Text Clock
 	Video_Clk <= scaler(1); -- 25Mhz Pixel clock (1)
 end behav_freq_divider;

@@ -55,7 +55,17 @@ vhdl/work/pc_unit.o: vhdl/core/pc_unit.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
 vhdl/work/stack.o: vhdl/core/stack.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
-vhdl/work/cram.o: vhdl/mem/ram/cram.vhdl vhdl/work unisim
+vhdl/work/blk_mem.o: vhdl/mem/ram/blk_mem.vhdl vhdl/work unisim
+	$(GHDL) -a $(GHDLFLAGS) $<
+vhdl/work/uart.o: vhdl/mem/uart/uart.vhdl vhdl/work
+	$(GHDL) -a $(GHDLFLAGS) $<
+vhdl/work/vga_640x480.o: vhdl/mem/video/vga_640x480.vhdl vhdl/work
+	$(GHDL) -a $(GHDLFLAGS) $<
+vhdl/work/vga_sprite.o: vhdl/mem/video/vga_sprite.vhdl vhdl/work
+	$(GHDL) -a $(GHDLFLAGS) $<
+vhdl/work/text_conv.o: vhdl/mem/video/text_conv.vhdl vhdl/work
+	$(GHDL) -a $(GHDLFLAGS) $<
+vhdl/work/vga.o: vhdl/mem/video/vga.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
 vhdl/work/top_tb.o: vhdl/sim/top_tb.vhdl vhdl/work
 	$(GHDL) -a $(GHDLFLAGS) $<
@@ -70,5 +80,10 @@ vhdl/work/decoder.o: vhdl/work/epu_pack.o
 vhdl/work/regfile.o: vhdl/work/epu_pack.o
 vhdl/work/pc_unit.o: vhdl/work/epu_pack.o
 vhdl/work/stack.o: vhdl/work/epu_pack.o
-vhdl/work/cram.o: vhdl/work/epu_pack.o
+vhdl/work/blk_mem.o: vhdl/work/epu_pack.o
+vhdl/work/uart.o: vhdl/work/epu_pack.o
+vhdl/work/vga_640x480.o: vhdl/work/epu_pack.o
+vhdl/work/vga_sprite.o: vhdl/work/epu_pack.o
+vhdl/work/text_conv.o: vhdl/work/epu_pack.o
+vhdl/work/vga.o: vhdl/work/epu_pack.o
 vhdl/work/top_tb.o: vhdl/work/epu_pack.o

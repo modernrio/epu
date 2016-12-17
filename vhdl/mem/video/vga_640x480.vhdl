@@ -37,7 +37,7 @@ architecture vga_640x480_behav of vga_640x480 is
 
 -- Signale
 	-- Horizontaler und vertikaler Zähler
-	signal hcs, vcs		: std_logic_vector(9 downto 0);
+	signal hcs, vcs		: std_logic_vector(9 downto 0) := "0000000000";
 	-- Aktiviert den vertikalen Zähler
 	signal vsenable		: std_logic;
 begin

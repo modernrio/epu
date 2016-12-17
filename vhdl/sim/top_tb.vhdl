@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer:
 --
--- Create Date:   16:13:01 10/24/2016
+-- Create Date:   16:51:25 11/27/2016
 -- Design Name:   
 -- Module Name:   /home/whoami/Projects/epu/vhdl/sim/top_tb.vhd
 -- Project Name:  EPU
@@ -41,36 +41,38 @@ ARCHITECTURE behavior OF top_tb IS
  
     COMPONENT top
     PORT(
-		MainClk : IN  std_logic;
-		RST : IN  std_logic;
-		SEGEn : OUT  std_logic_vector(2 downto 0);
-		LED : OUT  std_logic_vector(7 downto 0);
-		SEG : OUT  std_logic_vector(7 downto 0);
-		SW	 : IN std_logic_vector(6 downto 0);
-		TX : OUT  std_logic;
-		RX : IN  std_logic;
-		hs 				  : out std_logic;
-		vs			   	  : out std_logic;
-		red				  : out std_logic_vector(2 downto 0);
-		green		   	  : out std_logic_vector(2 downto 0);
-		blue		   	  : out std_logic_vector(1 downto 0)
-	);
+         MainClk : IN  std_logic;
+         RST : IN  std_logic;
+         SEGEn : OUT  std_logic_vector(2 downto 0);
+         LED : OUT  std_logic_vector(7 downto 0);
+         SEG : OUT  std_logic_vector(7 downto 0);
+         SW : IN  std_logic_vector(6 downto 0);
+         TX : OUT  std_logic;
+         RX : IN  std_logic;
+         hs : OUT  std_logic;
+         vs : OUT  std_logic;
+         red : OUT  std_logic_vector(2 downto 0);
+         green : OUT  std_logic_vector(2 downto 0);
+         blue : OUT  std_logic_vector(1 downto 0)
+        );
     END COMPONENT;
     
 
    --Inputs
    signal MainClk : std_logic := '0';
    signal RST : std_logic := '0';
+   signal SW : std_logic_vector(6 downto 0) := (others => '0');
    signal RX : std_logic := '0';
-   signal SW : std_logic_vector(6 downto 0) := "0000000";
 
  	--Outputs
    signal SEGEn : std_logic_vector(2 downto 0);
    signal LED : std_logic_vector(7 downto 0);
    signal SEG : std_logic_vector(7 downto 0);
    signal TX : std_logic;
-   signal hs, vs : std_logic;
-   signal red, green : std_logic_vector(2 downto 0);
+   signal hs : std_logic;
+   signal vs : std_logic;
+   signal red : std_logic_vector(2 downto 0);
+   signal green : std_logic_vector(2 downto 0);
    signal blue : std_logic_vector(1 downto 0);
 
    -- Clock period definitions
@@ -85,14 +87,14 @@ BEGIN
           SEGEn => SEGEn,
           LED => LED,
           SEG => SEG,
-		  SW => SW,
+          SW => SW,
           TX => TX,
           RX => RX,
-		  hs => hs,
-		  vs => vs,
-		  red => red,
-		  green => green,
-		  blue => blue
+          hs => hs,
+          vs => vs,
+          red => red,
+          green => green,
+          blue => blue
         );
 
    -- Clock process definitions
