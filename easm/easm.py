@@ -6,10 +6,6 @@
 #
 # Autor: Markus Schneider
 #
-# Erstellungsdatum: 30.07.2016
-#
-# Version: 1.1
-#
 # Beschreibung: Assemblersprache in Maschinenbefehle umwandeln
 #
 
@@ -1020,7 +1016,7 @@ def main():
             print("Label addresses".center(33, "="))
         for item in labels:
             if item.startswith("_") or args.all:
-                print("Section: {0:8} Address: 0x{1}"
+                print("Section: {0:20} Address: 0x{1}"
                       .format(str(item), str(hex(labels[item])[2:])
                               .rjust(4, '0')))
         print("\n")

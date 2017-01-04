@@ -1,5 +1,31 @@
 _boot:
 	jmp.i $_start
+_print:
+	# Preparations
+	_print_start:
+		pop r15
+		pop r1 # Get pointer to data
+		pop r2 # Get starting point
+		push r15
+		load r0, 0xF000	# Fixed VRAM addr
+
+	# Check if byte is zero
+	_print_zerocheck:
+		load r5, 0x0000
+		read.h r5, r1, 0x0
+		test r5
+		jz.i $_print_stop
+	
+	# Print the character
+	_print_byte:
+		write.h r0, r5, 0x0 # Move byte into VRAM
+		addi r0, r0, 0x1 # Increase VRAM pointer
+		addi r1, r1, 0x1 # Increase data pointer
+		jmp.i $_print_zerocheck
+
+	# Stop printing
+	_print_stop:
+			ret	
 _int:
 	ret
 _code:

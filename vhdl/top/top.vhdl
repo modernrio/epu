@@ -67,42 +67,27 @@ architecture behav_top of top is
 	component memory_control
 		port(
 			-- Eingänge
-			I_MEM_Clk     : in std_logic;						-- Takteingang
-			I_MEM_Reset   : in std_logic;						-- Rücksetzsignal
-			I_MEM_En	  : in std_logic;						-- Aktivierung
-			I_MEM_We	  : in std_logic;						-- Schreibfreigabe
-			I_MEM_Data	  : in std_logic_vector(7 downto 0);	-- Daten
-			I_MEM_Addr	  : in std_logic_vector(15 downto 0);	-- Adresswahl
-			I_VID_Addr	  : in std_logic_vector(15 downto 0);	-- Videoadresswahl
+			I_MEM_Clk         : in std_logic;						-- Takteingang
+			I_MEM_Reset       : in std_logic;						-- Rücksetzsignal
+			I_MEM_En	      : in std_logic;						-- Aktivierung
+			I_MEM_We		  : in std_logic;						-- Schreibfreigabe
+			I_MEM_Data		  : in std_logic_vector(7 downto 0);	-- Daten
+			I_MEM_Addr		  : in std_logic_vector(15 downto 0);	-- Adresswahl
+			I_VID_Clk		  : in std_logic;						-- Videotakt
 
 			-- Ausgänge
-			O_MEM_Ready	  : out std_logic;						-- Bereitschaft
-			O_MEM_Data    : out std_logic_vector(7 downto 0);	-- Datenausgang
-			O_VID_Data    : out std_logic_vector(7 downto 0);	-- Videodatenausgang
-			O_LED		  : out std_logic_vector(7 downto 0);	-- LEDs
+			O_MEM_Ready		  : out std_logic;						-- Bereitschaft
+			O_MEM_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
+			O_LED			  : out std_logic_vector(7 downto 0);	-- LEDs
+			O_VID_Red		  : out std_logic;						-- Rot
+			O_VID_Green		  : out std_logic;						-- Grün
+			O_VID_Blue		  : out std_logic;						-- Blau
+			O_VID_HSync		  : out std_logic;						-- HSync
+			O_VID_VSync		  : out std_logic;						-- HSync
 
-			UClk		  : in std_logic;
-			TX			  : out std_logic;
-			RX			  : in std_logic
-		);
-	end component;
-	
-	component vga
-		port(
-			-- Eingänge
-			I_TClk	: in std_logic;							-- Speichertakt
-			I_PClk	: in std_logic;							-- Pixeltakt
-			I_SW	: in std_logic_vector(6 downto 0);		-- Buttons (SW1-SW7)
-			I_Reset : in std_logic;							-- Reset
-			I_Data	: in std_logic_vector(7 downto 0);		-- Videospeichereingang
-
-			-- Ausgänge
-			O_Addr	: out std_logic_vector(15 downto 0);	-- Videospeicheradresse
-			O_HS	: out std_logic;						-- Horizontale Synchronisation
-			O_VS	: out std_logic;						-- Vertikale Syncrhonisation
-			O_Red	: out std_logic_vector(2 downto 0);		-- Rotanteil
-			O_Green	: out std_logic_vector(2 downto 0);		-- Grünanteil
-			O_Blue	: out std_logic_vector(1 downto 0)		-- Blauanteil
+			UClk			  : in std_logic;
+			TX				  : out std_logic;
+			RX				  : in std_logic
 		);
 	end component;
 
@@ -130,6 +115,10 @@ architecture behav_top of top is
 
 	signal VidAddr		  : std_logic_vector(15 downto 0) := (others => '0');
 	signal VidData		  : std_logic_vector(7 downto 0) := (others => '0');
+
+	signal VidRed		  : std_logic;
+	signal VidGreen		  : std_logic;
+	signal VidBlue		  : std_logic;
 begin
 	-- Instanz der UUTs erstellen
 	uut_freq_divider : freq_divider port map (
@@ -163,32 +152,26 @@ begin
 		I_MEM_We => MemWe,
 		I_MEM_Data => MemWData,
 		I_MEM_Addr => MemAddr,
-		I_VID_Addr => VidAddr,
+		I_VID_Clk => VidClk,
 		O_MEM_Ready => MemReady,
 		O_MEM_Data => MemRData,
-		O_VID_Data => VidData,
 		O_LED => leds,
+		O_VID_Red => VidRed,
+		O_VID_Green => VidGreen,
+		O_VID_Blue => VidBlue,
+		O_VID_HSync => hs,
+		O_VID_VSync => vs,
 		UClk => UARTClk,
 		TX => TX,
 		RX => RX
 	);
-	
-	uut_vga : vga port map (
-		I_TClk => TxtClk,
-		I_PClk => VidClk,
-		I_SW => SW,
-		I_Reset => '0',
-		I_Data => VidData,
-		O_Addr => VidAddr,
-		O_HS => hs,
-		O_VS => vs,
-		O_Red => red,
-		O_Green => green,
-		O_Blue => blue
-	);
-	
+
+	red <= VidRed & VidRed & VidRed;
+	green <= VidGreen & VidGreen & VidGreen;
+	blue <= VidBlue & VidBlue;
+
 	CoreReset <= RST;
-	LED <= VidAddr(7 downto 0);
+	LED <= MeMaddr(7 downto 0);
 	SEG(0) <= '1';
 	
 	seg_proc : process(SegClk)

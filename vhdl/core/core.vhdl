@@ -247,15 +247,15 @@ begin
 	Reg_I_En <= En_RegRead or En_RegWrite;
 	Reg_I_We <= En_RegWrite and RegWe;
 
-	Reg_I_Data(15 downto 8) <= MEM_RData when En_RegWrite = '1'
-				  and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ
-				  else StackData(15 downto 8) when En_RegWrite = '1'
-				  and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_POP
+	Reg_I_Data(15 downto 8) <= I_MEM_Data when
+				  AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ
+				  else StackData(15 downto 8) when
+				  AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_POP
 				  else Res(15 downto 8);
-	Reg_I_Data(7 downto 0) <= MEM_RData when En_RegWrite = '1'
-				  and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ
-				  else StackData(7 downto 0) when En_RegWrite = '1'
-				  and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_POP
+	Reg_I_Data(7 downto 0) <= I_MEM_Data when
+				  AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ
+				  else StackData(7 downto 0) when
+				  AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_POP
 				  else Res(7 downto 0);
 
 	Reg_I_Byte <= '1' when En_RegWrite = '1'
@@ -264,7 +264,7 @@ begin
 	
 	Reg_I_High <= '1' when En_RegWrite = '1'
 				  and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ
-				  and AluOp(IFO_REL_FLAG) = '1'
+				  and AluOp(IFO_REL_FLAG) = '0'
 				  else '0';
 
 	uut_regfile : regfile port map (

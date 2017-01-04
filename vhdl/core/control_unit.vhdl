@@ -38,9 +38,7 @@ begin
 			else
 				case S_State is
 					when "0000001" => -- Fetch
-						if I_MemReady = '1' then
-							S_State <= "0000010";
-						end if;
+						S_State <= "0000010";
 					when "0000010" => -- Decode
 						if I_Done = '1' then
 							S_State <= "0000100"; 
@@ -63,8 +61,12 @@ begin
 							S_State <= "1000000"; -- Reg Write
 						end if;
 					when "0010000" => -- Memory Write
-						if I_MemReady = '1' then
-							S_State <= "1000000";
+						if I_AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_READ then
+							if I_MemReady = '1' then
+								S_State <= "1000000"; -- Reg Write when memory is ready
+							end if;
+						else
+							S_State <= "1000000"; -- Reg Write
 						end if;
 					when "0100000" => -- Stack Read/Write
 						S_State <= "1000000";

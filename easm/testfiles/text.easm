@@ -1,0 +1,11 @@
+_start:
+	load r0, 0x00
+	load r1, $data
+	push r0
+	push r1
+	call.i $_print
+end:
+	jmp.i $end
+
+data:
+	.data 0x48656C6C6F20776F726C6400
