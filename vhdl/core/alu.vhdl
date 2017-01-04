@@ -127,6 +127,9 @@ begin
 				when OPCODE_LOAD =>
 					S_Res(15 downto 0) <= I_Imm;
 					S_SB <= '0';
+				when OPCODE_MOV =>
+					S_Res(15 downto 0) <= I_DataA;
+					S_SB <= '0';
 				when OPCODE_READ =>
 					S_Res(16 downto 0) <= std_logic_vector(signed(I_DataA(15) & I_DataA)
 										+ signed('0' & I_Imm));

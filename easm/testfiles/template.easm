@@ -28,6 +28,20 @@ _print:
 	# Stop printing
 	_print_stop:
 			ret	
+_setcursor:
+	# Preparations
+	_setcursor_start:
+		pop r15
+		pop r1 # cursor pos (0xAABB where AA is x pos and BB is y pos)
+		push r15
+		load r0, 0xED00 # Cursor x pos addr
+	
+	_setcursor_write:
+		write.h r0, r1, 0x0 # Write x pos
+		write.l r0, r1, 0x1 # Write y pos
+	
+	_setcursor_stop:
+		ret
 _int:
 	ret
 _code:

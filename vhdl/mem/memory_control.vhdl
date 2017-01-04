@@ -142,8 +142,8 @@ architecture behav_memory_control of memory_control is
 	signal crx_oreg_ce : std_logic;
 	signal cry_oreg_ce : std_logic;
 	signal ctl_oreg_ce : std_logic;
-	signal crx_oreg    : std_logic_vector(7 downto 0);
-	signal cry_oreg    : std_logic_vector(7 downto 0);
+	signal crx_oreg    : std_logic_vector(7 downto 0) := (others => '0');
+	signal cry_oreg    : std_logic_vector(7 downto 0) := (others => '0');
 	signal ctl_oreg    : std_logic_vector(7 downto 0);
 	
 	-- Text Buffer RAM Memory Signals, Port A (to CPU core)
@@ -243,11 +243,23 @@ begin
 	mem_proc : process(I_MEM_Clk)
 	begin
 		if I_MEM_Addr(15 downto 12) = X"F" then
-			ram_adA <= I_MEM_Addr(11 downto 0);
-			ram_weA <= we;
-			ram_diA <= I_MEM_Data;
-			O_MEM_Data <= ram_doA;
+				ram_adA <= I_MEM_Addr(11 downto 0);
+				ram_weA <= we;
+				ram_diA <= I_MEM_Data;
+				O_MEM_Data <= ram_doA;
+				blk_weA <= "0";
+		elsif I_MEM_Addr(15 downto 0) = X"ED00" then
+			-- Cursor X pos addr ED00
+			crx_oreg <= I_MEM_Data;
+			O_MEM_Data <= X"00";
 			blk_weA <= "0";
+			ram_weA <= "0";
+		elsif I_MEM_Addr(15 downto 0) = X"ED01" then
+			-- Cursor Y pos addr ED01
+			cry_oreg <= I_MEM_Data;
+			O_MEM_Data <= X"00";
+			blk_weA <= "0";
+			ram_weA <= "0";
 		else
 			blk_adA <= I_MEM_Addr;
 			blk_weA <= we;
@@ -260,8 +272,8 @@ begin
 	ram_weB <= "0";
 	ram_diB <= (others => '0');
 	
-	crx_oreg    <= std_logic_vector(TO_UNSIGNED(0, 8));
-	cry_oreg    <= std_logic_vector(TO_UNSIGNED(39, 8));
+	-- crx_oreg    <= std_logic_vector(TO_UNSIGNED(0, 8));
+	-- cry_oreg    <= std_logic_vector(TO_UNSIGNED(39, 8));
 	ctl_oreg    <= "11110010";
 	crx_oreg_ce <= '1';
 	cry_oreg_ce <= '1';

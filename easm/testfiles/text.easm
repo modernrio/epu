@@ -4,6 +4,9 @@ _start:
 	push r0
 	push r1
 	call.i $_print
+	load r0, 0x1005 # x=16;y=5
+	push r0
+	call.i $_setcursor
 end:
 	jmp.i $end
 
