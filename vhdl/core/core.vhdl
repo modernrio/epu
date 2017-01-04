@@ -96,6 +96,8 @@ architecture behav_core of core is
 			I_DataD       : in std_logic_vector(15 downto 0);	-- Dateneingang für D
 
 			-- Ausgänge
+			O_LED : out std_logic_vector(7 downto 0);
+
 			O_DataA       : out std_logic_vector(15 downto 0);	-- Datenausgang für A
 			O_DataB       : out std_logic_vector(15 downto 0)	-- Datenausgang für B
 		);
@@ -157,6 +159,7 @@ architecture behav_core of core is
 	signal Reg_I_Byte     : std_logic := '0';
 	signal Reg_I_High     : std_logic := '0';
 	signal Reg_I_Data	  : std_logic_vector(15 downto 0) := (others => '0');
+	signal regled		  : std_logic_vector(7 downto 0) := (others => '0');
 
 	signal MEM_Reset      : std_logic := '0';
 	signal MEM_En		  : std_logic := '0';
@@ -188,7 +191,7 @@ begin
 	O_MEM_Data <= MEM_WData;
 	O_MEM_Addr <= MEM_Addr;
 	
-	O_LED <= DataB(7 downto 0);
+	O_LED <= regled;
 
 	-- Speichercontroller
 	MEM_En	  <= En_Fetch or En_MemWrite;
@@ -277,6 +280,7 @@ begin
 		I_SelB => SelB,
 		I_SelD => SelD,
 		I_DataD => Reg_I_Data,
+		O_LED => regled,
 		O_DataA => DataA,
 		O_DataB => DataB
 	);

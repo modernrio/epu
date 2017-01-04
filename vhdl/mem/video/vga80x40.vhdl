@@ -184,29 +184,29 @@ begin
 	-- counters, hctr, vctr, srcx, srcy, chrx, chry
 	-- TODO: OPTIMIZE THIS
   counters : block
-    signal hctr_ce : std_logic := '0';
-    signal hctr_rs : std_logic := '1';
-    signal vctr_ce : std_logic := '0';
-    signal vctr_rs : std_logic := '1';
+    signal hctr_ce : std_logic;
+    signal hctr_rs : std_logic;
+    signal vctr_ce : std_logic;
+    signal vctr_rs : std_logic;
 
-    signal chrx_ce : std_logic := '0';
-    signal chrx_rs : std_logic := '1';
-    signal chry_ce : std_logic := '0';
-    signal chry_rs : std_logic := '1';
-    signal scrx_ce : std_logic := '0';
-    signal scrx_rs : std_logic := '1';
-    signal scry_ce : std_logic := '0';
-    signal scry_rs : std_logic := '1';
+    signal chrx_ce : std_logic;
+    signal chrx_rs : std_logic;
+    signal chry_ce : std_logic;
+    signal chry_rs : std_logic;
+    signal scrx_ce : std_logic;
+    signal scrx_rs : std_logic;
+    signal scry_ce : std_logic;
+    signal scry_rs : std_logic;
 
-    signal hctr_639 : std_logic := '0';
-    signal vctr_479 : std_logic := '0';
-    signal chrx_007 : std_logic := '0';
-    signal chry_011 : std_logic := '0';
-    signal scrx_079 : std_logic := '0';
+    signal hctr_639 : std_logic;
+    signal vctr_479 : std_logic;
+    signal chrx_007 : std_logic;
+    signal chry_011 : std_logic;
+    signal scrx_079 : std_logic;
 
     -- RAM read, ROM read
-    signal ram_tmp : integer range 3200 downto 0 := 0;  --12 bits
-    signal rom_tmp : integer range 3070 downto 0 := 0;
+    signal ram_tmp : integer range 3200 downto 0;  --12 bits
+    signal rom_tmp : integer range 3070 downto 0;
 
   begin
     
@@ -243,9 +243,9 @@ begin
 
 
 -- Proboscide99 31/08/08
-	-- ram_tmp <= scry * 80 + scrx + 1 when ((scrx_079 = '0')) else
-	-- 		   scry * 80 when ((chry_011 = '0') and (scrx_079 = '1')) else
-    --            0         when ((chry_011 = '1') and (scrx_079 = '1'));
+--    ram_tmp <= scry * 80 + scrx + 1 when ((scrx_079 = '0')) else
+--               scry * 80 when ((chry_011 = '0') and (scrx_079 = '1')) else
+--               0         when ((chry_011 = '1') and (scrx_079 = '1'));
     ram_tmp <= scry * 80 + scrx;
 
     TEXT_A <= std_logic_vector(TO_UNSIGNED(ram_tmp, 12));

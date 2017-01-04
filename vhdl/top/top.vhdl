@@ -171,7 +171,7 @@ begin
 	blue <= VidBlue & VidBlue;
 
 	CoreReset <= RST;
-	LED <= MeMaddr(7 downto 0);
+	LED <= core_leds;
 	SEG(0) <= '1';
 	
 	seg_proc : process(SegClk)

@@ -22,6 +22,8 @@ entity regfile is
 			I_DataD : in std_logic_vector(15 downto 0);		-- Dateneingang für D
 
 			-- Ausgänge
+			O_LED : out std_logic_vector(7 downto 0);
+
 			O_DataA : out std_logic_vector(15 downto 0);	-- Datenausgang für A
 			O_DataB : out std_logic_vector(15 downto 0)		-- Datenausgang für B
 		);
@@ -63,4 +65,5 @@ begin
 
 	O_DataA <= S_DataA;
 	O_DataB <= S_DataB;
+	O_LED <= regs(3)(7 downto 0);
 end behav_regfile;
