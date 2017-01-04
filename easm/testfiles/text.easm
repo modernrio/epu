@@ -1,5 +1,5 @@
 _start:
-	load r0, 0x00
+	load r0, 0d80
 	load r1, $data
 	push r0
 	push r1

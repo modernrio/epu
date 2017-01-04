@@ -8,6 +8,8 @@ _print:
 		pop r2 # Get starting point
 		push r15
 		load r0, 0xF000	# Fixed VRAM addr
+		# Add starting point to start of VRAM
+		add r0, r0, r2
 
 	# Check if byte is zero
 	_print_zerocheck:
