@@ -1,11 +1,59 @@
 \chapter{Implementierung in VHDL}
 \label{c:vhdl}
 \section{Einführung in VHDL}
-\section{Schemata}
+In diesem Abschnitt soll eine kurze Einführung in VHDL gegeben werden, damit die
+nachfolgende Erklärung der Implementierung leichter zu verstehen ist.
+
+\subsection{Was ist VHDL}
+VHDL ist eine sogenannte Hardware Description Language (HDL), mit welcher es möglich ist, digitale
+Schaltungen in Form von Quellcode zu schreiben, um diesen dann von einem
+Computer zu Hardware weiterverarbeiten zu lassen. VHDL ist eine Abkürzung für
+VHSIC HDL (\acl{VHDL}). Der geschriebene VHDL-Code wird dann synthesiert zu
+einer Netzliste, welche die einzelnen Verbindungen zwischen den Komponenten
+beschreibt. Diese Netzliste wird daraufhin für den jeweiligen \ac{FPGA}
+übersetzt, sodass als letzter Schritt eine Konfigurationsdatei erstellt werden
+kann, welche auf den \ac{FPGA} geladen werden kann.
+
+Eine Besonderheit bei VHDL ist, dass nicht jeder geschriebene Quellcode
+synthesierbar ist, was bedeutet, dass mancher Quellcode nur in der Simulation
+funktioniert. In dem Umfang dieses Projektes ist aber der geschriebene Quellcode
+vollkommen synthesierbar und soll nicht nur in der Simulation funktionieren.
+
+\subsection{Notation}
+Allgemein endet jede Anweisung immer mit einem Semikolon. Kommentare werden mit
+einem doppelten Bindestrich (-{}-) eingeleitet und sind gültig bis zum Ende der
+Zeile. Einzelne Bitwerte werden mit einfachen Anführungszeichen und Werte
+von Bitvektoren (mehreren Bits) mit doppelten Anführungszeichen umrahmt.
+
+Außerdem gibt es noch mehrere Sprachelemente, welche häufig Verwendung
+haben. Eine (nicht vollständige) Beschreibung von häufig genutzten
+Sprachelementen:
+
+\begin{description}[align=right, labelwidth=1.6cm]
+\item[signal]		Verbindung zweier Module. Beschreibt die Leitung zwischen den
+					Modulen.
+\item[variable]		Ein Zwischenspeicher für Werte, welcher \textbf{nicht} als
+					Signal übersetzt wird.
+\item[entity]		Schlüsselwort zur Deklaration eines Moduls (logische Einheit).
+\item[in]			Deklaration eines Eingabesignals eines Moduls.
+\item[out]			Deklaration eines Ausgabesignals eines Moduls.
+\item[architecture]	Schlüsselwort zur Definition eines Moduls
+\item[component]	Signatur eines Moduls. Wird verwendet, um ein Modul
+					innerhalb eines anderen Moduls zu verwenden.
+\item[package]		Eine Sammlung (Bibliothek) von \textbf{components}.
+\end{description}
 \pagebreak
 \section{Beschreibung wichtiger Module}
-\subsection{top -- Verbindung mit der Hardware}
-\pagebreak
+\subsection{top -- Verbindung der Ein- und Ausgänge}
+Das Topmodul dient als oberste Ebene, welche die \ac{EPU} mit der `Außenwelt'
+verbindet. Die dazugehörigen Ein- und Ausgangssignale werden in der Datei
+\textit{top.vhdl} festgelegt. Abbildung~\ref{code:top} zeigt die Definition des
+Topmoduls.
+\begin{figure}[htb]
+\lstinputlisting[language=vhdl, tabsize=4, firstline=10, lastline=29]{../vhdl/top/top.vhdl}
+\caption{Topmodul}
+\label{code:top}
+\end{figure}
 \subsection{core -- Topmodul der CPU}
 \pagebreak
 \subsection{memory\_control -- Speichercontroller}

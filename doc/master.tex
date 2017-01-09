@@ -31,6 +31,7 @@
 \usepackage{mathptmx}					% Adobe Times Roman als Schriftart
 \usepackage{float}						% Verbessert die Schnittstelle für Gleitobjekte
 \usepackage{enumitem}					% Kontrolle über das Layout von Auflistungen
+\usepackage{listings}					% Quellcode
 
 % Vektorgrafikbibliotheken
 \usetikzlibrary{arrows,automata,decorations.pathmorphing,backgrounds,fit,positioning,shapes.symbols,chains,shapes.geometric,shapes.arrows,calc}
@@ -43,6 +44,17 @@
 % Zusätzliche Befehle
 \newcommand{\mx}[1]{\mathbf{\bm{#1}}} % Matrix command
 \newcommand{\vc}[1]{\mathbf{\bm{#1}}} % Vector command
+\newcommand{\titledate}[2][2.5in]{%
+  \noindent%
+  \begin{tabular}{@{}p{#1}@{}}
+    \\ \hline \\[-.75\normalbaselineskip]
+    #2
+  \end{tabular} \hspace{1in}
+  \begin{tabular}{@{}p{#1}@{}}
+    \\ \hline \\[-.75\normalbaselineskip]
+    Datum
+  \end{tabular}
+}
 
 % ============ Kopf- und Fußzeile ============
 % Style
@@ -97,6 +109,9 @@
 
 % Tabellenverzeichnis
 \listoftables
+
+% Selbstständigkeitserklärung
+\include{erklaerung}
 
 % Kapitel einbinden
 \include{einleitung}
