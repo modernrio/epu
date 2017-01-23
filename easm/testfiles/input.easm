@@ -1,0 +1,36 @@
+_start:
+	load r0, 0d80
+	load r1, $data
+	push r0
+	push r1
+	call.i $_print
+	load r0, 0x1005 # x=16;y=5
+	push r0
+	call.i $_setcursor
+
+inputloop:
+	# Get input
+	call.i $_getinput
+
+	# Write input to RAM
+	load r0, $inputdata
+	pop r1
+	write.l r0, r1, 0x0
+
+	# Call print
+	load r0, 0d160
+	load r1, $inputdata
+	push r0
+	push r1
+	call.i $_print
+
+	# Jump to start of loop
+	jmp.i $inputloop
+end:
+	jmp.i $end
+
+data:
+	.data 0x48656C6C6F20776F726C6400
+
+inputdata:
+	.data 0x0000

@@ -1,7 +1,6 @@
 _boot:
 	jmp.i $_start
 _print:
-	# Preparations
 	_print_start:
 		pop r15
 		pop r1 # Get pointer to data
@@ -16,7 +15,7 @@ _print:
 		load r3, 0x0000
 		read.h r3, r1, 0x0
 		test r3
-		jz.i $_print_stop
+		jz.i $_print_end
 	
 	# Print the character
 	_print_byte:
@@ -26,10 +25,9 @@ _print:
 		jmp.i $_print_zerocheck
 
 	# Stop printing
-	_print_stop:
+	_print_end:
 			ret	
 _setcursor:
-	# Preparations
 	_setcursor_start:
 		pop r15
 		pop r1 # cursor pos (0xAABB where AA is x pos and BB is y pos)
@@ -40,8 +38,51 @@ _setcursor:
 		write.h r0, r1, 0x0 # Write x pos
 		write.l r0, r1, 0x1 # Write y pos
 	
-	_setcursor_stop:
+	_setcursor_end:
+		ret
+
+_getinput:
+	_getinput_start:
+		load r0, 0xEF00
+		load r1, 0x0000
+	
+	_getinput_read:
+		read.l r1, r0, 0x0
+	
+	_getinput_end:
+		pop r15
+		push r1
+		push r15
 		ret
 _int:
 	ret
 _code:
+
+_getstring:
+	_getstring_start:
+		pop r15
+		pop r2 # Pointer to memory location
+		push r15
+		load r0, 0x0A # newline
+		load r3, 0x00 # wait
+
+	_getstring_read:
+		call.i $_getinput
+		pop r1
+	
+	_getstring_checkwait:
+		cmp r1, r3
+		je.i $_getstring_read
+	
+	_getstring_write:
+		write.l r2, r1, 0x0
+		addi r2, r2, 0x1
+	
+	_getstring_checkend:
+		cmp r1, r0
+		jne.i $_getstring_read
+	
+	_getstring_end:
+		load r4, 0x00
+		write.l r2, r4, 0x0
+		ret

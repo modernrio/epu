@@ -10,21 +10,21 @@ use work.epu_pack.all;
 
 entity top is
 	port(
-		MainClk			  : in std_logic;
-		RST				  : in std_logic;
-		SEGEn			  : out std_logic_vector(2 downto 0);
-		LED				  : out std_logic_vector(7 downto 0);
-		SEG				  : out std_logic_vector(7 downto 0);
-		SW				  : in std_logic_vector(6 downto 0);
+		MainClk	: in std_logic;
+		RST		: in std_logic;
+		SEGEn	: out std_logic_vector(2 downto 0);
+		LED		: out std_logic_vector(7 downto 0);
+		SEG		: out std_logic_vector(7 downto 0);
+		SW		: in std_logic_vector(6 downto 0);
 
-		TX				  : out std_logic;
-		RX				  : in std_logic;
+		TX		: out std_logic;
+		RX		: in std_logic;
 		
-		hs 				  : out std_logic;
-		vs			   	  : out std_logic;
-		red				  : out std_logic_vector(2 downto 0);
-		green		   	  : out std_logic_vector(2 downto 0);
-		blue		   	  : out std_logic_vector(1 downto 0)
+		hs 		: out std_logic;
+		vs		: out std_logic;
+		red		: out std_logic_vector(2 downto 0);
+		green	: out std_logic_vector(2 downto 0);
+		blue	: out std_logic_vector(1 downto 0)
 	);
 end top;
 
@@ -171,7 +171,7 @@ begin
 	blue <= VidBlue & VidBlue;
 
 	CoreReset <= RST;
-	LED <= core_leds;
+	LED <= leds;
 	SEG(0) <= '1';
 	
 	seg_proc : process(SegClk)

@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- Beschreibung: Zusammenfuehren der Komponenten des Prozessors
+-- Beschreibung: Zusammenführen der Komponenten des Prozessors
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -10,40 +10,41 @@ use work.epu_pack.all;
 
 entity core is
 	port(
-		-- Eingaenge
-		I_CORE_Clk		: in std_logic;
-		I_CORE_Reset	: in std_logic;
+		-- Eingänge
+		I_CORE_Clk        : in std_logic;						-- Takteingang
+		I_CORE_Reset	  : in std_logic;						-- Rücksetzsignal
 
-		I_MEM_Ready		: in std_logic;
-		I_MEM_Data		: in std_logic_vector(7 downto 0);
+		I_MEM_Ready	      : in std_logic;						-- Bereitschaft
+		I_MEM_Data        : in std_logic_vector(7 downto 0); 	-- Datenausgang
 
-		-- Ausgaenge
-		O_CORE_HLT		: out std_logic;
+		-- Ausgänge
+		O_CORE_HLT		  : out std_logic;						-- Stopsignal
 
-		O_MEM_Reset		: out std_logic;
-		O_MEM_En		: out std_logic;
-		O_MEM_We		: out std_logic;
-		O_MEM_Data		: out std_logic_vector(7 downto 0);
-		O_MEM_Addr		: out std_logic_vector(15 downto 0);
-
-		O_LED			: out std_logic_vector(7 downto 0)
+		O_MEM_Reset       : out std_logic;						-- Rücksetzsignal
+		O_MEM_En	      : out std_logic;						-- Aktivierung
+		O_MEM_We		  : out std_logic;						-- Schreibfreigabe
+		O_MEM_Data		  : out std_logic_vector(7 downto 0);	-- Daten
+		
+		O_LED : out std_logic_vector(7 downto 0);
+		
+		O_MEM_Addr		  : out std_logic_vector(15 downto 0)	-- Adresswahl
 	);
 end core;
 
 architecture behav_core of core is
-	-- Komponentendeklaration fuer das zu testende Geraet (UUT)
+	-- Komponentendeklaration für das zu testende Gerät (UUT)
 	component alu
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
 			I_En          : in std_logic;						-- Freigabesignal
-			I_AluOp       : in std_logic_vector(7 downto 0);	-- Auszufuehrende Operation
+			I_AluOp       : in std_logic_vector(7 downto 0);	-- Auszuführende Operation
 			I_Imm         : in std_logic_vector(15 downto 0);	-- Konstante aus dem Befehl
 			I_DataA       : in std_logic_vector(15 downto 0);	-- Daten von Register A
 			I_DataB       : in std_logic_vector(15 downto 0);	-- Daten von Register B
 			I_PC          : in std_logic_vector(15 downto 0);	-- Befehlszeiger
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_SB          : out std_logic;						-- Sprungbefehl?
 			O_Res         : out std_logic_vector(15 downto 0)	-- Ergebnis
 		);
@@ -51,31 +52,31 @@ architecture behav_core of core is
 
 	component control_unit
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
-			I_Reset       : in std_logic;						-- Ruecksetzsignal
-			I_Done        : in std_logic;						-- Befehl vollstaendig dekodiert?
+			I_Reset       : in std_logic;						-- Rücksetzsignal
+			I_Done        : in std_logic;						-- Befehl vollständig dekodiert?
 			I_MemReady	  : in std_logic;						-- RAM bereit?
 			I_AluOp		  : in std_logic_vector(7 downto 0);	-- ALU-Operation
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_State       : out std_logic_vector(6 downto 0)	-- Pipelinestatus
 		);
 	end component;
 
 	component decoder
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
 			I_En          : in std_logic;						-- Freigabesignal
 			I_Inst        : in std_logic_vector(7 downto 0);	-- Maschinenbefehl
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_We          : out std_logic;						-- Konstantenausgabe
 			O_Done        : out std_logic;						-- 1 => Befehl endet nach dem Byte
-			O_SelA        : out std_logic_vector(3 downto 0);	-- Registerwahl fuer Ausgang A
-			O_SelB        : out std_logic_vector(3 downto 0);	-- Registerwahl fuer Ausgang B
-			O_SelD        : out std_logic_vector(3 downto 0);	-- Registerwahl fuer Ausgang D
+			O_SelA        : out std_logic_vector(3 downto 0);	-- Registerwahl für Ausgang A
+			O_SelB        : out std_logic_vector(3 downto 0);	-- Registerwahl für Ausgang B
+			O_SelD        : out std_logic_vector(3 downto 0);	-- Registerwahl für Ausgang D
 			O_AluOp       : out std_logic_vector(7 downto 0);	-- ALU-Operation
 			O_Imm         : out std_logic_vector(15 downto 0)	-- Konstantenausgabe
 		);
@@ -83,46 +84,46 @@ architecture behav_core of core is
 
 	component regfile
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
 			I_En          : in std_logic;						-- Freigabesignal
 			I_We          : in std_logic;						-- Schreibfreigabe
 			I_Byte        : in std_logic;						-- Schreibbreite
 			I_High        : in std_logic;						-- Auswahl High-/Low-Byte
-			I_SelA        : in std_logic_vector(3 downto 0);	-- Waehlt Register fuer Ausgang A
-			I_SelB        : in std_logic_vector(3 downto 0);	-- Waehlt Register fuer Ausgang B
-			I_SelD        : in std_logic_vector(3 downto 0);	-- Waehlt Register fuer Eingang D
-			I_DataD       : in std_logic_vector(15 downto 0);	-- Dateneingang fuer D
+			I_SelA        : in std_logic_vector(3 downto 0);	-- Wählt Register für Ausgang A
+			I_SelB        : in std_logic_vector(3 downto 0);	-- Wählt Register für Ausgang B
+			I_SelD        : in std_logic_vector(3 downto 0);	-- Wählt Register für Eingang D
+			I_DataD       : in std_logic_vector(15 downto 0);	-- Dateneingang für D
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_LED : out std_logic_vector(7 downto 0);
 
-			O_DataA       : out std_logic_vector(15 downto 0);	-- Datenausgang fuer A
-			O_DataB       : out std_logic_vector(15 downto 0)	-- Datenausgang fuer B
+			O_DataA       : out std_logic_vector(15 downto 0);	-- Datenausgang für A
+			O_DataB       : out std_logic_vector(15 downto 0)	-- Datenausgang für B
 		);
 	end component;
 
 	component pc_unit
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
 			I_Op          : in std_logic_vector(1 downto 0);	-- PC-Operation
 			I_PC          : in std_logic_vector(15 downto 0);	-- Sprungadresse
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_PC          : out std_logic_vector(15 downto 0)	-- Befehlszeigerausgabe
 		);
 	end component;
 
 	component stack
 		port(
-			-- Eingaenge
+			-- Eingänge
 			I_Clk         : in std_logic;						-- Takteingang
 			I_En          : in std_logic;						-- Freigabesignal
 			I_We          : in std_logic;						-- Schreibfreigabe
 			I_Data        : in std_logic_vector(15 downto 0);	-- Dateneingang
 
-			-- Ausgaenge
+			-- Ausgänge
 			O_Data        : out std_logic_vector(15 downto 0)	-- Ergebnis
 		);
 	end component;
@@ -179,7 +180,7 @@ architecture behav_core of core is
 begin
 	-- Signale definieren
 	MEM_Reset <= I_CORE_Reset;
-	-- Ein-/Ausgaenge verbinden
+	-- Ein-/Ausgänge verbinden
 	O_CORE_HLT <= '1' when AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_HLT
 				  else '0';
 	O_MEM_Reset <= MEM_Reset;
@@ -198,7 +199,7 @@ begin
 				 and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_WRITE
 				 else '0';
 	MEM_WData <= DataB(15 downto 8) when AluOp(IFO_REL_FLAG) = '1' else DataB(7 downto 0);
-	MEM_Addr  <= Res when En_MemWrite = '1' or En_RegWrite = '1' else PC;
+	MEM_Addr  <= Res when En_MemWrite = '1' else PC;
 
 
 	-- Instanz der UUTs erstellen

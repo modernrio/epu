@@ -11,23 +11,23 @@ use work.epu_pack.all;
 entity memory_control is
 	port(
 		-- Eingänge
-		I_MEM_Clk         : in std_logic;						-- Takteingang
-		I_MEM_Reset       : in std_logic;						-- Rücksetzsignal
-		I_MEM_En	      : in std_logic;						-- Aktivierung
-		I_MEM_We		  : in std_logic;						-- Schreibfreigabe
-		I_MEM_Data		  : in std_logic_vector(7 downto 0);	-- Daten
-		I_MEM_Addr		  : in std_logic_vector(15 downto 0);	-- Adresswahl
-		I_VID_Clk		  : in std_logic;						-- Videotakt
+		I_MEM_Clk         : in std_logic;
+		I_MEM_Reset       : in std_logic;
+		I_MEM_En	      : in std_logic;
+		I_MEM_We		  : in std_logic;
+		I_MEM_Data		  : in std_logic_vector(7 downto 0);
+		I_MEM_Addr		  : in std_logic_vector(15 downto 0);
+		I_VID_Clk		  : in std_logic;
 
 		-- Ausgänge
-		O_MEM_Ready		  : out std_logic;						-- Bereitschaft
-		O_MEM_Data        : out std_logic_vector(7 downto 0);	-- Datenausgang
-		O_LED			  : out std_logic_vector(7 downto 0);	-- LEDs
-		O_VID_Red		  : out std_logic;						-- Rot
-		O_VID_Green		  : out std_logic;						-- Grün
-		O_VID_Blue		  : out std_logic;						-- Blau
-		O_VID_HSync		  : out std_logic;						-- HSync
-		O_VID_VSync		  : out std_logic;						-- HSync
+		O_MEM_Ready		  : out std_logic;
+		O_MEM_Data        : out std_logic_vector(7 downto 0);
+		O_LED			  : out std_logic_vector(7 downto 0);
+		O_VID_Red		  : out std_logic;
+		O_VID_Green		  : out std_logic;
+		O_VID_Blue		  : out std_logic;
+		O_VID_HSync		  : out std_logic;
+		O_VID_VSync		  : out std_logic;
 
 		UClk			  : in std_logic;
 		TX				  : out std_logic;
@@ -136,6 +136,7 @@ architecture behav_memory_control of memory_control is
 	signal rx_data		  : std_logic_vector(7 downto 0) := (others => '0');
 	signal rx_ready		  : std_logic := '0';
 	signal rx_error		  : std_logic := '0';
+	signal rx_cont		  : std_logic := '0';
 
 	-- Video signals
 	signal clk25MHz    : std_logic;
@@ -232,9 +233,9 @@ begin
 		RX => RX,
 		I_Reset => '0',
 		I_TX_Data => X"7C",
-		I_TX_Enable => '1',
+		I_TX_Enable => '0',
 		O_TX_Ready => tx_ready,
-		I_RX_Cont => '1',
+		I_RX_Cont => rx_cont,
 		O_RX_Data => rx_data,
 		O_RX_Sig => rx_ready,
 		O_RX_FrameError => rx_error
@@ -243,21 +244,29 @@ begin
 	mem_proc : process(I_MEM_Clk)
 	begin
 		if I_MEM_Addr(15 downto 12) = X"F" then
-				ram_adA <= I_MEM_Addr(11 downto 0);
-				ram_weA <= we;
-				ram_diA <= I_MEM_Data;
-				O_MEM_Data <= ram_doA;
-				blk_weA <= "0";
+			ram_adA <= I_MEM_Addr(11 downto 0);
+			ram_weA <= we;
+			ram_diA <= I_MEM_Data;
+			O_MEM_Data <= ram_doA;
+			rx_cont <= '0';
+			blk_weA <= "0";
 		elsif I_MEM_Addr(15 downto 0) = X"ED00" then
 			-- Cursor X pos addr ED00
 			crx_oreg <= I_MEM_Data;
 			O_MEM_Data <= X"00";
+			rx_cont <= '0';
 			blk_weA <= "0";
 			ram_weA <= "0";
 		elsif I_MEM_Addr(15 downto 0) = X"ED01" then
 			-- Cursor Y pos addr ED01
 			cry_oreg <= I_MEM_Data;
 			O_MEM_Data <= X"00";
+			rx_cont <= '0';
+			blk_weA <= "0";
+			ram_weA <= "0";
+		elsif I_MEM_Addr(15 downto 0) = X"EF00" then
+			O_MEM_Data <= rx_data;
+			rx_cont <= '1';
 			blk_weA <= "0";
 			ram_weA <= "0";
 		else
@@ -265,6 +274,7 @@ begin
 			blk_weA <= we;
 			blk_diA <= I_MEM_Data;
 			O_MEM_Data <= blk_doA;
+			rx_cont <= '0';
 			ram_weA <= "0";
 		end if;
 	end process;
@@ -291,6 +301,6 @@ begin
 			end if;
 		end if;
 	end process;
-	--O_MEM_Data  <= S_RAM_Data;
-	--O_LED <= rx_error & rx_data(6 downto 0);
+
+	O_LED <= rx_data;
 end behav_memory_control;

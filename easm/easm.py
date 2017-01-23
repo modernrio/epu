@@ -916,6 +916,17 @@ def main():
             tmp.append(content[item])
     content = tmp
 
+    tmp = list()
+    for item in range(len(content)):
+        # Split up .data entries
+        if content[item].startswith(".data"):
+            data = str(content[item].split(" ", 2)[1][2:])
+            for i in range(0, len(data), 2):
+                tmp.append(".data 0x" + data[i:i+2])
+        else:
+            tmp.append(content[item])
+    content = tmp
+
     # Get labels and remove them from the content list
     labels = dict()
     tmp = list()
