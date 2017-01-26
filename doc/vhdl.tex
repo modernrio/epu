@@ -45,16 +45,51 @@ Sprachelementen:
 \pagebreak
 \section{Beschreibung wichtiger Module}
 \subsection{top -- Verbindung der Ein- und Ausgänge}
+\label{s:top}
 Das Topmodul dient als oberste Ebene, welche die \ac{EPU} mit der `Außenwelt'
 verbindet. Die dazugehörigen Ein- und Ausgangssignale werden in der Datei
-\textit{top.vhdl} festgelegt. Abbildung~\ref{code:top} zeigt die Definition des
-Topmoduls.
+\textit{top.vhdl} festgelegt.
+
+Wie in Abbildung~\ref{code:top} zu erkennen, wird zuerst der Takt in Zeile drei als
+Eingang definiert, in den Zeilen vier bis acht die 7-Segment-Anzeige, die LEDs
+und Taster definiert. Die Zeilen zehn und elf beschreiben die beiden Signale des
+seriellen Schnittstelle und Zeilen dreizehn bis siebzehn beschreiben die Signale
+der VGA--Verbindung.
 \begin{figure}[htb]
-\lstinputlisting[language=vhdl, tabsize=4, firstline=10, lastline=29]{../vhdl/top/top.vhdl}
+\lstinputlisting[firstline=11, lastline=29]{../vhdl/top/top.vhdl}
 \caption{Topmodul}
 \label{code:top}
 \end{figure}
+\pagebreak
 \subsection{core -- Topmodul der CPU}
+\label{s:core}
+Das `core'-Modul verbindet die einzelnen Baugruppen der CPU\@. Dazu gehören
+Rechenwerk, Steuerwerk, Dekodierer, Programmzähler und der Stack, welche bereits
+in Kapitel~\ref{c:hardware} beschrieben wurden. 
+
+In Abbildung~\ref{code:core} ist die Definition des Moduls dargestellt. Die
+Signalnamen wurden dem Zweck angepasst, dass heißt das Verbindungen zum
+Speichercontroller mit `MEM' und interne Signale mit `CORE' bezeichnet. Das
+Signal `O\_LED' ist dabei eine Ausnahme, da dieser zu Testzwecken verwendet wird
+und damit nicht fest eingeordnet werden kann.
+\begin{figure}[htb]
+\lstinputlisting[firstline=11, lastline=31]{../vhdl/core/core.vhdl}
+\caption{`core'-Modul}
+\label{code:core}
+\end{figure}
 \pagebreak
 \subsection{memory\_control -- Speichercontroller}
+\label{s:memcontrol}
+Der Speichercontroller wurde bereits in Abschnitt~\ref{s:memorycontrol}
+beschrieben und hier soll nur die Implementation dessen dargestellt werden.
+
+Wie auch bei dem `core'-Modul (siehe~\ref{s:core}) sind hier die Signale nach
+Zugehörigkeit bezeichnet und interne Signale mit `MEM' und Videosignale mit
+`VID' beschrieben. Außerdem sind die letzten drei Signale (Zeilen 22--24) für
+die serielle Schnittstelle vorgesehen, welches im Speicher abgebildet wird.
+\begin{figure}[htb]
+\lstinputlisting[firstline=11, lastline=36]{../vhdl/mem/memory_control.vhdl}
+\caption{Speichercontroller}
+\label{code:core}
+\end{figure}
 \pagebreak

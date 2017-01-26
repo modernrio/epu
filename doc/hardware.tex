@@ -8,8 +8,21 @@ Hardwarekomponenten, soll durch Abbildung~\ref{pic:hardware_overview} das
 Zusammenspiel aller Komponenten gezeigt werden, auf welche während dieses
 Kapitels zurückgegriffen werden kann.
 
+% We need layers to draw the block diagram
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+% Define a few styles and constants
+\tikzstyle{block}=[draw, fill=blue!20, text width=5em, 
+    text centered, minimum height=2.5em]
+
 \begin{figure}[htb]
-\begin{tikzpicture}
+\centering
+\begin{tikzpicture}[auto, node distance=3cm,>=latex']
+	% \node [block, name=ALU] {ALU};
+	% \node [block, right of=ALU, name=controlunit] {Rechenwerk};
+	% \node [block, right of=controlunit, name=controlunit] {Steuerwerk};
 \end{tikzpicture}
 \caption{Hardwarekomponentenübersicht}
 \label{pic:hardware_overview}
