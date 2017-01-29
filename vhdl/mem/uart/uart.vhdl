@@ -34,6 +34,7 @@ architecture uart_behav of uart is
 	signal rx_clk_baud_tick : std_logic := '0';
 	signal rx_state : integer := 0;
 	signal rx_sig : std_logic := '0';
+	signal rx_sig_count : integer := 0; -- to delay turning rx_sig off
 	signal rx_sample_count : integer := 0;
 	signal rx_sample_offset : integer := 3;
 	signal rx_data : std_logic_vector(7 downto 0) := (others => '0');
@@ -43,7 +44,7 @@ architecture uart_behav of uart is
 	signal tx_clk	: std_logic := '0';
 	signal tx_state : tx_state_t := idle;
 	-- signal baudrate : std_logic_vector(15 downto 0) := X"006C"; -- 921600bps @ 100Mhz
-	signal baudrate : std_logic_vector(15 downto 0) := X"0364"; -- 115200bps @ 100Mhz
+	signal baudrate : std_logic_vector(15 downto 0) := X"0365"; -- 115200bps @ 100Mhz
 	-- signal baudrate : std_logic_vector(15 downto 0) := X"28B0"; -- 9600bps @ 100Mhz
 
 	constant OFFSET_START_BIT : integer := 7;
@@ -84,7 +85,7 @@ begin
 			if rx_clk_reset = '1' then
 				rx_clk_reset <= '0';
 			end if;
-			
+
 			if I_Reset = '1' then
 				rx_state <= 0;
 				rx_sig <= '0';
@@ -100,7 +101,6 @@ begin
 			elsif rx_clk_baud_tick = '1' and RX = '0' and rx_state = 1 then
 				rx_sample_count <= rx_sample_count + 1;
 				if rx_sample_count = rx_sample_offset then
-					rx_sig <= '0';
 					rx_state <= 2;
 					rx_data <= X"00";
 					rx_sample_offset <= OFFSET_DATA_BITS;
@@ -130,6 +130,15 @@ begin
 					end if;
 				else
 					rx_sample_count <= rx_sample_count + 1;
+				end if;
+			else
+				if rx_sig = '1' then
+					if rx_sig_count < 3 then
+						rx_sig_count <= rx_sig_count + 1;
+					else
+						rx_sig <= '0';
+						rx_sig_count <= 0;
+					end if;
 				end if;
 			end if;
 		end if;

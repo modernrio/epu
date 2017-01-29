@@ -294,7 +294,9 @@ begin
 	begin
 		if rising_edge(I_MEM_Clk) then
 			last_addr <= I_MEM_Addr;
-			if last_addr = I_MEM_Addr then
+			if I_MEM_Addr(15 downto 0) = X"EF00" then
+				O_MEM_Ready <= rx_ready;
+			elsif last_addr = I_MEM_Addr then
 				O_MEM_Ready <= '0';
 			else
 				O_MEM_Ready <= '1';
@@ -302,5 +304,5 @@ begin
 		end if;
 	end process;
 
-	O_LED <= rx_data;
+	O_LED <= rx_ready & rx_data(6 downto 0);
 end behav_memory_control;

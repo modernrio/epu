@@ -17,8 +17,11 @@ while True:
     size = len(cmd)
     if cmd == b"exit":
         sys.exit()
-    ser.write(cmd)
-    value = ser.read(size)
+    for char in str(cmd)[2:-1]:
+        print(char)
+        ser.write(str.encode(char))
+        time.sleep(0.001)
+    # value = ser.read(size)
     if value != b"":
         try:
             print(value.decode("ascii"))
