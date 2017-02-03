@@ -118,12 +118,12 @@ begin
 			elsif rx_clk_baud_tick = '1' and rx_state = 10 then
 				if rx_sample_count = OFFSET_STOP_BIT then
 					rx_state <= 0;
-					rx_sig <= '1';
 					O_RX_Data <= rx_data;
 
 					if RX = '1' then
 						-- Stopbit korrekt
 						O_RX_FrameError <= '0';
+						rx_sig <= '1';
 					else
 						-- Fehler
 						O_RX_FrameError <= '1';

@@ -304,5 +304,5 @@ begin
 		end if;
 	end process;
 
-	O_LED <= rx_ready & rx_data(6 downto 0);
+	O_LED <= rx_ready & rx_error & rx_data(5 downto 0);
 end behav_memory_control;
