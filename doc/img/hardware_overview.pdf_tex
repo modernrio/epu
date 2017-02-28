@@ -1,0 +1,80 @@
+%% Creator: Inkscape inkscape 0.92.1, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'hardware_overview.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{533.78227194bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.47177341)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{hardware_overview.pdf}}%
+    \put(0.23045771,0.28994257){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{RAM}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{hardware_overview.pdf}}%
+    \put(0.08070866,0.04984343){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{VIDEO}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{hardware_overview.pdf}}%
+    \put(0.18636863,0.04970625){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{LED}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{hardware_overview.pdf}}%
+    \put(0.27087348,0.04985065){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{SW}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{hardware_overview.pdf}}%
+    \put(0.3755008,0.04915167){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{UART}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{hardware_overview.pdf}}%
+    \put(0.47466637,0.40738848){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{EPU}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{hardware_overview.pdf}}%
+    \put(0.23188119,0.10806403){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{Speicherschnittstelle}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{hardware_overview.pdf}}%
+    \put(0.49873289,0.36648821){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Programmzähler}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{hardware_overview.pdf}}%
+    \put(0.52382333,0.25809734){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Rechenwerk}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{hardware_overview.pdf}}%
+    \put(0.80123674,0.36491289){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Dekodierer}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{hardware_overview.pdf}}%
+    \put(0.80435135,0.27410838){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Steuerwerk}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{hardware_overview.pdf}}%
+    \put(0.58311391,0.11001661){\color[rgb]{0,0,0}\makebox(0,0)[b]{\smash{Speichercontroller}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{hardware_overview.pdf}}%
+    \put(0.81631502,0.1256607){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Register}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{hardware_overview.pdf}}%
+  \end{picture}%
+\endgroup%

@@ -7,23 +7,10 @@ welche in Kapitel~\ref{c:vhdl} vertieft wird. Vor der Beschreibung der einzelnen
 Hardwarekomponenten, soll durch Abbildung~\ref{pic:hardware_overview} das
 Zusammenspiel aller Komponenten gezeigt werden, auf welche während dieses
 Kapitels zurückgegriffen werden kann.
-
-% We need layers to draw the block diagram
-\pgfdeclarelayer{background}
-\pgfdeclarelayer{foreground}
-\pgfsetlayers{background,main,foreground}
-
-% Define a few styles and constants
-\tikzstyle{block}=[draw, fill=blue!20, text width=5em, 
-    text centered, minimum height=2.5em]
-
-\begin{figure}[htb]
+\begin{figure}[hb]
 \centering
-\begin{tikzpicture}[auto, node distance=3cm,>=latex']
-	% \node [block, name=ALU] {ALU};
-	% \node [block, right of=ALU, name=controlunit] {Rechenwerk};
-	% \node [block, right of=controlunit, name=controlunit] {Steuerwerk};
-\end{tikzpicture}
+\def\svgwidth{\columnwidth}
+\input{img/hardware_overview.pdf_tex}
 \caption{Hardwarekomponentenübersicht}
 \label{pic:hardware_overview}
 \end{figure}
@@ -131,7 +118,7 @@ Register angesprochen werden. Da der Dekodierer einen einfachen Aufbau haben
 sollte, wurde der Aufbau eines Befehls selbst einfach gehalten.
 
 Der Dekodierer ist sehr stark an den Befehlssatz angelehnt, welcher in
-Abschnitt~\ref{s:befehlsstz} genauer beschrieben wird.
+Abschnitt~\ref{s:befehlssatz} genauer beschrieben wird.
 \subsection{Programmzähler}
 \label{s:pc}
 Der Programmzähler (engl. \ac{PC}) ist hardwaretechnisch gesehen ein Register,
@@ -153,10 +140,9 @@ wurden vier verschiedene Zustände für den \ac{PC} gewählt:
 
 Je nach Befehl wird bei der Ausführung dann der passende Zustand ausgewählt und
 somit sichergestellt, dass die Adresse für den folgenden Befehl korrekt ist.
-\pagebreak
 \subsection{Stack}
 \label{s:stack}
-Der Stack(deutsch: Stapel) ist ein Modell zum Speicher von Daten. Dabei sind
+Der Stack(deutsch: Stapel) ist ein Modell zum Speichern von Daten. Dabei sind
 zwei Operationen zum Speichern und Abrufen der Daten vorhanden: PUSH und POP\@.
 Bei PUSH wird oben auf den Stapel ein neues Element hinzugefügt, bei POP wird
 das oberste Element vom Stapel heruntergenommen. Somit ist der Zugriff auf das
@@ -171,6 +157,21 @@ da es keine Begrenzung (außer der physischen Größe des Stacks) gibt, wie viel
 Funktionen innerhalb einer Funktionen aufgerufen werden können. Es sind also
 theoretisch unendlich viele Verkettungen möglich, wobei die Theorie nur durch
 die Größe des Speichers limitiert wird.
+\subsection{UART}
+\label{s:stack}
+Der \ac{UART}, welcher die Implementierung der seriellen Schnittstelle enthält,
+wird genutzt, um Eingabe von dem Benutzer zu bekommen. Dabei wird über ein
+selbst geschriebenes Skript die Tastatureingabe von einem anderen Rechner
+übernommen und über die serielle Schnittstelle an das Gerät weitergeleitet. So
+ist es möglich, eine Tastatur "anzuschließen". Die Übertragung über die serielle
+Schnittstelle findet mit einer Bitrate von 115200 bit/s, 8 Datenbits, 1 Stopbit
+und keinem Paritätsbit statt.
+
+Hardwaretechnisch ist der UART über die Speicheradresse 0xEF00 zu erreichen.
+Sollte diese Adresse gelesen werden, wird das nächste Byte des UARTs abgefragt
+und dadurch die CPU gestoppt, bis ein Byte angekommen ist. Dadurch ist die
+Eingabe blockierend, also können keine weiteren Operationen während der Eingabe
+durchgeführt werden.
 \subsection{Speichercontroller}
 \label{s:memorycontrol}
 Der Arbeitsspeicher ist als kontinuierlicher Speicherblock realisert worden. Es
@@ -182,7 +183,7 @@ Schreibbefehle angesprochen werden kann.
 
 Insgesamt wurde der mit 16 Bit verfügbare maximal adressierbare Speicher von
 $2^{16} = 65536$ Bytes ausgenutzt, wobei einzelne Abschnitte, wie beispielsweise
-der Videospeicher, nicht allgemein nutzbar sind.
+der Videospeicher oder auch die Speicheraddresse für den UART, nicht allgemein nutzbar sind.
 \subsection{Videocontroller}
 \label{s:videocontrol}
 Der Videocontroller selbst ist nach außen hin unabhängig von allen anderen
@@ -226,7 +227,7 @@ Selektion & Name & Zweck\\
 \end{table}
 \pagebreak
 \section{Befehlssatz}
-\label{s:befehlsstz}
+\label{s:befehlssatz}
 Der Befehlssatz beschreibt den Aufbau und die Menge aller Befehle der \ac{EPU}.
 Nachfolgend soll sowohl der Aufbau und dessen Entstehung erläutert werden, als
 auch ein Überblick über die verschiedenen Befehle vermittelt werden.
@@ -240,7 +241,7 @@ Rechenoperation, ob das Ergebnis auf dem Arbeitsspeicher geschrieben werden
 soll, etc. Wie in Abbildung~\ref{pic:befehlsaufbau} zu sehen, ist die Angabe
 von Konstanten in 4, 8 und 16 Bit möglich. Der Grund für die doch sehr
 platznehmende 16-Bit-Konstante ist, dass ein Register mit einer Konstante in
-einem Befehl befülllt werden soll, wobei alle Register der \ac{EPU} 16 Bit groß
+einem Befehl befüllt werden soll, wobei alle Register der \ac{EPU} 16 Bit groß
 sind.
 \begin{figure}[htb]
 \centering
