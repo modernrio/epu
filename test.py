@@ -15,6 +15,8 @@ def on_press(key):
         ser.write(str.encode("\n"))
     elif str(key) == "Key.backspace":
         ser.write(str.encode("\b"))
+    elif str(key) == "Key.space":
+        ser.write(str.encode(" "))
     time.sleep(0.01)
 
 def on_release(key):
