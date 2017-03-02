@@ -1,0 +1,38 @@
+_start:
+	load r0, 0x1005 # x=16;y=5
+	push r0
+	call.i $_setcursor
+	jmp.i $main
+
+main:
+	load r0, 0d00
+	load r1, $data
+	push r0
+	push r1
+	call.i $_print
+
+	load r8, $inputdata
+	load r0, 0d3
+	push r0
+	push r8
+	call.i $_getstring
+
+	load r3, $cmd_echo
+	load r4, 0x4
+	push r4
+	push r3
+	push r8
+	call.i $_strcmp
+	test r0
+	jnz.i $main
+end:
+	jmp.i $end
+
+data:
+	.data 0x3E3E2020202020202020202020202000
+
+inputdata:
+	.data 0x00000000000000000000000000000000
+
+cmd_echo:
+	.data 0x6563686f

@@ -56,33 +56,70 @@ _getinput:
 		ret
 _int:
 	ret
-_code:
 
 _getstring:
 	_getstring_start:
 		pop r15
-		pop r2 # Pointer to memory location
+		pop r5 # inputdata
+		pop r7 # print offset
+		mov r6, r5
 		push r15
-		load r0, 0x0A # newline
-		load r3, 0x00 # wait
 
-	_getstring_read:
+	_getstring_loop:
+		# Get input
 		call.i $_getinput
+
+		# Write input to RAM
 		pop r1
-	
-	_getstring_checkwait:
-		cmp r1, r3
-		je.i $_getstring_read
-	
-	_getstring_write:
-		write.l r2, r1, 0x0
-		addi r2, r2, 0x1
-	
-	_getstring_checkend:
-		cmp r1, r0
-		jne.i $_getstring_read
-	
+		load r2, 0x0000
+		write.l r5, r1, 0x0
+		write.l r5, r2, 0x1 # write null byte to end string
+		load r4, 0x0A #newline
+		cmp r4, r1
+		je.i $_getstring_end
+
+		# Call print
+		push r7
+		push r6
+		call.i $_print
+
+		# Jump to start of loop
+		addi r5, r5, 0x1
+		jmp.i $_getstring_loop
+
 	_getstring_end:
-		load r4, 0x00
-		write.l r2, r4, 0x0
 		ret
+
+_strcmp:
+	_strcmp_start:
+		pop r15
+		pop r1 # &str1
+		pop r2 # &str2
+		pop r3 # length
+		push r15
+	
+	_strcmp_loop:
+		# Check char
+		read.l r5, r1, 0x0
+		read.l r6, r2, 0x0
+		cmp r5, r6
+		jne.i $_strcmp_false
+
+		# Go to next char
+		addi r1, r1, 0x1
+		addi r2, r2, 0x1
+
+		# Setup loop
+		subi r3, r3, 0x1
+		load r4, 0x0
+		cmp r3, r4
+		jg.i $_strcmp_loop
+	
+	_strcmp_true:
+		load r0, 0x0
+		ret
+
+	_strcmp_false:
+		load r0, 0x1
+		ret
+_code:

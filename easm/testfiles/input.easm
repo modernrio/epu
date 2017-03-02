@@ -1,5 +1,5 @@
 _start:
-	load r0, 0d80
+	load r0, 0d00
 	load r1, $data
 	push r0
 	push r1
@@ -7,31 +7,19 @@ _start:
 	load r0, 0x1005 # x=16;y=5
 	push r0
 	call.i $_setcursor
+	jmp.i $main
+
+main:
 	load r5, $inputdata
-
-inputloop:
-	# Get input
-	call.i $_getinput
-
-	# Write input to RAM
-	pop r1
-	write.l r5, r1, 0x0
-
-	# Call print
-	load r0, 0d160
-	load r1, $inputdata
+	load r0, 0d3
 	push r0
-	push r1
-	call.i $_print
-
-	# Jump to start of loop
-	addi r5, r5, 0x1
-	jmp.i $inputloop
+	push r5
+	call.i $_getstring
 end:
 	jmp.i $end
 
 data:
-	.data 0x48656C6C6F20776F726C6400
+	.data 0x3E3E20
 
 inputdata:
-	.data 0x414200
+	.data 0x00000000000000000000000000000000
