@@ -93,3 +93,29 @@ die serielle Schnittstelle vorgesehen, welches im Speicher abgebildet wird.
 \label{code:core}
 \end{figure}
 \pagebreak
+\subsection{alu -- Rechenwerk}
+Das Rechenwerk führt die eigentliche logische bzw. mathematische Operation aus.
+Hier soll zum Verständnis nur ein Teil des Quellcodes gezeigt werden.
+
+Die nachfolgende Abbildung~\ref{code:alu_add} beschreibt den Ablauf der \ac{ALU} bei dem Befehl
+'ADD'.
+
+\begin{figure}[htb]
+\lstinputlisting[firstline=65, lastline=89]{../vhdl/core/alu.vhdl}
+\caption{Addition aus Sicht der ALU}
+\label{code:alu_add}
+\end{figure}
+Der Quellcode ist recht einfach zu lesen, denn die eigentliche Logik, die hier
+passiert, basiert auf Abfragen nach bestimmten Flags. So gibt es die Möglichkeit
+beim 'ADD'-Befehl einerseits vorzeichenbehaftet und andererseits
+vorzeichenunbehaftet zu addieren (siehe Abfrage Zeile 2). Danach wird noch bei
+beiden Fällen noch überprüft, ob zwei Register oder ein Register und eine
+Konstante addiert werden sollen (siehe Zeilen 3 und 13). Die je nach Fall
+ausgeführte Addition ist dann trivial, da sie bereits in die Sprache eingebunden
+ist und nur die Werte in die richtigen Datentypen (\textit{signed} \&
+\textit{unsigned}) konvertiert werden müssen (siehe Zeilen 5-6, 9-10, 15 und
+20).  Bei der vorzeichenbehafteten Addition muss die Erkennung eines
+\textbf{Überlaufs} seperat durchgeführt werden (siehe Zeilen 16-17 und 21-22),
+wohingegen bei der vorzeichenunbehafteten Addition die Erkennung einfach am
+siebzehnten Bit zu erkennen ist und damit innerhalb der eigentlichen Rechnung
+stattfindet.
