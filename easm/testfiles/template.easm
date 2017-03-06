@@ -27,6 +27,36 @@ _print:
 	# Stop printing
 	_print_end:
 			ret	
+
+_clear:
+	_clear_start:
+		pop r15
+		pop r1 # start
+		pop r2 # length
+		push r15
+		load r3, 0x20 # space
+		
+		# Calc VRAM addr
+		load r0, 0xF000	# Fixed VRAM addr
+		add r1, r1, r0
+	
+	_clear_write:
+		# Setup loop
+		test r2
+		jz.i $_clear_end
+		subi r2, r2, 0x1
+
+		# Write to VRAM
+		write.l r1, r3, 0x0
+		
+		# Increase start
+		addi r1, r1, 0x1
+		
+		jmp.i $_clear_write
+		
+	_clear_end:
+		ret
+
 _setcursor:
 	_setcursor_start:
 		pop r15
@@ -68,15 +98,48 @@ _getstring:
 	_getstring_loop:
 		# Get input
 		call.i $_getinput
-
-		# Write input to RAM
 		pop r1
+		mov r8, r1
+
+		# Check for newline
+		load r4, 0x0A # newline
+		cmp r4, r1
+		jne.i $_getstring_backspace
+
+		# Write null byte at end of string
+		load r1, 0x00
+		write.l r5, r1, 0x0
+		jmp.i $_getstring_end
+
+	_getstring_backspace:
+		# Check for backspace
+		load r4, 0x08 # backspace
+		cmp r4, r1
+		jne.i $_getstring_write
+
+		# Check that we're not on the first char
+		cmp r5, r6
+		jle.i $_getstring_loop
+
+		# Delete last character if backspace was pressed
+		subi r5, r5, 0x1
+		load r2, 0x00
+		write.l r5, r2, 0x0
+		jmp.i $_getstring_print
+
+	_getstring_write:
+		# Write to RAM
 		load r2, 0x0000
 		write.l r5, r1, 0x0
 		write.l r5, r2, 0x1 # write null byte to end string
-		load r4, 0x0A #newline
-		cmp r4, r1
-		je.i $_getstring_end
+
+	_getstring_print:
+		# Clear previous string
+		load r10, 0d80
+		sub r10, r10, r7 # calc offset to EOL
+		push r10
+		push r7
+		call.i $_clear
 
 		# Call print
 		push r7
@@ -84,10 +147,21 @@ _getstring:
 		call.i $_print
 
 		# Jump to start of loop
+		load r4, 0x08 # backspace
+		cmp r4, r8
+		# Don't do addition if backspace was pressed
+		je.i $_getstring_loop
 		addi r5, r5, 0x1
 		jmp.i $_getstring_loop
 
 	_getstring_end:
+		# Clear previous string
+		load r10, 0d80
+		sub r10, r10, r7 # calc offset to EOL
+		push r10
+		push r7
+		call.i $_clear
+
 		ret
 
 _strcmp:
@@ -122,4 +196,25 @@ _strcmp:
 	_strcmp_false:
 		load r0, 0x1
 		ret
+
+_strlen:
+	_strlen_start:
+		pop r15
+		pop r1 # str
+		push r15
+		load r0, 0x00 # counter
+		load r2, 0x00
+
+	_strlen_loop:
+		# Check if current char is null
+		read.l r2, r1, 0x0
+		test r2
+		jz.i $_strlen_end
+		addi r0, r0, 0x1 # inc counter
+		addi r1, r1, 0x1 # inc str
+		jmp.i $_strlen_loop
+
+	_strlen_end:
+		ret
+		
 _code:

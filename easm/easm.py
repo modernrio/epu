@@ -13,6 +13,16 @@ import argparse
 import re
 from bitstring import BitArray
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 jumpcondition = {
     "EQ":         "0b0000",
     "NEQ":        "0b0001",
@@ -80,8 +90,8 @@ def I(args, line, parameter, sel, showerrors):
         # Check length and if neccessary correct it
         if len(I) > 6:
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " +
-                      "Immediate can be only 2 Bytes(4 hex characters) long")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                      "Immediate can be only 2 Bytes(4 hex characters) long" + bcolors.ENDC)
             return bitargs
         else:
             # Fill unused space with 0's
@@ -90,8 +100,8 @@ def I(args, line, parameter, sel, showerrors):
         # Check syntax
         if not re.fullmatch("[0-9a-fA-F]+", I[2:]):
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " +
-                      "Immediate is not an hex number")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                      "Immediate is not an hex number" + bcolors.ENDC)
             return bitargs
 
         # Set the immediate
@@ -102,8 +112,8 @@ def I(args, line, parameter, sel, showerrors):
         # Check length and if neccessary correct it
         if len(I) > 18:
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " + "Immediate" +
-                      " can be only 2 Bytes(16 binary characters) long")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " + "Immediate" +
+                      " can be only 2 Bytes(16 binary characters) long" + bcolors.ENDC)
             return bitargs
         else:
             # Fill unused space with 0's
@@ -112,8 +122,8 @@ def I(args, line, parameter, sel, showerrors):
         # Check syntax
         if not re.fullmatch("[01]+", I[2:]):
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " +
-                      "Immediate is not a binary number")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                      "Immediate is not a binary number" + bcolors.ENDC)
                 return bitargs
 
         # Set the immediate
@@ -123,15 +133,15 @@ def I(args, line, parameter, sel, showerrors):
         # Check syntax
         if not re.fullmatch("[0-9]+", I[2:]):
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " +
-                      "Immediate is not a decimal number")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                      "Immediate is not a decimal number" + bcolors.ENDC)
             return bitargs
 
         # Check length and if neccessary correct it
         if int(I[2:]) > 65535:
             if showerrors:
-                print("(line " + str(line).rjust(3, " ") + ") " +
-                      "Immediate can be only 2 Bytes(max: 0d65535) long")
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                      "Immediate can be only 2 Bytes(max: 0d65535) long" + bcolors.ENDC)
             return bitargs
         else:
             # Fill unused space with 0's
@@ -144,8 +154,8 @@ def I(args, line, parameter, sel, showerrors):
         return bitargs
     else:
         if showerrors:
-            print("(line " + str(line).rjust(3, " ") + ") " +
-                  "Immediate syntax error")
+            print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                  "Immediate syntax error" + bcolors.ENDC)
 
     return bitargs
 
@@ -158,15 +168,15 @@ def R(args, line, sel):
     except:
         R = args.replace(" ", "")
     if not R.startswith("r"):
-        print("(line " + str(line).rjust(3, " ") + ") " +
+        print(bcolors.WARNING + "(line " + str(line).rjust(3, " ") + ") " +
               "No register given when expected for parameter " +
-              str(int(sel+1)) + ". Defaulting to r0")
+              str(int(sel+1)) + ". Defaulting to r0" + bcolors.ENDC)
         return BitArray("0b0000")
     else:
         if int(R[1:]) >= int(16):
-            print("(line " + str(line).rjust(3, " ") + ") " +
+            print(bcolors.WARNING + "(line " + str(line).rjust(3, " ") + ") " +
                   "Register r" + str(R[1:]) + " does not exist. Defaulting " +
-                  "to r0")
+                  "to r0" + bcolors.ENDC)
             return BitArray("0b0000")
         R = "0x" + hex(int(R[1:]))
         bitargs.append(R)
@@ -181,8 +191,8 @@ def RO(args, line, sel):
     try:
         RO = args.split(".", 2)[int(sel)].replace(" ", "")
     except:
-        print("(line " + str(line).rjust(3, " ") + ") " +
-              "Reg-Offset syntax error: Expected format: rXX.Y")
+        print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+              "Reg-Offset syntax error: Expected format: rXX.Y" + bcolors.ENDC)
         return BitArray("0b0000")
 
     if sel == 0:
@@ -190,13 +200,13 @@ def RO(args, line, sel):
     elif sel == 1:
         # Check syntax
         if not re.fullmatch("[0-9]+", RO):
-            print("(line " + str(line).rjust(3, " ") + ") " +
-                  "Offset is not a decimal number")
+            print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                  "Offset is not a decimal number" + bcolors.ENDC)
 
         # Check length and if neccessary correct it
         if int(RO) > 15:
-            print("(line " + str(line).rjust(3, " ") + ") " +
-                  "Offset needs to be in range 0 to 15")
+            print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
+                  "Offset needs to be in range 0 to 15" + bcolors.ENDC)
             return bitargs
         else:
             # Fill unused space with 0's
@@ -232,7 +242,7 @@ class FORM_VOID:
         if self.opcode in opcodebits:
             self.data[0:5] = BitArray(self.opcode)
         else:
-            print("[DEBUG] Given opcode is not listed: " + self.opcode)
+            print(bcolors.OKBLUE + "[DEBUG] Given opcode is not listed: " + self.opcode + bcolors.ENDC)
             return "X\"00\","
 
         if self.flag:
@@ -261,7 +271,7 @@ class FORM_RI:
             if self.opcode in opcodebits:
                 self.data[0:5] = BitArray(self.opcode)
             else:
-                print("[DEBUG] Given opcode is not listed: " + self.opcode)
+                print(bcolors.OKBLUE + "[DEBUG] Given opcode is not listed: " + self.opcode + bcolors.ENDC)
                 return "X\"00\","
 
             if self.flag:
@@ -310,7 +320,7 @@ class FORM_RR:
             if self.opcode in opcodebits:
                 self.data[0:5] = BitArray(self.opcode)
             else:
-                print("[DEBUG] Given opcode is not listed: " + self.opcode)
+                print(bcolors.OKBLUE + "[DEBUG] Given opcode is not listed: " + self.opcode + bcolors.ENDC)
                 return "X\"00\","
 
             if self.flag:
@@ -371,7 +381,7 @@ class FORM_IRR:
             if self.opcode in opcodebits:
                 self.data[0:5] = BitArray(self.opcode)
             else:
-                print("[DEBUG] Given opcode is not listed: " + self.opcode)
+                print(bcolors.OKBLUE + "[DEBUG] Given opcode is not listed: " + self.opcode + bcolors.ENDC)
                 return "X\"00\","
 
             if self.flag:
@@ -400,11 +410,11 @@ class FORM_IRR:
             # Check argument length
             parametercount = len(list(args.split(",")))
             if not parametercount == self.parameter:
-                print("(line " + str(line).rjust(3, " ") + ") " +
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
                       "Parameter list not valid based on length\n" +
                       "           " +
                       "Expected " + str(self.parameter) + " parameters, " +
-                      str(parametercount) + " were given.")
+                      str(parametercount) + " were given." + bcolors.ENDC)
                 return self.data.hex
 
         elif self.count == 2:
@@ -449,7 +459,7 @@ class FORM_RRI:
             if self.opcode in opcodebits:
                 self.data[0:5] = BitArray(self.opcode)
             else:
-                print("[DEBUG] Given opcode is not listed: " + self.opcode)
+                print(bcolors.OKBLUE + "[DEBUG] Given opcode is not listed: " + self.opcode + bcolors.ENDC)
                 return "X\"00\","
 
             if self.flag:
@@ -488,11 +498,11 @@ class FORM_RRI:
             parametercount = len(list(args.split(",")))
             if not parametercount == self.rCount + 1:
                 self.showerrors = False  # Do not show more errors
-                print("(line " + str(line).rjust(3, " ") + ") " +
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
                       "Parameter list not valid based on length\n" +
                       "           " +
                       "Expected " + str(self.rCount + 1) + " parameters, " +
-                      str(parametercount) + " were given.")
+                      str(parametercount) + " were given." + bcolors.ENDC)
                 return self.data.hex
 
         elif self.count == 2:
@@ -616,11 +626,11 @@ class FORM_RRR:
             # Check argument length
             parametercount = len(list(args.split(",")))
             if not parametercount == self.rCount + 1:
-                print("(line " + str(line).rjust(3, " ") + ") " +
+                print(bcolors.FAIL + "(line " + str(line).rjust(3, " ") + ") " +
                       "Parameter list not valid based on length\n" +
                       "           " +
                       "Expected " + str(self.rCount + 1) + " parameters, " +
-                      str(parametercount) + " were given.")
+                      str(parametercount) + " were given." + bcolors.ENDC)
                 return self.data.hex
 
         elif self.count == 2:

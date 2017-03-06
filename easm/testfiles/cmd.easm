@@ -17,7 +17,8 @@ main:
 	push r8
 	call.i $_getstring
 
-	load r3, $cmd_echo
+	load r8, $inputdata
+	load r3, $str_echo
 	load r4, 0x4
 	push r4
 	push r3
@@ -25,14 +26,40 @@ main:
 	call.i $_strcmp
 	test r0
 	jnz.i $main
-end:
-	jmp.i $end
+
+	call.i $cmd_echo
+	load r0, 0d77
+	load r1, 0d3
+	push r0
+	push r1
+	call.i $_clear
+	jmp.i $main
 
 data:
-	.data 0x3E3E2020202020202020202020202000
+	.data 0x3E3E2000
+
+test:
+	.data 0x00000000
+
+str_echo:
+	.data 0x6563686f00
+
+cmd_echo:
+	# Clear line
+	load r0, 0d80
+	push r0
+	push r0
+	call.i $_clear
+
+	# Print arguemnts
+	load r0, 0d80
+	load r1, $inputdata
+	addi r1, r1, 0x5
+	push r0
+	push r1
+	call.i $_print
+
+	ret
 
 inputdata:
 	.data 0x00000000000000000000000000000000
-
-cmd_echo:
-	.data 0x6563686f
