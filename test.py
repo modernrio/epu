@@ -4,7 +4,7 @@ from pynput.keyboard import Key, Listener
 import serial
 import time
 
-ser = serial.serial_for_url("spy:///dev/ttyUSB1?file=test.txt", timeout=1, baudrate=115200)
+ser = serial.serial_for_url("spy:///dev/ttyUSB1?file=test.txt", timeout=1, baudrate=9600)
 
 def on_press(key):
     print('{0} pressed'.format(key))

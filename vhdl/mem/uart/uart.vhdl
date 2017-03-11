@@ -44,8 +44,8 @@ architecture uart_behav of uart is
 	signal tx_clk	: std_logic := '0';
 	signal tx_state : tx_state_t := idle;
 	-- signal baudrate : std_logic_vector(15 downto 0) := X"006C"; -- 921600bps @ 100Mhz
-	signal baudrate : std_logic_vector(15 downto 0) := X"0365"; -- 115200bps @ 100Mhz
-	-- signal baudrate : std_logic_vector(15 downto 0) := X"28B0"; -- 9600bps @ 100Mhz
+	-- signal baudrate : std_logic_vector(15 downto 0) := X"0365"; -- 115200bps @ 100Mhz
+	signal baudrate : std_logic_vector(15 downto 0) := X"28B0"; -- 9600bps @ 100Mhz
 
 	constant OFFSET_START_BIT : integer := 7;
 	constant OFFSET_DATA_BITS : integer := 15;
