@@ -173,10 +173,11 @@ begin
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
   -- Control register. Individual control signal
-  cur_mode  <= octl(4); 
-  cur_blink <= octl(5); 
-  cur_en    <= octl(6); 
-  vga_en    <= octl(7); 
+  vga_en    <= octl(7);
+  cur_en    <= octl(6);
+  cur_blink <= octl(5);
+  cur_mode  <= octl(4);
+
   ctl_r     <= octl(2);
   ctl_g     <= octl(1);
   ctl_b     <= octl(0);

@@ -170,6 +170,8 @@ architecture behav_memory_control of memory_control is
 	signal blk_weA : std_logic_vector(00 downto 0);
 	
 	signal last_addr : std_logic_vector(15 downto 0);
+
+	signal vga_ctl : std_logic_vector(7 downto 0) := "11110111";
 begin
 	we(0) <= I_MEM_We;
 
@@ -264,12 +266,21 @@ begin
 			rx_cont <= '0';
 			blk_weA <= "0";
 			ram_weA <= "0";
+		elsif I_MEM_Addr(15 downto 0) = X"ED02" then
+			-- VGA Control Flags
+			vga_ctl <= I_MEM_Data;
+			O_MEM_Data <= X"00";
+			rx_cont <= '0';
+			blk_weA <= "0";
+			ram_weA <= "0";
 		elsif I_MEM_Addr(15 downto 0) = X"EF00" then
+			-- UART Input
 			O_MEM_Data <= rx_data;
 			rx_cont <= '1';
 			blk_weA <= "0";
 			ram_weA <= "0";
 		else
+			-- "Normal" Memory Access
 			blk_adA <= I_MEM_Addr;
 			blk_weA <= we;
 			blk_diA <= I_MEM_Data;
@@ -284,7 +295,8 @@ begin
 	
 	-- crx_oreg    <= std_logic_vector(TO_UNSIGNED(0, 8));
 	-- cry_oreg    <= std_logic_vector(TO_UNSIGNED(39, 8));
-	ctl_oreg    <= "11110010";
+	-- ctl_oreg    <= "11110010";
+	ctl_oreg <= vga_ctl;
 	crx_oreg_ce <= '1';
 	cry_oreg_ce <= '1';
 	ctl_oreg_ce <= '1';

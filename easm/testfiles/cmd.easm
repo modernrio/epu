@@ -2,37 +2,68 @@ _start:
 	load r0, 0x1005 # x=16;y=5
 	push r0
 	call.i $_setcursor
+
+	# Set color to white (default)
+	load r0, 0b11110111
+	push r0
+	call.i $_set_vga
+
 	jmp.i $main
 
 main:
+	# Print prompt
 	load r0, 0d00
 	load r1, $data
 	push r0
 	push r1
 	call.i $_print
 
+	# Get input
 	load r8, $inputdata
 	load r0, 0d3
 	push r0
 	push r8
 	call.i $_getstring
 
+	# Load global variables
 	load r8, $inputdata
-	load r3, $str_echo
+
+	# Case echo
 	load r4, 0x4
+	load r3, $str_echo
 	push r4
 	push r3
 	push r8
 	call.i $_strcmp
 	test r0
-	jnz.i $main
+	jz.i $echo
 
-	call.i $cmd_echo
+	# Case setcolor
+	load r3, $str_setcolor
+	load r4, 0x8
+	push r4
+	push r3
+	push r8
+	call.i $_strcmp
+	test r0
+	jz.i $setcolor
+
+	# Clear prompt
 	load r0, 0d77
 	load r1, 0d3
 	push r0
 	push r1
 	call.i $_clear
+	jmp.i $main
+
+# echo cmd
+echo:
+	call.i $cmd_echo
+	jmp.i $main
+
+# setcolor cmd
+setcolor:
+	call.i $cmd_setcolor
 	jmp.i $main
 
 data:
@@ -43,6 +74,9 @@ test:
 
 str_echo:
 	.data 0x6563686f00
+
+str_setcolor:
+	.data 0x736574636f6c6f7200
 
 cmd_echo:
 	# Clear line
@@ -60,6 +94,47 @@ cmd_echo:
 	call.i $_print
 
 	ret
+
+cmd_setcolor:
+	# Clear line
+	load r0, 0d80
+	push r0
+	push r0
+	call.i $_clear
+
+	# Predefined vga flag register
+	load r9, 0b11110111
+	load r1, $inputdata
+	addi r1, r1, 0x9
+
+	# Check 1st char (red)
+	cmd_setcolor_check0:
+		load r0, 0x0
+		read.l r0, r1, 0x0
+		test.b r0.0
+		jb.i $cmd_setcolor_check1
+		clr r9.2
+
+	# Check 2nd char (green)
+	cmd_setcolor_check1:
+		load r0, 0x0
+		read.l r0, r1, 0x1
+		test.b r0.0
+		jb.i $cmd_setcolor_check2
+		clr r9.1
+
+	# Check 3rd char (blue)
+	cmd_setcolor_check2:
+		load r0, 0x0
+		read.l r0, r1, 0x2
+		test.b r0.0
+		jb.i $cmd_setcolor_write
+		clr r9.0
+	
+	cmd_setcolor_write:
+		push r9
+		call.i $_set_vga
+		ret
 
 inputdata:
 	.data 0x00000000000000000000000000000000

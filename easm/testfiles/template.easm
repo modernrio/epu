@@ -216,5 +216,18 @@ _strlen:
 
 	_strlen_end:
 		ret
+
+_set_vga:
+	_set_vga_start:
+		pop r15
+		pop r1
+		push r15
+		load r0, 0xED02 # Fixed VGA Flag address
+	
+	_set_vga_write:
+		write.h r0, r1, 0x0
+	
+	_set_vga_end:
+		ret
 		
 _code:
