@@ -158,20 +158,20 @@ Funktionen innerhalb einer Funktionen aufgerufen werden können. Es sind also
 theoretisch unendlich viele Verkettungen möglich, wobei die Theorie nur durch
 die Größe des Speichers limitiert wird.
 \subsection{UART}
-\label{s:stack}
+\label{s:uart}
 Der \ac{UART}, welcher die Implementierung der seriellen Schnittstelle enthält,
 wird genutzt, um Eingabe von dem Benutzer zu bekommen. Dabei wird über ein
 selbst geschriebenes Skript die Tastatureingabe von einem anderen Rechner
 übernommen und über die serielle Schnittstelle an das Gerät weitergeleitet. So
-ist es möglich, eine Tastatur "anzuschließen". Die Übertragung über die serielle
-Schnittstelle findet mit einer Bitrate von 115200 bit/s, 8 Datenbits, 1 Stopbit
+ist es möglich, eine Tastatur 'anzuschließen'. Die Übertragung über die serielle
+Schnittstelle findet mit einer Bitrate von 9600 bit/s, 8 Datenbits, 1 Stopbit
 und keinem Paritätsbit statt.
 
 Hardwaretechnisch ist der UART über die Speicheradresse 0xEF00 zu erreichen.
 Sollte diese Adresse gelesen werden, wird das nächste Byte des UARTs abgefragt
-und dadurch die CPU gestoppt, bis ein Byte angekommen ist. Dadurch ist die
-Eingabe blockierend, also können keine weiteren Operationen während der Eingabe
-durchgeführt werden.
+und dadurch die CPU temporär gestoppt, bis ein Byte angekommen ist. Dadurch ist
+die Eingabe blockierend, also können keine weiteren Operationen während der
+Eingabe durchgeführt werden.
 \subsection{Speichercontroller}
 \label{s:memorycontrol}
 Der Arbeitsspeicher ist als kontinuierlicher Speicherblock realisert worden. Es
@@ -206,8 +206,8 @@ Selektion & Name & Zweck\\
 \midrule
 0000 & R0  & Akkumulator\\
 0001 & R1  & Allgemeine Verwendung\\
-0010 & R2  & Laufvariable\\
-0011 & R3  & Datenregister\\
+0010 & R2  & Allgemeine Verwendung\\
+0011 & R3  & Allgemeine Verwendung\\
 0100 & R4  & Allgemeine Verwendung\\
 0101 & R5  & Allgemeine Verwendung\\
 0110 & R6  & Allgemeine Verwendung\\
@@ -218,8 +218,8 @@ Selektion & Name & Zweck\\
 1011 & R11 & Allgemeine Verwendung\\
 1100 & R12 & Allgemeine Verwendung\\
 1101 & R13 & Allgemeine Verwendung\\
-1110 & FLA & Flagregister\\
-1111 & ID  & Interruptdaten\\
+1110 & R14 & Flagregister\\
+1111 & R15 & Programmzähler (Kopie)\\
 \bottomrule
 \end{tabular}
 \caption{Registerbelegung}
@@ -229,8 +229,7 @@ Selektion & Name & Zweck\\
 \section{Befehlssatz}
 \label{s:befehlssatz}
 Der Befehlssatz beschreibt den Aufbau und die Menge aller Befehle der \ac{EPU}.
-Nachfolgend soll sowohl der Aufbau und dessen Entstehung erläutert werden, als
-auch ein Überblick über die verschiedenen Befehle vermittelt werden.
+Nachfolgend soll sowohl der Aufbau und dessen Entstehung erläutert werden.
 
 \subsection{Aufbau}
 Der Befehl wird byteweise gelesen und die Anzahl an Bytes in einem Befehl sind
@@ -255,7 +254,7 @@ sind.
 	% Blaue vertikale Linien
 	\foreach \x in {0,...,8}
 		\draw[thick,blue] (\x, 14) -- (\x,21);
-	% Das Wort "Bit" nach ganz links schreiben
+	% Das Wort 'Bit' nach ganz links schreiben
 	\node[thick] (bit1) at (-0.5, 20.5) {\scriptsize Bit};
 	\node[thick] (bit2) at (-0.5, 14.5) {\scriptsize Bit};
 	% Pfeil links
@@ -302,7 +301,9 @@ sind insgesamt $2^5 = 32$ Befehle möglich. Dennoch kann ein Befehl durch
 bestimmte Parameter (wie z.B. der Flag im ersten Byte) um gewisse Funktionen
 erweitert werden. Dies ermöglicht beispielsweise vorzeichenbehaftete und
 vorzeichenlose Addition, obwohl der Opcode beider Operationen der gleiche ist.
-\begin{table}[h]
+Eine ausführlichere Beschreibung jedes Befehls ist im
+Anhang~\ref{a:befehlsliste} zu finden.
+\begin{table}[htb]
 \centering
 \begin{tabular}{lll}
 \toprule
@@ -324,15 +325,15 @@ Bitweises Verschieben nach rechts				& SHR   	& 01100\\
 Vergleichen zweier Register						& CMP   	& 01101\\
 Springen zu einer Adresse						& JMP   	& 01110\\
 Bedingtes Springen zu einer Adresse				& JC    	& 01111\\
-Multiplikation									& MUL   	& 10000\\
+Nicht benutzt									& ---   	& 10000\\
 Aufrufen einer Funktion							& CALL  	& 10001\\
 Zurückkehren von einer Funktion					& RET   	& 10010\\
 Ein Element auf den Stack schieben				& PUSH  	& 10011\\
 Von dem Stack ein Element entnehmen				& POP   	& 10100\\
-Ausführung eines Interrupts						& INT   	& 10101\\
+Nicht benutzt									& ---   	& 10101\\
 Flags für die Beziehung zweier Register setzen	& TEST  	& 10110\\
-Division										& DIV   	& 10111\\
-Modulo											& MOD   	& 11000\\
+Nicht benutzt									& ---   	& 10111\\
+Nicht benutzt									& ---   	& 11000\\
 Stoppen der Ausführung des Prozessors			& HLT   	& 11001\\
 Setzen eines bestimmten Bits eines Registers	& SET   	& 11010\\
 Löschen eines bestimmten Bits eines Registers	& CLR   	& 11011\\
