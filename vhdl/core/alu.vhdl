@@ -141,23 +141,23 @@ begin
 				when OPCODE_SHL =>
 					if I_AluOp(IFO_REL_LENGTH_END) = '0' then
 						-- Form RRR
-						-- S_Res(15 downto 0) <= std_logic_vector(shift_left(unsigned(I_DataA),
-						-- 						to_integer(unsigned(I_DataB(3 downto 0)))));
+						S_Res(15 downto 0) <= std_logic_vector(shift_left(unsigned(I_DataA),
+												to_integer(unsigned(I_DataB(3 downto 0)))));
 					else
 						-- Form RRI
-						-- S_Res(15 downto 0) <= std_logic_vector(shift_left(unsigned(I_DataA),
-						-- 						to_integer(unsigned(I_Imm(3 downto 0)))));
+						S_Res(15 downto 0) <= std_logic_vector(shift_left(unsigned(I_DataA),
+												to_integer(unsigned(I_Imm(3 downto 0)))));
 					end if;
 					S_SB <= '0';
 				when OPCODE_SHR =>
 					if I_AluOp(IFO_REL_LENGTH_END) = '0' then
 						-- Form RRR
-						-- S_Res(15 downto 0) <= std_logic_vector(shift_right(unsigned(I_DataA),
-						-- 						to_integer(unsigned(I_DataB(3 downto 0)))));
+						S_Res(15 downto 0) <= std_logic_vector(shift_right(unsigned(I_DataA),
+												to_integer(unsigned(I_DataB(3 downto 0)))));
 					else
 						-- Form RRI
-						-- S_Res(15 downto 0) <= std_logic_vector(shift_right(unsigned(I_DataA),
-						-- 						to_integer(unsigned(I_Imm(3 downto 0)))));
+						S_Res(15 downto 0) <= std_logic_vector(shift_right(unsigned(I_DataA),
+												to_integer(unsigned(I_Imm(3 downto 0)))));
 					end if;
 					S_SB <= '0';
 				when OPCODE_CMP =>

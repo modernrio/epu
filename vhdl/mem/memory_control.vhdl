@@ -140,9 +140,6 @@ architecture behav_memory_control of memory_control is
 
 	-- Video signals
 	signal clk25MHz    : std_logic;
-	signal crx_oreg_ce : std_logic;
-	signal cry_oreg_ce : std_logic;
-	signal ctl_oreg_ce : std_logic;
 	signal crx_oreg    : std_logic_vector(7 downto 0) := (others => '0');
 	signal cry_oreg    : std_logic_vector(7 downto 0) := (others => '0');
 	signal ctl_oreg    : std_logic_vector(7 downto 0);
@@ -297,9 +294,6 @@ begin
 	-- cry_oreg    <= std_logic_vector(TO_UNSIGNED(39, 8));
 	-- ctl_oreg    <= "11110010";
 	ctl_oreg <= vga_ctl;
-	crx_oreg_ce <= '1';
-	cry_oreg_ce <= '1';
-	ctl_oreg_ce <= '1';
 
 	-- This process is only for the READ command
 	rdy_proc : process(I_MEM_Clk)
