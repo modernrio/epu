@@ -2,18 +2,17 @@
 \label{c:einleitung}
 Diese Dokumentation beschreibt den Aufbau und die Funktionsweise der \ac{EPU}.
 Das Projekt kam dadurch zustande, dass die Struktur und die Arbeitsweise eines
-Computers, insbesondere der \ac{CPU} besser verstanden werden soll. Um dieses
+Computers, insbesondere einer \ac{CPU} besser verstanden werden soll. Um dieses
 Ziel zu erreichen, wurde die \ac{EPU} gebaut, da sie als lehrreicher
-Mikrorechner, wobei der Hauptteil der \ac{EPU} nur aus der \ac{CPU} besteht,
+Mikrorechner, wobei der Fokus der \ac{EPU} auf der \ac{CPU} besteht,
 die Funktionsweise und den Aufbau eines Alltagscomputer erklärt und somit
-Verständnis für die Komplexität unserer heutingen Rechner einbringt.
+Verständnis für die Komplexität unserer heutigen Rechner einbringt.
 
 \section{Was ist ein FPGA?}
 Ein \ac{FPGA} ist ein \ac{IC}, welcher zum Aufbau digitaler Schaltungen
 dient. Er besteht meist aus mehr als 100.000 Logikblöcken~\cite[S. 8]{minicpu}.
 Ins Deutsche übersetzt bedeutet \ac{FPGA} soviel wie `im Feld programmierbare
-[Logik-]Gatter-Anordnung', wobei `im Feld' sich dabei auf den Konsumenten
-bezieht.
+(Logik-)Gatter-Anordnung.
 
 Die Logikschaltungen eines \ac{FPGA} sind entweder über elektronische `Schalter'
 der Konfiguration entsprechend verknüpft oder es werden sogenannte \acp{LUT}
@@ -21,8 +20,8 @@ benutzt, mit denen die Logikfunktion explizit realisiert werden kann. Eine
 \ac{LUT} kann verschiedene kombinatorische Funktionen (NAND, XOR, AND, NOT,
 Multiplexer, etc.) aus den Eingangssignalen realisieren. Die meisten \acp{LUT}
 besitzen zwischen 4 und 6 Eingangssignale. Es ist auch möglich, mehrere
-\acp{LUT} in Serie zu schalten und die Limitierung durch die Eingangssignale zu
-verhindern.~\cite{FPGA_Aufbau}
+\acp{LUT} in Serie zu schalten und die Limitierung durch die Eingangssignale so
+zu verhindern.~\cite{FPGA_Aufbau}
 
 Da der \ac{FPGA} aber nach Verlust des Stromanschlusses die Konfiguration der
 Logikelemente nicht von selbst speichert, wird meist zusätzlich noch ein
