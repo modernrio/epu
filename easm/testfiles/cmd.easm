@@ -1,5 +1,8 @@
 _start:
-	load r0, 0x1005 # x=16;y=5
+	# r0: x, r1: y
+	load r0, 0x01
+	load r1, 0x03
+	push r1
 	push r0
 	call.i $_setcursor
 

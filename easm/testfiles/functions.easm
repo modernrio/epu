@@ -5,10 +5,11 @@ _start:
 	push r1
 	call.i $add
 	hlt
+
 add:
 	pop r15
 	pop r5
 	pop r6
 	push r15
-	add r7, r6, r5
+	add r0, r6, r5
 	ret

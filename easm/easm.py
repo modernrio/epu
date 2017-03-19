@@ -689,7 +689,7 @@ opcode = {
     "write.h": FORM_IRR("0b01010", True),
 
     # SHL
-    "thl":     FORM_RRR("0b01011", False),
+    "shl":     FORM_RRR("0b01011", False),
     "shl.r":   FORM_RRR("0b01011", False),
     "shl.i":   FORM_RRI("0b01011", False),
 

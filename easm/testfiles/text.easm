@@ -1,14 +1,16 @@
 _start:
+	load r5, 0x04
+	shr.i r5, r5, 0d2
+	addi r5, r5, 0x30
+	load r1, $data
+	write.l r1, r5, 0x0
 	load r0, 0d80
 	load r1, $data
 	push r0
 	push r1
 	call.i $_print
-	load r0, 0x1005 # x=16;y=5
-	push r0
-	call.i $_setcursor
 end:
 	jmp.i $end
 
 data:
-	.data 0x48656C6C6F20776F726C6400
+	.data 0x00000000
