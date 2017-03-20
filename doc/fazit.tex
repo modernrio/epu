@@ -2,57 +2,60 @@
 \label{c:fazit}
 \section{Umfang und Aufwand}
 Der Aufwand der besonderen Lernleistung war insgesamt deutlich höher als
-anfänglich gedacht. Der Einstieg in das Thema ging ziemlich schnell, sodass die
-Simulation des ersten Programm bereits ein Monat nach Beginn funktionierte.
+anfänglich gedacht. Der Einstieg in das Thema erfolgt zügig, sodass die
+Simulation des ersten Programm bereits einen Monat nach Beginn funktionierte.
 
-Nachfolgend gab es kleinere Probleme, bei denen die Behebung durch die
-Simulation deutlich vereinfacht wurde. Als es dann zur ersten Übertragung des
-Projektes auf den \ac{FPGA} kam, trat ein größeres Problem auf. Zuerst konnte die
-Datei für den \ac{FPGA} nicht übertagen werden, da der Hersteller nur ein Programm
-für Windows zur Übertragung anbietete, aber der Rest des Projektes bereits
-vollständig auf Linux erstellt wurde. Nach etwas Recherche stellte sich dann
-aber raus, dass jemand bereits das selbe Problem für ein ähnliches Board des
-selben Herstellers hatte und seinen Code für ein Programm zur Übertragung
-veröffentlicht hatte~\cite{numatoloader}. Dies war eine große Hilfe, da nun nur noch die
-Beschreibung des Boards im Code angepasst werden musste und somit auch die
-Übertagung funktionierte.
+Nachfolgend gab es kleinere Probleme, welche durch die Hilfe der Simulation
+einfach zu lösen waren. Als es zur ersten Übertragung des Projektes auf den
+\ac{FPGA} kam, trat ein größeres Problem auf. Die Projektatei für den \ac{FPGA}
+konnte nicht übertagen werden, da der Hersteller nur ein Programm für Windows
+zur Übertragung anbietet, aber das Projekt vollständig auf Linux erstellt wurde.
+Nach gründlicher Recherche stellte sich heraus, dass jemand bereits dasselbe
+Problem für ein ähnliches Board des selben Herstellers hatte und seinen Code für
+ein Programm zur Übertragung der Datei auf den \ac{FPGA} veröffentlichte
+~\cite{numatoloader}. Dies war eine große Hilfe, da jetzt nur noch die
+Beschreibung des Boards im Code angepasst werden musste und anschließend auch
+die Übertagung funktionierte.
 
-Wenig später sollte auch der RAM-Block des \ac{FPGA} genutzt werden, wobei
-vorher nur für die Simulation der Speicher aus Flip-Flops erstellt wurde. Dabei
-stellte sic das Problem, dass die Dokumentation des DDR-RAM-Chips auf dem Board
-nicht sehr ausführlich ist und keine große Hilfe bei der Implementierung bietet.
-Deshalb wurde kein DDR-RAM verwendet, sondern der interne Speicher des
-\ac{FPGA}-Chip. Da nur 64 Kilobyte an Speicher für die 16-Bit-Adressierung der
-\ac{EPU} nötig sind, reicht dieser interne Speicher vollkommen aus und
-vereinfacht damit auch den Aufbau der \ac{EPU}, da kein komplexer
-DDR-Speichercontroller implementiert werden musste.
+Wenig später sollte auch der RAM-Block des \ac{FPGA} genutzt werden. Vorher
+wurde für die Simulation der Speicher aus Flip-Flops erstellt, was bei größeren
+Speichermengen aber nicht effizient ist. Dabei stellte sich das Problem, dass
+die Dokumentation des DDR-RAM-Chips auf dem Board nicht sehr ausführlich ist und
+keine große Hilfe bei der Implementierung bietet. Deshalb wurde kein DDR-RAM
+verwendet, sondern der interne Speicher des \ac{FPGA}-Chip. Da nur 64 Kilobyte
+Speicher für die 16-Bit-Adressierung der \ac{EPU} nötig sind, reicht dieser
+interne Speicher aus und vereinfacht damit auch den Aufbau der \ac{EPU}, da kein
+komplexer DDR-Speichercontroller implementiert werden musste.
 
-Auch wurde anfangs überlegt, alle Grundrechenarten als eigene Befehle zu
-implementieren. Nach langer Überlegung wurde aber dagegen entschieden und nur
-die Addition und Subtraktion in die Hardware implementiert, da die anderen
-Rechenarten über die Software später implementiert werden können und nicht
-essentiell sind. Grundsätzlich lohnte sich nicht der notwendige Zeitaufwand der
-Implementierung für die Multiplikation und Division, da diese Befehle nicht
-häufig genug Verwendung bekommen.
+Anfangs wurde überlegt, alle Grundrechenarten als eigene Befehle zu
+implementieren. Nach längerer Abwegung wurde dagegen entschieden und nur die
+Addition und Subtraktion in die Hardware implementiert. Der Gründ für diese
+Entscheidung war, dass die anderen Rechenarten über die Software später
+implementiert werden können und nicht essentiell sind. Grundsätzlich lohnte sich
+nicht der Zeitaufwand einer Implementierung der Multiplikation und
+Division, da diese Befehle nicht häufig genug Anwendung finden.
 
 \section{Ziele und Lernerfolg}
 Hauptziel der besonderen Lernleistung war es, einen funktionsfähigen
-Mikrorechner bzw. zu produzieren und dieser Ziel ist auch sehr gut gelungen.
-Außerdem sollte eine Ausgabe über einen Bildschirm als auch eine Eingabe über
-eine Tastatur möglich sein, was beides funktioniert.
+Mikrorechner zu produzieren und dieser Ziel ist sehr gut gelungen.
 
-Andere anfangs sehr übernommene Ziele, wie eine Netzwerkverbindung, Soundtreiber
-oder externer Speicher über den MicroSD-Kartenslot, mussten aus Zeitgründen
-leider gestrichen werden. Dennoch sind diese Ziele als mögliche Erweiterungen zu
+Außerdem sollte eine Ausgabe über einen Bildschirm als auch eine Eingabe über
+eine Tastatur möglich sein. Beide Vorgaben sind erfüllt und funktionsfähig.
+
+Andere anfangs übernommene Ziele, wie eine Netzwerkverbindung, Soundtreiber oder
+externer Speicher über den MicroSD-Kartenslot mussten aus Zeitgründen leider
+nicht umgesetzt werden. Dennoch sind diese Ziele als mögliche Erweiterungen zu
 sehen, welche im Nachhinein noch implementiert werden könnten.
 
 Der Lernerfolg bei diesem Projekt war außerordentlich hoch. Nicht nur die
-Sprache VHDL und deren Syntax wurde gelernt und angewendet, sondern viel mehr
-wurde über den Aufbau eines Rechnes, insbesondere eines Prozessors, gelernt.
-Auch wie Hardware entwickelt wird und worauf dabei zu achten ist, darf nicht
-unterschätzt werden. Diese Arbeit auf einer sehr niedrigen Ebene ('low-level')
-hatte sehr viele Vorteile und verbesserte das allgemeine Verständnis, wie ein
-Rechner funktioniert und hilft auch bei anderen Projekten, die nicht so nah an
-der Hardware liegen. Besonders beim Beheben von Fehlern in Software ist dieses
-Wissen nicht ersetzbar und stellt dabei eine große Hilfe dar.
+Sprache VHDL und deren Syntax wurde erlernt und angewendet, sondern außerdem
+wurden neue Kenntnisse über den Aufbau eines Rechners, insbesondere eines
+Prozessors, gewonnen. Das Projekt erlaubte gute Einblicke sowohl in den
+Hardware-Aufbau als auch in die umfangreiche Entwicklung von Hardware. Diese
+Arbeit auf einer sehr niedrigen Abstraktionsebene ('low-level') verbesserte das
+allgemeine Verständnis darüber, wie ein Rechner funktioniert. Dieses erworbene
+Wissen hilft auch bei anderen Projekten, die auf einer höheren Abstraktionsebene
+entwickelt werden. Besonders beim Beheben von Softwarefehlern ist dieses Wissen
+einsetzbar und stellt dabei eine große Hilfe dar.
+
 \pagebreak

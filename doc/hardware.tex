@@ -4,7 +4,7 @@
 Im Folgenden soll eine Übersicht aller Hardwarekomponenten erfolgen. Dadurch
 soll eine grobe Vorstellung der Funktionsweise des Mikrorechners entstehen,
 welche in Kapitel~\ref{c:vhdl} vertieft wird. Vor der Beschreibung der einzelnen
-Hardwarekomponenten, soll durch Abbildung~\ref{pic:hardware_overview} das
+Hardwarekomponenten soll durch Abbildung~\ref{pic:hardware_overview} das
 Zusammenspiel aller Komponenten gezeigt werden, auf welche während dieses
 Kapitels zurückgegriffen werden kann.
 \begin{figure}[hb]
@@ -65,14 +65,14 @@ geladen. Die Adresse des Befehls wird durch den Wert des Programmzählers
 In diesem Zustand wird das erste Byte des Befehl dekodiert und dabei
 festgestellt, ob der Befehl noch mehr Bytes, als bisher gelesen wurde, besitzt.
 Ist dies der Fall, wird wieder zum `Fetch'-Zustand gewechselt. Außerdem wird der
-eigentlich auszufhrende Befehl festgestellt, mit welchen Parametern er
-auszuführen ist, aus welchen Registern die Daten herkommen und wo das Resultat
+eigentlich auszuführende Befehl festgestellt, mit welchen Parametern er
+auszuführen ist, aus welchen Registern die Daten kommen und wo das Resultat
 gespeichert werden soll. Eine ausführlichere Beschreibung ist bei der
 Beschreibung des Dekodiers in Abschnitt~\ref{s:decode} zu finden.
 \subsubsection{Read}
 Die Register für die Ein- und Ausgabe des Befehls werden nun ausgewählt und
-haben dementsprechend genug Zeit, ihre Daten an den Ausgängen auszugeben, ohne
-dass korrupte Daten verwendet werden.
+dementsprechend ist genug Zeit vorhanden, die Daten zu lesen, sodass keine
+korrupte Daten in den folgenden Zuständen zur Verwendung kommen.
 \subsubsection{Execute}
 Das Rechenwerk (siehe~\ref{s:alu}) wird bei diesem Zustand aktiviert und führt
 den vorher dekodierten Befehl aus. Das Resultat des Rechenwerks wird ausgegeben,
@@ -80,19 +80,19 @@ damit in den weiteren Zuständen das Ergebnis an die gewünschte Stelle
 geschrieben werden kann.
 \subsubsection{Memory Write}
 Das Resultat des Rechenwerks wird an die vom Befehl vorgebene Speicheradresse im
-Arbeisspeicher (siehe~\ref{s:memorycontrol}) gespeichert.
+Arbeitsspeicher (siehe~\ref{s:memorycontrol}) gespeichert.
 \subsubsection{Stack Read/Write}
 Je nach Befehl wird entweder das Resultat des Rechenwerks auf dem Stack gelegt
-oder der oberste Wert des Stacks genommen, um es im nächsten Zustand weier
+oder der oberste Wert des Stacks genommen, um es im nächsten Zustand weiter
 verarbeiten zu können. Eine detaillierte Erklärung der Funktionsweise des Stacks
 findet in Abschnitt~\ref{s:stack} statt.
 \subsubsection{Register Write}
-Ähnlich wie beim `Stack Read/Write'-Zustand, wird auch hier je nach Befehl das
+Ähnlich wie beim `Stack Read/Write'-Zustand, wird auch hier (je nach Befehl) das
 Ergebnis des Rechenwerks oder der Wert, der vom Stack entnommen wurde, in das
 Register geschrieben, welches der Befehl vorschreibt.
 \subsection{Rechenwerk}
 \label{s:alu}
-Das Rechenwerk ist dafür zustandig, dass die eigentliche Operation des Befehls
+Das Rechenwerk ist dafür zuständig, dass die eigentliche Operation des Befehls
 ausgeführt wird. Es ist zu unterscheiden, ob man von der \ac{ALU} oder vom
 Rechenwerk spricht, denn die \ac{ALU} ist nur das `Rechenzentrum' des
 Rechenwerks, gestützt von z.B. Hilfsregistern.
@@ -104,10 +104,10 @@ vermittelt werden. Um den Aufbau simpel zu halten, wurde entschieden, dass jeder
 Befehl die gleiche Bearbeitungszeit bekommt und damit jeder Befehl gleich
 schnell (bezogen nur auf die Zeit beim Rechenwerk) ausgeführt wird.
 
-Das Rechenwerk ist auch zuständig, bestimmte Statusflaggen wie z.B. `SB' zu
-setzen oder zu löschen, welche angibt, ob ein Sprungbefehl ausgeführt wurde und
-dieser auch die Sprungbedingung erfüllt, da auch der Programmzähler in diesem
-Fall einen neuen Wert bekommt,
+Das Rechenwerk hat die Aufgabe bestimmte Statusflaggen zu setzen oder zu
+löschen. Im Beispiel `SB' gibt die Statusflagge an, ob ein Sprungbefehl
+ausgeführt wird und dieser auch die Sprungbedingung erfüllt. Der Programmzähler
+erhält in diesem Fall einen neuen Wert.
 \clearpage
 \pagebreak
 \subsection{Dekodierer}
@@ -123,7 +123,7 @@ Abschnitt~\ref{s:befehlssatz} genauer beschrieben wird.
 \label{s:pc}
 Der Programmzähler (engl. \ac{PC}) ist hardwaretechnisch gesehen ein Register,
 welches aber im Vergleich zu `normalen' Registern ihren Wert um eine bestimmte
-Byteanzahl je nach Länge des ausgeführten Befehls erhöht. Somit hält der \ac{PC}
+Byteanzahl (je nach Länge des ausgeführten Befehls) erhöht. Somit hält der \ac{PC}
 immer die Adresse für den nächsten auszuführenden Befehl. Bei einem Sprungbefehl
 wird der Wert des Programmzählers mit dem vom Befehl vorgeschriebenen Wert
 überschrieben.
@@ -131,26 +131,26 @@ wird der Wert des Programmzählers mit dem vom Befehl vorgeschriebenen Wert
 Im Ganzen lässt sich der Programmzähler als Zustandsautomat realisieren. Dazu
 wurden vier verschiedene Zustände für den \ac{PC} gewählt:
 
-\begin{description}[align=right, labelwidth=1.6cm]
-\item[NOP]		Keine Operation
-\item[INC]		Erhöhe den Zähler um die Byteanzahl des vorherigen Befehls
-\item[ASSIGN]	Setze den Zähler auf die Sprungadresse
-\item[RESET]	Setze den Zähler auf null zurück
-\end{description}
+\begin{labeling}{\textbf{ASSIGN}}
+\item[\textbf{NOP}]		Keine Operation
+\item[\textbf{INC}]		Erhöhe den Zähler um die Byteanzahl des vorherigen Befehls
+\item[\textbf{ASSIGN}]	Setze den Zähler auf die Sprungadresse
+\item[\textbf{RESET}]	Setze den Zähler auf null zurück
+\end{labeling}
 
 Je nach Befehl wird bei der Ausführung dann der passende Zustand ausgewählt und
 somit sichergestellt, dass die Adresse für den folgenden Befehl korrekt ist.
 \subsection{Stack}
 \label{s:stack}
-Der Stack(deutsch: Stapel) ist ein Modell zum Speichern von Daten. Dabei sind
+Der Stack (deutsch: Stapel) ist ein Modell zum Speichern von Daten. Dabei sind
 zwei Operationen zum Speichern und Abrufen der Daten vorhanden: PUSH und POP\@.
 Bei PUSH wird oben auf den Stapel ein neues Element hinzugefügt, bei POP wird
 das oberste Element vom Stapel heruntergenommen. Somit ist der Zugriff auf das
 oberste Element beschränkt. Der Stack wird hauptsächlich von Programmen als
-Zwischenspeicher genutzt, wenn nicht genügend Register zur Verfügung sthen, aber
-auch beim Aufrufen von Funktionen (Befehl CALL) wird auf dem Stack die Rückkehraddresse
-gespeichert, welche beim Verlassen der Funktion (Befehl RET) wieder
-vom Stapel entnommen wird.
+Zwischenspeicher genutzt, wenn nicht genügend Register zur Verfügung stehen,
+aber auch beim Aufrufen von Funktionen (Befehl CALL) wird auf dem Stack die
+Rückkehraddresse gespeichert, welche beim Verlassen der Funktion (Befehl RET)
+wieder vom Stapel entnommen wird.
 
 Besonders für den Funktionsaufruf eignet sich das Prinzip des Stacks sehr gut,
 da es keine Begrenzung (außer der physischen Größe des Stacks) gibt, wie viele
@@ -163,34 +163,34 @@ Der \ac{UART}, welcher die Implementierung der seriellen Schnittstelle enthält,
 wird genutzt, um Eingabe von dem Benutzer zu bekommen. Dabei wird über ein
 selbst geschriebenes Skript die Tastatureingabe von einem anderen Rechner
 übernommen und über die serielle Schnittstelle an das Gerät weitergeleitet. So
-ist es möglich, eine Tastatur 'anzuschließen'. Die Übertragung über die serielle
+ist es möglich, eine Tastatur `anzuschließen'. Die Übertragung über die serielle
 Schnittstelle findet mit einer Bitrate von 9600 bit/s, 8 Datenbits, 1 Stopbit
 und keinem Paritätsbit statt.
 
 Hardwaretechnisch ist der UART über die Speicheradresse 0xEF00 zu erreichen.
 Sollte diese Adresse gelesen werden, wird das nächste Byte des UARTs abgefragt
 und dadurch die CPU temporär gestoppt, bis ein Byte angekommen ist. Dadurch ist
-die Eingabe blockierend, also können keine weiteren Operationen während der
+die Eingabe blockierend, es können also keine weiteren Operationen während der
 Eingabe durchgeführt werden.
 \subsection{Speichercontroller}
 \label{s:memorycontrol}
-Der Arbeitsspeicher ist als kontinuierlicher Speicherblock realisert worden. Es
+Der Arbeitsspeicher ist als kontinuierlicher Speicherblock realisiert worden. Es
 sind zwei Ports für die Ein- und Ausgabe zur Verfügung, wobei der zweite Port
 ausschließlich für den Videocontroller vorgesehen ist, welcher damit Zugriff auf
 den Videospeicher bekommt. Dies bedeutet auch, dass der Videospeicher nicht
-seperat geändert werden muss und so über allgemein gültige Lese- und
+separat geändert werden muss und so über allgemein gültige Lese- und
 Schreibbefehle angesprochen werden kann.
 
 Insgesamt wurde der mit 16 Bit verfügbare maximal adressierbare Speicher von
 $2^{16} = 65536$ Bytes ausgenutzt, wobei einzelne Abschnitte, wie beispielsweise
-der Videospeicher oder auch die Speicheraddresse für den UART, nicht allgemein nutzbar sind.
+der Videospeicher oder auch die Speicheraddresse für den UART nicht allgemein nutzbar sind.
 \subsection{Videocontroller}
 \label{s:videocontrol}
 Der Videocontroller selbst ist nach außen hin unabhängig von allen anderen
-Elementen der \ac{EPU}, nur der Videospeicher, welche die Informationen über die
+Elementen der \ac{EPU}. Nur der Videospeicher, welche die Informationen über die
 anzuzeigenden Pixel enthält, wird vom Speichercontroller geliefert. Dennoch hat
 der Speichercontroller keine Kontrolle über den Zugang des Videcontrollers zu
-dem Videospeicher, denn wie bereits in~\ref{s:memorycontrol} gesagt, ist der
+dem Videospeicher, denn wie bereits in~\ref{s:memorycontrol} beschrieben, ist der
 Port für den Videocontroller unabhängig vom Speichercontroller.
 \pagebreak
 \subsection{Registerbelegung}
@@ -229,15 +229,15 @@ Selektion & Name & Zweck\\
 \section{Befehlssatz}
 \label{s:befehlssatz}
 Der Befehlssatz beschreibt den Aufbau und die Menge aller Befehle der \ac{EPU}.
-Nachfolgend soll sowohl der Aufbau und dessen Entstehung erläutert werden.
+Nachfolgend soll sowohl der Aufbau sowie dessen Entstehung erläutert werden.
 
 \subsection{Aufbau}
-Der Befehl wird byteweise gelesen und die Anzahl an Bytes in einem Befehl sind
+Der Befehl wird byteweise gelesen. Die Anzahl an Bytes in einem Befehl sind
 durch die beiden letzten Bits des ersten Bytes angegeben, was es leichter macht,
 die richtige Byteanzahl einzulesen. Alle weiteren Abschnitte jedes Bytes werden
 je nach Opcode (die ersten 5 Bits) bestimmt, also die Register, die
 Rechenoperation, ob das Ergebnis auf dem Arbeitsspeicher geschrieben werden
-soll, etc. Wie in Abbildung~\ref{pic:befehlsaufbau} zu sehen, ist die Angabe
+soll etc. Wie in Abbildung~\ref{pic:befehlsaufbau} zu sehen, ist die Angabe
 von Konstanten in 4, 8 und 16 Bit möglich. Der Grund für die doch sehr
 platznehmende 16-Bit-Konstante ist, dass ein Register mit einer Konstante in
 einem Befehl befüllt werden soll, wobei alle Register der \ac{EPU} 16 Bit groß
@@ -300,7 +300,7 @@ verschiedenen Befehle der \ac{EPU} liefern. Durch die Größe des Opcodes (5 Bit
 sind insgesamt $2^5 = 32$ Befehle möglich. Dennoch kann ein Befehl durch
 bestimmte Parameter (wie z.B. der Flag im ersten Byte) um gewisse Funktionen
 erweitert werden. Dies ermöglicht beispielsweise vorzeichenbehaftete und
-vorzeichenlose Addition, obwohl der Opcode beider Operationen der gleiche ist.
+vorzeichenlose Addition, obwohl der Opcode beider Operationen der Gleiche ist.
 Eine ausführlichere Beschreibung jedes Befehls ist im
 Anhang~\ref{a:befehlsliste} zu finden.
 \begin{table}[htb]
@@ -318,8 +318,8 @@ Logisches XOR									& XOR   	& 00101\\
 Logisches NOT									& NOT   	& 00110\\
 Laden eines Registers							& LOAD  	& 00111\\
 Verschieben eines Registerwertes				& MOV   	& 01000\\
-Lesevorgang im Arbeisspeicher					& READ  	& 01001\\
-Schreibvorgang im Arbeisspeicher				& WRITE 	& 01010\\
+Lesevorgang im Arbeitsspeicher					& READ  	& 01001\\
+Schreibvorgang im Arbeitsspeicher				& WRITE 	& 01010\\
 Bitweises Verschieben nach links				& SHL   	& 01011\\
 Bitweises Verschieben nach rechts				& SHR   	& 01100\\
 Vergleichen zweier Register						& CMP   	& 01101\\

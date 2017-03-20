@@ -3,24 +3,24 @@
 In diesem Kapitel soll eine Übersicht über die Struktur und den Aufbau der
 Programme, welche die Software der EPU bilden, dargestellt werden. Die
 Voraussetzung für das Verständnis der Umsetzung der Software in die Hardware
-ist bereits in Kapitel~\ref{c:hardware}, oder genauer bei der Erklärung des
-Befehlssatzes in Abschnitt~\ref{s:befehlssatz}, geschehen.
+ist bereits in Kapitel~\ref{c:hardware} (oder genauer bei der Erklärung des
+Befehlssatzes in Abschnitt~\ref{s:befehlssatz}) geschehen.
 \section{Einführung in EPU-Assembly}
 Zur Übersetzung der eigenen Assembly-Sprache in Maschinencode, welche die CPU
-verstehen, wurde ein eigener Assembler entwickelt. Der Assembler ist in  der
+versteht, wurde ein eigener Assembler entwickelt. Der Assembler ist in der
 Interpretersprache Python geschrieben und erlaubt die Kompilierung von einer
 .easm-Datei, wobei eine Vorlage mit vordefinierten Funktionen als externe Datei
 auch noch übergeben werden kann. Die Ausgabe erfolgt durch das Schreiben der
 einzelnen Bytes des Maschinencodes in eine Datei im .coe-Format. Der Grund für
 das .coe-Format ist, dass dieses genutzt werden kann, um den RAM-Block der EPU
-zu initialisieren und somit das Programm direkt ausgeführt werden kann.
+zu initialisieren.
 
-Der Aufbau der Befehle, welche der Assembler versteht, wurde recht simpel
+Der Aufbau der Befehle, welche der Assembler versteht, wurde einfach
 gehalten, um eine leicht zu verstehende Sprache zu erstellen, wobei viele
-Ähnlichkeiten zur x86-Assembly (genutzt ist den meisten Desktopcomputern
+Ähnlichkeiten zur x86-Assembly (genutzt in den meisten Desktopcomputern
 heutzutage) bestehen, da somit das anfängliche Verstehen der Befehle leichter
 wird. Der Aufbau eines Befehls richtet sich nach folgender Regel, wobei in
-eckigen Klammern eingerahmte Parameter optional sind bzw. nur bei bestimmten
+eckigen Klammern eingerahmte Parameter optional sind bzw.\ nur bei bestimmten
 Befehlen notwendig sind:
 \begin{lstlisting}[basicstyle=,numbers=none]
 	Mnemonic[.Option] [Operand1] [,Operand2] [,Operand3]
@@ -28,16 +28,16 @@ Befehlen notwendig sind:
 
 Um einen Befehl aufzurufen, wird das obere Schema verwendet, was bedeutet, dass
 der Befehl selbst mit seiner \textbf{Mnemonic} startet. Das Wort Mnemonic
-bedeutet auf Deutsch so viel wie 'Merkspruch'. Es wird meist bei
+bedeutet auf Deutsch so viel wie `Merkspruch'. Es wird meist bei
 Assemblersprachen verwendet, um beim Programmieren das Auswendiglernen des
 Maschinencodes jedes Befehls zu sparen. An die Mnemonic kann eine Option nach
 einem Punkt angehängt werden. Dies ist befehlsspezifisch und muss für jeden
 Befehl nachgeschlagen werden. Je nach Befehl werden auch ein bis zwei weitere
 Operanden benötigt, welche selbst noch in verschiedenen Formen vorkommen können
-(abhängig von der gewählten Option). Um dies zu verdeutlichen, sollen nun ein
-paar Beispiele das Verständnis für den Befehlsaufbau gezeigt werden.
+(abhängig von der gewählten Option). Um dies zu verdeutlichen, sollen ein
+paar Beispiele für den Befehlsaufbau gezeigt werden.
 \begin{figure}
-\begin{lstlisting}[basicstyle=]
+	\begin{lstlisting}[basicstyle=]
 	load r1, 0xAFFE
 	jmp.i $test
 
@@ -53,37 +53,39 @@ paar Beispiele das Verständnis für den Befehlsaufbau gezeigt werden.
 \label{code:instruction_code}
 \end{figure}
 
-In Abbildung ~\ref{code:instruction_code} wird zuerst in Zeile 1 eine
+In Abbildung~\ref{code:instruction_code} wird zuerst in Zeile 1 eine
 hexadezimale Konstante (Präfix '0x' steht für hexadezimal) in das Register R1
-geladen. Danach wird ein Sprungbefehl mit der Option 'i' ausgeführt, wobei das
-'i' für 'Immediate' bzw. Konstante steht und damit die Adresse, zu welcher
+geladen. Danach wird ein Sprungbefehl mit der Option `i' ausgeführt, wobei das
+`i' für `Immediate' bzw. Konstante steht und damit die Adresse, zu welcher
 gesprungen werden soll, im Befehl vorhanden ist.  Die Konstant ist hier mit dem
 Adressoperator '\$' vorangestellt, welcher die Adresse des \textbf{Labels}, hier
 test' (Zeile 7), enthält. Dadurch wird die Ausführung in Zeile 8, also direkt
 nach der Definition des Labels, fortgeführt.
 
-Davor ist aber noch ein in Zeile 5 eine sogennante \textbf{Assemblerdirektive}
-zu sehen, welche an dem '.' vor der Mnemonic zu erkennen ist.
+Davor ist aber noch (in Zeile 5) eine sogennante \textbf{Assemblerdirektive}
+zu sehen, welche an dem `.' vor der Mnemonic zu erkennen ist.
 Assemblerdirektiven sind Anweisungen an den Assembler und werden nicht direkt in
 Maschinencode umgewandelt, sondern getrennt behandelt. In diesem Beispiel ist
-die Assemblerdirektive 'data' verwendet worden, welche die angegebene Konstante
+die Assemblerdirektive `data' verwendet worden, welche die angegebene Konstante
 im ersten Operanden unmittelbar in die Byteausgabe des Maschinencodes übernimmt.
-So ist es beispielsweise möglich, dass vordefinierte Variablen bereits einen
+So ist es beispielsweise möglich, dass vordefinierten Variablen bereits einen
 Wert beim Start des Programms zugewiesen bekommen können.
 
-Zurück bei der Ausführung des Beispieles in Zeile 8 wird mit dem Befehl 'addi'
-eine Konstante zu dem Register R1 (zweiter Operand) eine dezimale Konstante
-(Präfix '0d' für dezimale Konstanten) addiert. Das Ergebnis wird im ersten
-Operand gespeichert - hier R2. In Zeile 9 wird die Adresse des 'data'-Labels in
-das Register R1 geladen und danach in Zeile 10 wird an die Speicheradresse in R1
-der Wert im Register R2 geschrieben. Der dritte Operand wird hier nicht benötigt
-und daher null gesetzt, kann aber für einen Offset der Speicheradresse dienen.
+Zurück bei der Ausführung des Beispiels in Zeile 8: Hier wird mit dem Befehl
+`addi' eine Konstante zu dem Register R1 (zweiter Operand) eine dezimale
+Konstante (Präfix '0d' für dezimale Konstanten) addiert. Das Ergebnis wird im
+ersten Operand gespeichert - hier R2. In Zeile 9 wird die Adresse des
+`data'-Labels in das Register R1 geladen und danach in Zeile 10 wird an die
+Speicheradresse in R1 der Wert im Register R2 geschrieben. Der dritte Operand
+wird hier nicht benötigt und daher null gesetzt, kann aber für einen Offset der
+Speicheradresse dienen.
 \pagebreak
 \section{Funktionsaufruf}
-In diesem Abschnitt soll der Aufruf von Funktonen demonstriert werden. Bei dem
+In diesem Abschnitt soll der Aufruf von Funktionen demonstriert werden. Bei dem
 Aufbau wurde eine ähnliche Methode wie beim x86-Befehlssatz verwendet. Die
 einfachste Methode des Funktionsaufrufs ist das Aufrufen einer Funktion ohne
 Parameter, wie unten in Abbildung~\ref{code:function_struct}  zu sehen ist.
+
 \begin{figure}[htb]
 \begin{lstlisting}[basicstyle=]
 funktion:
@@ -95,21 +97,46 @@ _start:
 \caption{Funktionsaufruf ohne Parameter}
 \label{code:function_struct}
 \end{figure}
-Dabei wird einfach der Befehl 'call' aufgerufen mit dem ersten Operanden hier
-als Adresse zum Label 'funktion'. Nachdem die Funktion mit dem Befehl 'ret'
+
+Dabei wird einfach der Befehl `call' aufgerufen mit dem ersten Operanden hier
+als Adresse zum Label `funktion'. Nachdem die Funktion mit dem Befehl `ret'
 wieder zurückkehrt, wird automatisch der nächste Befehl nach dem Funktonsaufruf
 ausgeführt.
 
 Damit beim Zurückkehren von einer Funktion die Rücksprungadresse für den
-nächsten Befehl gefunden werden kann, wird beim Aufruf von 'call' nicht nur ein
+nächsten Befehl gefunden werden kann, wird beim Aufruf von `call' nicht nur ein
 Sprungbefehl zur Funktion aufgerufen, sondern auch die Rückkehradresse auf den
-Stack (siehe~\ref{s:stack}) gelegt. Beim Ausführen von 'ret' wird dann einfach
+Stack (siehe~\ref{s:stack}) gelegt. Beim Ausführen von `ret' wird dann einfach
 das Element vom Stack heruntergenommen und in den PC (siehe~\ref{s:pc})
 geschrieben.
 
 Bei Funktionen mit Parametern und Rückgabewert ist der Aufbau ähnlich. Das
 folgende Beispiel in Abbildung~\ref{code:function_parameter} soll einen solchen
-Funktionsaufruf illustrieren:
+Funktionsaufruf illustrieren.
+
+Zuerst werden die zu übergebenen Argumente in beliebige Register gespeichert
+(Zeile 15-16) und dann in \textbf{umgekehrter} Reihenfolge auf den Stack gelegt
+(Zeile 17-18). Anschließend findet der eigentliche Funktionsaufruf statt und die
+Funktion wird aufgerufen, wobei unter anderem die Rückkehradresse auf dem Stack
+abgelegt wird. Da die Rückkehradresse ganz oben auf dem Stack abgelegt ist, muss
+diese erst vom Stack heruntergenommen und in einem Register zwischengespeichert
+werden, damit die Argumente vom Stack geholt werden können (Zeile 2). Da sie in
+umgekehrter Reihenfolge auf den Stack gelegt wurden, dreht sich beim Holen der
+Argumente die Reihenfolge wieder um, sodass die Reihenfolge wieder die
+ursprüngliche ist (Zeile 3-4). Danach kann die Rückkehradresse wieder zurück auf
+den Stack gelegt werden (Zeile 5). Nun kann die eigentliche Operation der
+Funktion durchgeführt werden; dies ist hier die Subtraktion (Zeile 7). Da nun
+der Rückgabewert auf dem Stack abgelegt werden soll, aber auch zugriffsbereit
+für die aufrufende Funktion, muss zuerst wieder die Rückkehradresse vom Stack
+entfernt (Zeile 9) und dann der Rückgabewert auf den Stack gelegt werden (Zeile
+10). Jetzt kann die Rückkehradresse wieder auf den Stack (Zeile 11) und die
+Funktion kann wie gewohnt zurückkehren (Zeile 12).
+
+Durch die Nutzung des Stacks für den Rückgabewert ist es theoretisch möglich,
+mehrere Rückgabewert einer Funktion zuzuweisen. In dem Beispiel ist dies aber
+nicht der Fall. Dennoch ist zu erwähnen, dass über die Register auch ein oder
+mehrere Rückgabewerte theoretisch erfolgen können. Genauere Informationen sind
+der jeweiligen Funktion, welche man aufrufen möchte, zu entnehmen.
 \begin{figure}[!htb]
 \begin{lstlisting}[basicstyle=]
 sub:
@@ -133,53 +160,32 @@ _start:
 	call.i $sub
 	pop r3
 \end{lstlisting}
-\caption{Funktionsaufruf mit Paramtern}
+\caption{Funktionsaufruf mit Parametern}
 \label{code:function_parameter}
 \end{figure}
 
-Zuerst werden die zu übergebenen Argumente in beliebige Register gespeichert
-(Zeile 15-16) und dann in \textbf{umgekehrter} Reihenfolge auf den Stack gelegt
-(Zeile 17-18). Danach findet der eigentliche Funktionsaufruf statt und die
-Funktion wird aufgerufen, wobei unter anderem die Rückkehradresse wird auch auf
-dem Stack abgelegt. Da die Rückkehradresse ganz oben auf dem Stack abgelegt ist,
-muss diese erst vom Stack heruntergenommen und in einem Register
-zwischengespeichert werden, damit die Argumente vom Stack geholt werden können
-(Zeile 2). Da sie in umgekehrter Reihenfolge auf den Stack gelegt wurden, dreht
-sich beim Holen der Argumente die Reihenfolge wieder um, sodass die Reihenfolge
-wieder richtig ist (Zeile 3-4). Danach kann die Rückkehradresse wieder zurück
-auf den Stack gelegt werden (Zeile 5). Danach kann die eigentliche Operation der
-Funktion durchgeführt werden; dies ist hier die Subtraktion (Zeile 7). Da nun
-der Rückgabewert auf dem Stack abgelegt werden soll, aber auch zugriffsbereit
-für die aufrufende Funktion, muss zuerst wieder die Rückkehradresse vom Stack
-entfernt (Zeile 9) und dann der Rückgabewert auf den Stack gelegt werden (Zeile
-10). Danach kann die Rückkehradresse wieder auf den Stack (Zeile 11) und die
-Funktion kann wie gewohnt zurückkehren (Zeile 12).
-
-Durch die Nutzung des Stacks für den Rückgabewert ist es theoretisch möglich,
-mehrere Rückgabewert einer Funktion zuzuweisen. In dem Beispiel ist dies aber
-nicht der Fall.  Dennoch ist zu erwähnen, dass über die Register auch ein oder
-mehrere Rückgabewerte theoretisch erfolgen können. Genauere Informationen sind
-der jeweiligen Funktion, welche man aufrufen möchte, zu entnehmen.
 \clearpage
-\section{Vordefinierte Funktonen}
-Einige allgemein nützige Funktionen sind bereits vorgeschrieben worden und
+\section{Vordefinierte Funktionen}
+Einige hilfreiche Funktionen sind bereits vorgeschrieben worden und
 können als Vorlage an den Assembler übergeben werden. Dadurch können diese
 vordefinierten Funktionen in allen Programmen genutzt werden. Unter anderem sind
 folgende Funktionen verfügbar:
-\begin{description}
-\item [\_print(*data, start)] Gebe eine null-terminierte Zeichenkette an der
+\begin{labeling}{\textbf{\_print(*data, start)}}
+\item [\textbf{\_print(*data, start)}] Gebe eine null-terminierte Zeichenkette an der
 Stelle \textbf{data} auf dem Bildschirm an Startpositon \textbf{start}
 aus.
-\item [\_setcursor(pos)] Setze den Bildschirmcursor an Position \textbf{pos},
+\item [\textbf{\_setcursor(pos)}] Setze den Bildschirmcursor an Position \textbf{pos},
 	wobei der Wert 0xAABB die x-Koordinate 0xAA und die y-Koordinate 0xBB setzt.
-\item [\_getinput] Liest ein Byte vom Benutzer ein und gibt es zurück
-\item [\_getstring] Liest einen 'Enter'-terminierten String vom Benutzer ein und
+\item [\textbf{\_getinput}] Liest ein Byte vom Benutzer ein und gibt es zurück.
+\item [\textbf{\_getstring}] Liest einen `Enter'-terminierten String vom Benutzer ein und
 	gibt diesen zurück
-\end{description}
+\item [\textbf{\_set\_vga}] Ermöglicht es, die Optionen des VGA-Ausgangs zu verändern, um
+	z.B. andere Farben zu verwenden oder den VGA-Ausgang zu deaktivieren.
+\end{labeling}
 Die Benutzung dieser Vorlage wird empfohlen, ist aber keine Voraussetzung. Denn
 die Vorlage definiert auch, dass der Start des eigentlichen Programms beim Label
-'\_start' stattfindet und dieser wird auch von der Vorlage aufgerufen. Wie
-wahrscheinlich bereits aufgefallen ist, starten bei der Erstellung der Vorlage
+'\_start' stattfindet und dieser auch von der Vorlage aufgerufen wird. Wie
+bereits aufgefallen ist, starten bei der Erstellung der Vorlage
 alle genutzten Labels mit einem Unterstrich, was den Grund hat, alle
 vordefinierten Funktionen und die Funktionen des Programms visuell zu trennen.
 Daher ist es auch nicht empfohlen, dass im Programm Labels mit einem Unterstrich
@@ -189,8 +195,8 @@ starten.
 Mithilfe des Debugging ist es möglich, Fehler in Programmen zu erkennen und
 diese auch zu beseitigen. Damit dies auch bei der \ac{EPU} möglich ist, soll
 dieser Abschnitt beispielhaft anhand eines Signal-Zeit-Diagrammes zeigen, wie die
-Ausführung eines Befehls aussehen sollte.
-Das auszuführende Befehl sei folgender, wobei angenommen wird das Register R14
+Ausführung eines Befehls aussieht.
+Der auszuführende Befehl sei folgender, wobei angenommen wird das Register R14
 bereits den Wert 0x1234 hat:
 \begin{lstlisting}[basicstyle=,numbers=none]
 	push r14
@@ -217,21 +223,21 @@ bereits den Wert 0x1234 hat:
 \label{wave:program}
 \end{figure}
 
-Wie in Abbildung~\ref{wave:program} zu sehen, beschreiben die ersten 6 Signale
-die einzelnen Zustände des Steuerwerks (siehe~\ref{s:control}), danach folgt der
-Programmzähler (siehe~\ref{s:pc}) und der Wert des übergebenen Registers Ra,
-gefolgt von dem 'Enable'- und 'WriteEnable'-Eingang des Stacks
+Wie in Abbildung~\ref{wave:program} zu sehen ist, beschreiben die ersten 6
+Signale die einzelnen Zustände des Steuerwerks (siehe~\ref{s:control}), danach
+folgt der Programmzähler (siehe~\ref{s:pc}) und der Wert des übergebenen
+Registers Ra, gefolgt von dem `Enable'- und `WriteEnable'-Eingang des Stacks
 (siehe~\ref{s:stack}).
 
-Im ersten Abschnitt von t=0 bis t=6 ist zu sehen, wie byteweise der Befehl
+Im ersten Abschnitt von t=0 bis t=6 ist zu erkennen, wie byteweise der Befehl
 gelesen und dekodiert wird. Dabei wird bei jeder positiven Flanke des Signals
-'en\_fetch' der Programmzähler inkrementiert, damit er auf das nächste zu
+`en\_fetch' der Programmzähler inkrementiert, damit er auf das nächste zu
 dekodierende Byte zeigt. Im zweiten Abschnitt von t=6 bis t=9 werden zuerst die
-Werte der übergebenen Register gelesen und sind dann nach der negativen Flanke
-von 'en\_regread' verfügbar (siehe Signal 'dataA'). Als nächstes wird das
-Rechenwerk aktiviert und legt in diesem Fall nur fest, dass kein Sprungbefehl
-ausgeführt werden muss.Danach wird nun 'en\_stack' auf 1 gesetzt (t=8) und damit
-gleichzeit auch die 'Enable'- und 'Write-Enable'-Eingänge des Stacks. Der Stack
-nimmt daraufhin den Wert von 'dataA' und schreibt ihn als oberstes Element auf
-den Stapel. Im letzten Schritt (t=9) wird nun noch 'en\_regwrite', da jedoch
-kein Ergebnis in ein Register geschrieben werden muss, passiert hier nichts.
+Werte der übergebenen Register gelesen. Diese sind dann nach der negativen
+Flanke von `en\_regread' verfügbar (siehe Signal `dataA'). Als nächstes wird das
+Rechenwerk aktiviert und legt in diesem Fall fest, dass kein Sprungbefehl
+ausgeführt werden muss. Danach wird `en\_stack' auf 1 gesetzt (t=8) und damit
+auch die `Enable'- und `Write-Enable'-Eingänge des Stacks aktiv. Der Stack
+übernimmt daraufhin den Wert von `dataA' und schreibt ihn als oberstes Element
+auf den Stapel. Zuletzt wird nun noch `en\_regwrite' aktiv, da jedoch kein
+Ergebnis in ein Register geschrieben werden muss, passiert hier nichts (t=9).
