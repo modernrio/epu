@@ -104,7 +104,7 @@ Dieser Befehl führt keine Operation aus.
 \end{tikzpicture}
 
 Addiere zwei Register miteinander. Das Bit \textbf{S} zeigt an, ob die Addition
-vorzeichenbehaftet(1) oder vorzeichenunbehaftet(0) stattfinden soll.
+vorzeichenbehaftet (S=1) oder vorzeichenunbehaftet (S=0) stattfinden soll.
 
 \textit{Regs[Rd] = Regs[Ra] + Regs[Rb]}
 \section*{addi.u, addi.s}
@@ -156,7 +156,7 @@ vorzeichenbehaftet(1) oder vorzeichenunbehaftet(0) stattfinden soll.
 \end{tikzpicture}
 
 Addiere ein Register mit einer 16-Bit-Konstanten. Das Bit \textbf{S} zeigt an,
-ob die Addition vorzeichenbehaftet(1) oder vorzeichenunbehaftet(0) stattfinden
+ob die Addition vorzeichenbehaftet (S=1) oder vorzeichenunbehaftet (S=0) stattfinden
 soll.
 
 \textit{Regs[Rd] = Regs[Ra] + Imm}
@@ -221,7 +221,7 @@ soll.
 \end{tikzpicture}
 
 Subtrahiere die Werte zweier Register. Das Bit \textbf{S} zeigt an, ob die
-Subtraktion vorzeichenbehaftet(1) oder vorzeichenunbehaftet(0) stattfinden
+Subtraktion vorzeichenbehaftet (S=1) oder vorzeichenunbehaftet (S=0) stattfinden
 soll.
 
 \textit{Regs[Rd] = Regs[Ra] - Regs[Rb]}
@@ -274,7 +274,7 @@ soll.
 \end{tikzpicture}
 
 Subtrahiere eine 16-Bit-Konstante von einem Register. Das Bit \textbf{S} zeigt an,
-ob die Subtraktion vorzeichenbehaftet(1) oder vorzeichenunbehaftet(0) stattfinden
+ob die Subtraktion vorzeichenbehaftet (S=1) oder vorzeichenunbehaftet (S=0) stattfinden
 soll.
 
 \textit{Regs[Rd] = Regs[Ra] - Imm}
@@ -404,7 +404,7 @@ Berechne die bitweise UND-Verknüpfung zweier Register.
 Berechne die bitweise ODER-Verknüpfung zweier Register.
 
 \textit{Regs[Rd] = Regs[Ra] $\lor$ Regs[Rb]}
-\section*{or}
+\section*{xor}
 \begin{tikzpicture}
 	% Bitnummern oben
 	\foreach \x in {0,...,15}
@@ -1213,7 +1213,7 @@ Springe zu Adresse. Die Adresse wird durch das Register \textit{Ra} gegeben.
 
 Springe zu Adresse. Wenn das Bit \textbf{I} gesetzt ist, wird der Wert der
 Konstante \textit{Imm} als Adresse übernommen (1), andernfalls wird der Wert zum
-derzeitigen Wert des PC's addiert (2). Dabei wird im zweiten Fall immer von
+derzeitigen Wert des PC"'s addiert (2). Dabei wird im zweiten Fall immer von
 vorzeichenbehafteten Zahlen ausgegangen, damit auch Sprünge rückwarts
 stattfinden können.
 
@@ -1388,7 +1388,7 @@ Bitmuster & Befehl & Bedingung\\
 Springe zu Adresse, wenn die \textbf{Sprungbedingung} erfüllt ist. Dafür wird die
 \textbf{Sprungbedingung} mit dem Register \textbf{R14} verglichen. Wenn das Bit
 \textbf{I} gesetzt ist, wird der Wert der Konstante \textit{Imm} als Adresse
-übernommen (1), andernfalls wird der Wert zum derzeitigen Wert des PC's addiert
+übernommen (1), andernfalls wird der Wert zum derzeitigen Wert des PC"'s addiert
 (2). Dabei wird im zweiten Fall immer von vorzeichenbehafteten Zahlen
 ausgegangen, damit auch Sprünge rückwarts stattfinden können. Weitere
 Informationen zur \textbf{Sprungbedingung} sind der
@@ -1397,70 +1397,6 @@ Tabelle~\ref{tab:sprungbedingung} zu entnehmen.
 (1) \textit{PC = Imm (wenn Sprungbedingung erfüllt ist)}
 
 (2) \textit{PC = PC + Imm (wenn Sprungbedingung erfüllt ist)}
-\section*{mul}
-\begin{tikzpicture}
-	% Bitnummern oben
-	\foreach \x in {0,...,15}
-		\pgfmathsetmacro{\number}{int(abs(\x-15)+8)}
-		\node at (\x - 0.5, 20.5) {\scriptsize \number};
-	% Bitbeschreibungen
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (-1, 20) rectangle (0,
-	19.5);
-	\node (mode) at (-0.5, 19.75) {\small \textbf{1}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (0, 20) rectangle (1,
-	19.5);
-	\node (mode) at (0.5, 19.75) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (1, 20) rectangle (2,
-	19.5);
-	\node (mode) at (1.5, 19.75) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (2, 20) rectangle (3,
-	19.5);
-	\node (mode) at (2.5, 19.75) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (3, 20) rectangle (4,
-	19.5);
-	\node (mode) at (3.5, 19.75) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (4, 20) rectangle (5,
-	19.5);
-	\node (mode) at (4.5, 19.75) {\small 0};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (5, 20) rectangle (6,
-	19.5);
-	\node (mode) at (5.5, 19.75) {\small \textbf{1}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (6, 20) rectangle (7,
-	19.5);
-	\node (mode) at (6.5, 19.75) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (7, 20) rectangle (11,
-	19.5);
-	\node (mode) at (9, 19.75) {\small \textbf{Rd}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (11, 20) rectangle (15,
-	19.5);
-	\node (mode) at (13, 19.75) {\small \textbf{Ra}};
-
-	% Bitnummern oben
-	\foreach \x in {0,...,7}
-		\pgfmathsetmacro{\number}{int(abs(\x-7))}
-		\node at (\x - 0.5, 19) {\scriptsize \number};
-	% Bitbeschreibungen
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (-1, 18.5) rectangle (3,
-	18);
-	\node (mode) at (1, 18.25) {\small \textbf{Rb}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (3, 18.5) rectangle (4,
-	18);
-	\node (mode) at (3.5, 18.25) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (4, 18.5) rectangle (5,
-	18);
-	\node (mode) at (4.5, 18.25) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (5, 18.5) rectangle (6,
-	18);
-	\node (mode) at (5.5, 18.25) {\small \textbf{0}};
-	\filldraw[thick, draw=black, fill={rgb:white,255}] (6, 18.5) rectangle (7,
-	18);
-	\node (mode) at (6.5, 18.25) {\small \textbf{0}};
-\end{tikzpicture}
-
-Zwei Register werden miteinander multipliziert in das Ergebnis in ein drittes
-Register geschrieben.
-
-\textit{Regs[Rd] = Regs[Ra] $\cdot$ Regs[Rb]}
 \section*{push}
 \begin{tikzpicture}
 	% Bitnummern oben
@@ -1609,8 +1545,9 @@ Hole das oberste Element des Stacks und schreibe es in das Register \textit{Rd}.
 
 Rufe die Funktion an der Adresse \textit{Ra} auf.
 
-\textbf{Hinweis}: Dieser Befehl tut gleichzeitig die Rückkehraddresse auf den
-Stack schieben, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
+\textbf{Hinweis}: Dieser Befehl schiebt gleichzeitig die Rückkehradresse auf den
+Stack, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
+\clearpage
 \section*{call.o, call.i}
 \begin{tikzpicture}
 	% Bitnummern oben
@@ -1679,14 +1616,14 @@ Stack schieben, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
 
 Rufe die Funktion an der Adresse \textit{Ra} auf. Wenn das Bit \textbf{I}
 gesetzt ist, wird der Wert der Konstante \textit{Imm} als Adresse übernommen
-(1), andernfalls wird der Wert zum derzeitigen Wert des PC's addiert (2).
+(1), andernfalls wird der Wert zum derzeitigen Wert des PC"'s addiert (2).
 
 (1) \textit{PC = Imm (wenn Sprungbedingung erfüllt ist)}
 
 (2) \textit{PC = PC + Imm (wenn Sprungbedingung erfüllt ist)}
 
-\textbf{Hinweis}: Dieser Befehl tut gleichzeitig die Rückkehraddresse auf den
-Stack schieben, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
+\textbf{Hinweis}: Dieser Befehl schiebt gleichzeitig die Rückkehradresse auf den
+Stack, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
 \section*{ret}
 \begin{tikzpicture}
 	% Bitnummern oben
@@ -1721,7 +1658,7 @@ Stack schieben, damit die Funktion wieder ordnungsgemäß zurückkehren kann.
 \end{tikzpicture}
 
 Beendet die Funktion und kehrt damit zurück zum Aufruf der Funktion. Die
-Rückkehraddresse wird aus dem Stack entnommen.
+Rückkehradresse wird aus dem Stack entnommen.
 \section*{test.r}
 \begin{tikzpicture}
 	% Bitnummern oben

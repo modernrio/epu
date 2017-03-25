@@ -46,7 +46,7 @@ Sprachelementen:
 \section{Beschreibung wichtiger Module}
 \subsection{top -- Verbindung der Ein- und Ausgänge}
 \label{s:top}
-Das Topmodul dient als oberste Ebene, welche die \ac{EPU} mit der `Außenwelt'
+Das Topmodul dient als oberste Ebene, welche die \ac{EPU} mit der "`Außenwelt"'
 verbindet. Die dazugehörigen Ein- und Ausgangssignale werden in der Datei
 \textit{top.vhdl} festgelegt.
 
@@ -63,18 +63,18 @@ beschreiben die Signale der VGA-Verbindung.
 \pagebreak
 \subsection{core -- Topmodul der CPU}
 \label{s:core}
-Das `core'-Modul verbindet die einzelnen Baugruppen der CPU\@. Dazu gehören
+Das "`core"'-Modul verbindet die einzelnen Baugruppen der CPU\@. Dazu gehören
 Rechenwerk, Steuerwerk, Dekodierer, Programmzähler und der Stack. Diese wurden
 bereits in Kapitel~\ref{c:hardware} beschrieben.
 
 In Abbildung~\ref{code:core} ist die Definition des Moduls dargestellt. Die
 Signalnamen wurden dem Zweck angepasst, das heißt, dass Verbindungen zum
-Speichercontroller mit `MEM' und interne Signale mit `CORE' bezeichnet werden.
-Das Signal `O\_LED' ist dabei eine Ausnahme, da dieses zu Testzwecken verwendet
+Speichercontroller mit "`MEM"' und interne Signale mit "`CORE"' bezeichnet werden.
+Das Signal "`O\_LED"' ist dabei eine Ausnahme, da dieses zu Testzwecken verwendet
 wird und damit nicht fest eingeordnet werden kann.
 \begin{figure}[htb]
 \lstinputlisting[firstline=11, lastline=31]{../vhdl/core/core.vhdl}
-\caption{`core'-Modul}
+\caption{"`core"'-Modul}
 \label{code:core}
 \end{figure}
 \pagebreak
@@ -83,9 +83,9 @@ wird und damit nicht fest eingeordnet werden kann.
 Der Speichercontroller wurde bereits in Abschnitt~\ref{s:memorycontrol}
 beschrieben. Hier soll nur die Implementation dargestellt werden.
 
-Wie auch bei dem `core'-Modul (siehe~\ref{s:core}) sind hier die Signale nach
-Zugehörigkeit bezeichnet und interne Signale mit `MEM' und Videosignale mit
-`VID' beschrieben. Außerdem sind die letzten drei Signale (Zeilen 22--24) für
+Wie auch bei dem "`core"'-Modul (siehe~\ref{s:core}) sind hier die Signale nach
+Zugehörigkeit bezeichnet und interne Signale mit "`MEM"' und Videosignale mit
+"`VID"' beschrieben. Außerdem sind die letzten drei Signale (Zeilen 22--24) für
 die serielle Schnittstelle vorgesehen, welches im Speicher abgebildet wird.
 \begin{figure}[htb]
 \lstinputlisting[firstline=11, lastline=36]{../vhdl/mem/memory_control.vhdl}
@@ -98,7 +98,7 @@ Das Rechenwerk führt die eigentliche logische bzw.\ mathematische Operation aus
 Hier soll zum Verständnis nur ein Teil des Quellcodes gezeigt werden.
 
 Die nachfolgende Abbildung~\ref{code:alu_add} beschreibt den Ablauf der \ac{ALU} bei dem Befehl
-`ADD'.
+"`ADD"'.
 
 \begin{figure}[htb]
 \lstinputlisting[firstline=65, lastline=89]{../vhdl/core/alu.vhdl}
@@ -107,7 +107,7 @@ Die nachfolgende Abbildung~\ref{code:alu_add} beschreibt den Ablauf der \ac{ALU}
 \end{figure}
 Der Quellcode ist recht einfach zu lesen, denn die eigentliche Logik, die hier
 passiert, basiert auf Abfragen nach bestimmten Flags. So gibt es die Möglichkeit
-beim `ADD'-Befehl einerseits vorzeichenbehaftet und andererseits
+beim "`ADD"'-Befehl einerseits vorzeichenbehaftet und andererseits
 vorzeichenunbehaftet zu addieren (siehe Abfrage Zeile 2). Danach wird bei beiden
 Fällen überprüft, ob zwei Register oder ein Register und eine Konstante addiert
 werden sollen (siehe Zeilen 3 und 13). Die je nach Fall ausgeführte Addition ist

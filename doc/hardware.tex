@@ -64,7 +64,7 @@ geladen. Die Adresse des Befehls wird durch den Wert des Programmzählers
 \subsubsection{Decode}
 In diesem Zustand wird das erste Byte des Befehl dekodiert und dabei
 festgestellt, ob der Befehl noch mehr Bytes, als bisher gelesen wurde, besitzt.
-Ist dies der Fall, wird wieder zum `Fetch'-Zustand gewechselt. Außerdem wird der
+Ist dies der Fall, wird wieder zum "`Fetch"'-Zustand gewechselt. Außerdem wird der
 eigentlich auszuführende Befehl festgestellt, mit welchen Parametern er
 auszuführen ist, aus welchen Registern die Daten kommen und wo das Resultat
 gespeichert werden soll. Eine ausführlichere Beschreibung ist bei der
@@ -87,14 +87,14 @@ oder der oberste Wert des Stacks genommen, um es im nächsten Zustand weiter
 verarbeiten zu können. Eine detaillierte Erklärung der Funktionsweise des Stacks
 findet in Abschnitt~\ref{s:stack} statt.
 \subsubsection{Register Write}
-Ähnlich wie beim `Stack Read/Write'-Zustand, wird auch hier (je nach Befehl) das
+Ähnlich wie beim "`Stack Read/Write"'-Zustand, wird auch hier (je nach Befehl) das
 Ergebnis des Rechenwerks oder der Wert, der vom Stack entnommen wurde, in das
 Register geschrieben, welches der Befehl vorschreibt.
 \subsection{Rechenwerk}
 \label{s:alu}
 Das Rechenwerk ist dafür zuständig, dass die eigentliche Operation des Befehls
 ausgeführt wird. Es ist zu unterscheiden, ob man von der \ac{ALU} oder vom
-Rechenwerk spricht, denn die \ac{ALU} ist nur das `Rechenzentrum' des
+Rechenwerk spricht, denn die \ac{ALU} ist nur das "`Rechenzentrum"' des
 Rechenwerks, gestützt von z.B. Hilfsregistern.
 
 Der Befehlscode (auch Opcode) besteht aus 5 Bits und daher können $2^{5} = 32$
@@ -105,7 +105,7 @@ Befehl die gleiche Bearbeitungszeit bekommt und damit jeder Befehl gleich
 schnell (bezogen nur auf die Zeit beim Rechenwerk) ausgeführt wird.
 
 Das Rechenwerk hat die Aufgabe bestimmte Statusflaggen zu setzen oder zu
-löschen. Im Beispiel `SB' gibt die Statusflagge an, ob ein Sprungbefehl
+löschen. Im Beispiel "`SB"' gibt die Statusflagge an, ob ein Sprungbefehl
 ausgeführt wird und dieser auch die Sprungbedingung erfüllt. Der Programmzähler
 erhält in diesem Fall einen neuen Wert.
 \clearpage
@@ -122,7 +122,7 @@ Abschnitt~\ref{s:befehlssatz} genauer beschrieben wird.
 \subsection{Programmzähler}
 \label{s:pc}
 Der Programmzähler (engl. \ac{PC}) ist hardwaretechnisch gesehen ein Register,
-welches aber im Vergleich zu `normalen' Registern ihren Wert um eine bestimmte
+welches aber im Vergleich zu "`normalen"' Registern ihren Wert um eine bestimmte
 Byteanzahl (je nach Länge des ausgeführten Befehls) erhöht. Somit hält der \ac{PC}
 immer die Adresse für den nächsten auszuführenden Befehl. Bei einem Sprungbefehl
 wird der Wert des Programmzählers mit dem vom Befehl vorgeschriebenen Wert
@@ -153,17 +153,19 @@ Rückkehraddresse gespeichert, welche beim Verlassen der Funktion (Befehl RET)
 wieder vom Stapel entnommen wird.
 
 Besonders für den Funktionsaufruf eignet sich das Prinzip des Stacks sehr gut,
-da es keine Begrenzung (außer der physischen Größe des Stacks) gibt, wie viele
-Funktionen innerhalb einer Funktionen aufgerufen werden können. Es sind also
-theoretisch unendlich viele Verkettungen möglich, wobei die Theorie nur durch
-die Größe des Speichers limitiert wird.
+da es keine Limitierung der Anzahl der Funktionsaufrufe gibt (außer der
+physikalischen Größe des Stacks). Somit ist es möglich, dass unbegrenzt viele
+Funktionen ineinander aufgerufen werden können. Es sind also theoretisch
+unendlich viele Verkettungen möglich, wobei die Theorie nur durch die maximale
+Größe des Stacks limitiert wird.
+
 \subsection{UART}
 \label{s:uart}
 Der \ac{UART}, welcher die Implementierung der seriellen Schnittstelle enthält,
 wird genutzt, um Eingabe von dem Benutzer zu bekommen. Dabei wird über ein
 selbst geschriebenes Skript die Tastatureingabe von einem anderen Rechner
 übernommen und über die serielle Schnittstelle an das Gerät weitergeleitet. So
-ist es möglich, eine Tastatur `anzuschließen'. Die Übertragung über die serielle
+ist es möglich, eine Tastatur "`anzuschließen"'. Die Übertragung über die serielle
 Schnittstelle findet mit einer Bitrate von 9600 bit/s, 8 Datenbits, 1 Stopbit
 und keinem Paritätsbit statt.
 
@@ -254,7 +256,7 @@ sind.
 	% Blaue vertikale Linien
 	\foreach \x in {0,...,8}
 		\draw[thick,blue] (\x, 14) -- (\x,21);
-	% Das Wort 'Bit' nach ganz links schreiben
+	% Das Wort ""'Bit""' nach ganz links schreiben
 	\node[thick] (bit1) at (-0.5, 20.5) {\scriptsize Bit};
 	\node[thick] (bit2) at (-0.5, 14.5) {\scriptsize Bit};
 	% Pfeil links
