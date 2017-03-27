@@ -1,3 +1,21 @@
 Educational Processing Unit (EPU)
 =================================
 Eine 16-Bit CPU, geschrieben in VHDL, welche dazu dient, den Arbeitsablauf einer CPU zu lehren.
+
+Struktur
+--------
+├── doc (Dokumentation)
+│   └── img/ (Bilddateien der Dokumentation)
+├── easm (Assembler)
+│   └── testfiles/ (Beispielprogramme)
+├── ise (Dateien für die Entwicklungsumgebung)
+│   ├── ipcore_dir/ (Speicherblöcke)
+│   └── WaxwingSpartan6DevBoard.ucf (Pinbelegung des FPGA)
+├── numato-loader (Tool zum Flashen des FPGA)
+└── vhdl (Projektdateien)
+    ├── core (Der "Kern" der EPU)
+    ├── dependencies (Externe Abhängigkeiten)
+    ├── mem (Speichercontroller & am Speicher angeschlossene Module)
+    ├── sim (Für die Simulation notwendige Dateien)
+    ├── test (Dateien für Testzwecke)
+    └── top (Oberste Ebene der EPU & Frequenzteiler)
