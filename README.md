@@ -4,6 +4,7 @@ Eine 16-Bit CPU, geschrieben in VHDL, welche dazu dient, den Arbeitsablauf einer
 
 Struktur
 --------
+```
 ├── doc (Dokumentation)
 │   └── img/ (Bilddateien der Dokumentation)
 ├── easm (Assembler)
@@ -19,3 +20,4 @@ Struktur
     ├── sim (Für die Simulation notwendige Dateien)
     ├── test (Dateien für Testzwecke)
     └── top (Oberste Ebene der EPU & Frequenzteiler)
+```
