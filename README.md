@@ -8,7 +8,7 @@ Struktur
 ├── doc (Dokumentation)
 │   └── img/ (Bilddateien der Dokumentation)
 ├── easm (Assembler)
-│   ├── easm.py (Assemblerskript, Mehr Info mit folgender Befehl: ./easm.py --help)
+│   ├── easm.py (Assemblerskript, mehr Info mit folgender Befehl: ./easm.py --help)
 │   └── testfiles/ (Beispielprogramme)
 ├── ise (Dateien für die Entwicklungsumgebung)
 │   ├── ipcore_dir/ (Speicherblöcke)
