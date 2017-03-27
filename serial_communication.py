@@ -4,10 +4,11 @@ from pynput.keyboard import Key, Listener
 import serial
 import time
 
-ser = serial.serial_for_url("spy:///dev/ttyUSB1?file=uart_log.txt", timeout=1, baudrate=9600)
+device = "/dev/ttyUSB1" # Device for serial communication
+ser = serial.serial_for_url("spy://" + device + "?file=uart_log.txt", timeout=1, baudrate=9600)
 
 def on_press(key):
-    print('{0} pressed'.format(key))
+    # print('{0} pressed'.format(key))
     if len(str(key)) == 3:
         code = str(key)[1]
         ser.write(str.encode(code))
