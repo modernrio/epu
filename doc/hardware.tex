@@ -1,9 +1,9 @@
 \chapter{Übersicht der Hardwarekomponenten}
 \label{c:hardware}
 \section{Komponentenbeschreibung}
-Im Folgenden soll eine Übersicht aller Hardwarekomponenten erfolgen. Dadurch
-soll eine grobe Vorstellung der Funktionsweise des Mikrorechners entstehen,
-welche in Kapitel~\ref{c:vhdl} vertieft wird. Vor der Beschreibung der einzelnen
+Es erfolgt eine Übersicht aller Hardwarekomponenten.  Dadurch wird eine grobe
+Vorstellung der Funktionsweise des Mikrorechners entstehen, welche das
+Kapitel~\ref{c:vhdl} vertieft. Vor der Beschreibung der einzelnen
 Hardwarekomponenten soll durch Abbildung~\ref{pic:hardware_overview} das
 Zusammenspiel aller Komponenten gezeigt werden, auf welche während dieses
 Kapitels zurückgegriffen werden kann.
@@ -22,8 +22,8 @@ Ausführung jedes Befehls ausgeführt werden, zum richtigen Zeitpunkt zu
 aktivieren. Dabei können einzelne Zustände je nach Befehl übersprungen werden.
 
 Als Abstraktion kann man sich das Steuerwerk auch als Zustandsautomat
-vorstellen. Mit Hilfe von Abbildung~\ref{pic:zustandsdiagramm} soll die
-Funktionsweise des Steuerwerkes durch ein Zustandsdiagramm dargestellt werden.
+vorstellen. Mit Hilfe von Abbildung~\ref{pic:zustandsdiagramm} ist die
+Funktionsweise des Steuerwerkes durch ein Zustandsdiagramm dargestellt.
 
 \begin{figure}[htb]
 \centering
@@ -63,7 +63,7 @@ geladen. Die Adresse des Befehls wird durch den Wert des Programmzählers
 (siehe~\ref{s:stack}) bestimmt.
 \subsubsection{Decode}
 In diesem Zustand wird das erste Byte des Befehl dekodiert und dabei
-festgestellt, ob der Befehl noch mehr Bytes, als bisher gelesen wurde, besitzt.
+festgestellt, ob der Befehl noch mehr Bytes, als bisher gelesen wurden, besitzt.
 Ist dies der Fall, wird wieder zum "`Fetch"'-Zustand gewechselt. Außerdem wird der
 eigentlich auszuführende Befehl festgestellt, mit welchen Parametern er
 auszuführen ist, aus welchen Registern die Daten kommen und wo das Resultat
@@ -80,7 +80,7 @@ damit in den weiteren Zuständen das Ergebnis an die gewünschte Stelle
 geschrieben werden kann.
 \subsubsection{Memory Write}
 Das Resultat des Rechenwerks wird an die vom Befehl vorgebene Speicheradresse im
-Arbeitsspeicher (siehe~\ref{s:memorycontrol}) gespeichert.
+Arbeitsspeicher (siehe~\ref{s:memorycontrol}) abgelegt.
 \subsubsection{Stack Read/Write}
 Je nach Befehl wird entweder das Resultat des Rechenwerks auf dem Stack gelegt
 oder der oberste Wert des Stacks genommen, um es im nächsten Zustand weiter
@@ -99,8 +99,8 @@ Rechenwerks, gestützt von z.B. Hilfsregistern.
 
 Der Befehlscode (auch Opcode) besteht aus 5 Bits und daher können $2^{5} = 32$
 verschiedene Befehle ausgeführt werden. Mit Hilfe der
-Tabelle~\ref{tab:befehlsliste} soll ein Überblick über die verfügbaren Befehle
-vermittelt werden. Um den Aufbau simpel zu halten, wurde entschieden, dass jeder
+Tabelle~\ref{tab:befehlsliste} wird ein Überblick über die verfügbaren Befehle
+vermittelt. Um den Aufbau simpel zu halten, wurde entschieden, dass jeder
 Befehl die gleiche Bearbeitungszeit bekommt und damit jeder Befehl gleich
 schnell (bezogen nur auf die Zeit beim Rechenwerk) ausgeführt wird.
 
@@ -114,8 +114,7 @@ erhält in diesem Fall einen neuen Wert.
 \label{s:decode}
 Der Dekodierer übernimmt die Aufgabe, den Befehl zu dekodieren, damit die
 Operation für das Rechenwerk ausgewählt werden kann und die dafür benötigten
-Register angesprochen werden. Da der Dekodierer einen einfachen Aufbau haben
-sollte, wurde der Aufbau eines Befehls selbst einfach gehalten.
+Register angesprochen werden.
 
 Der Dekodierer ist sehr stark an den Befehlssatz angelehnt, welcher in
 Abschnitt~\ref{s:befehlssatz} genauer beschrieben wird.
@@ -153,7 +152,7 @@ Rückkehraddresse gespeichert, welche beim Verlassen der Funktion (Befehl RET)
 wieder vom Stapel entnommen wird.
 
 Besonders für den Funktionsaufruf eignet sich das Prinzip des Stacks sehr gut,
-da es keine Limitierung der Anzahl der Funktionsaufrufe gibt (außer der
+da es keine Restriktionen der Anzahl von Funktionsaufrufen gibt (außer der
 physikalischen Größe des Stacks). Somit ist es möglich, dass unbegrenzt viele
 Funktionen ineinander aufgerufen werden können. Es sind also theoretisch
 unendlich viele Verkettungen möglich, wobei die Theorie nur durch die maximale
@@ -162,7 +161,7 @@ Größe des Stacks limitiert wird.
 \subsection{UART}
 \label{s:uart}
 Der \ac{UART}, welcher die Implementierung der seriellen Schnittstelle enthält,
-wird genutzt, um Eingabe von dem Benutzer zu bekommen. Dabei wird über ein
+wird genutzt, um Eingaben von dem Benutzer zu ermöglichen. Dabei wird über ein
 selbst geschriebenes Skript die Tastatureingabe von einem anderen Rechner
 übernommen und über die serielle Schnittstelle an das Gerät weitergeleitet. So
 ist es möglich, eine Tastatur "`anzuschließen"'. Die Übertragung über die serielle
@@ -189,7 +188,7 @@ der Videospeicher oder auch die Speicheraddresse für den UART nicht allgemein n
 \subsection{Videocontroller}
 \label{s:videocontrol}
 Der Videocontroller selbst ist nach außen hin unabhängig von allen anderen
-Elementen der \ac{EPU}. Nur der Videospeicher, welche die Informationen über die
+Elementen der \acl{EPU} (EPU). Nur der Videospeicher, welche die Informationen über die
 anzuzeigenden Pixel enthält, wird vom Speichercontroller geliefert. Dennoch hat
 der Speichercontroller keine Kontrolle über den Zugang des Videcontrollers zu
 dem Videospeicher, denn wie bereits in~\ref{s:memorycontrol} beschrieben, ist der
@@ -231,11 +230,11 @@ Selektion & Name & Zweck\\
 \section{Befehlssatz}
 \label{s:befehlssatz}
 Der Befehlssatz beschreibt den Aufbau und die Menge aller Befehle der \ac{EPU}.
-Nachfolgend soll sowohl der Aufbau sowie dessen Entstehung erläutert werden.
+Nachfolgend wird sowohl der Aufbau sowie dessen Entstehung erläutert.
 
 \subsection{Aufbau}
 Der Befehl wird byteweise gelesen. Die Anzahl an Bytes in einem Befehl sind
-durch die beiden letzten Bits des ersten Bytes angegeben, was es leichter macht,
+durch die beiden letzten Bits des ersten Bytes angegeben, dies erleichtert
 die richtige Byteanzahl einzulesen. Alle weiteren Abschnitte jedes Bytes werden
 je nach Opcode (die ersten 5 Bits) bestimmt, also die Register, die
 Rechenoperation, ob das Ergebnis auf dem Arbeitsspeicher geschrieben werden
@@ -297,12 +296,12 @@ sind.
 \label{pic:befehlsaufbau}
 \end{figure}
 \subsection{Befehlsübersicht}
-Die folgende Tabelle~\ref{tab:befehlsliste} soll einen Überblick über die
-verschiedenen Befehle der \ac{EPU} liefern. Durch die Größe des Opcodes (5 Bit)
+Die folgende Tabelle~\ref{tab:befehlsliste} gibt einen Überblick über die
+verschiedenen Befehle, welche die \ac{EPU} liefert. Durch die Größe des Opcodes (5 Bit)
 sind insgesamt $2^5 = 32$ Befehle möglich. Dennoch kann ein Befehl durch
 bestimmte Parameter (wie z.B. der Flag im ersten Byte) um gewisse Funktionen
 erweitert werden. Dies ermöglicht beispielsweise vorzeichenbehaftete und
-vorzeichenlose Addition, obwohl der Opcode beider Operationen der Gleiche ist.
+vorzeichenlose Additionen, obwohl der Opcode beider Operationen der Gleiche ist.
 Eine ausführlichere Beschreibung jedes Befehls ist im
 Anhang~\ref{a:befehlsliste} zu finden.
 \begin{table}[htb]

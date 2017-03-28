@@ -1,7 +1,7 @@
 \captionsetup[figure]{justification=justified,singlelinecheck=false}
 \chapter{Programmstruktur}
-In diesem Kapitel soll eine Übersicht über die Struktur und den Aufbau der
-Programme, welche die Software der EPU bilden, dargestellt werden. Die
+In diesem Kapitel wird eine Übersicht über die Struktur und den Aufbau der
+Programme, welche die Software der EPU bilden, dargestellt. Die
 Voraussetzung für das Verständnis der Umsetzung der Software in die Hardware
 ist bereits in Kapitel~\ref{c:hardware} (oder genauer bei der Erklärung des
 Befehlssatzes in Abschnitt~\ref{s:befehlssatz}) geschehen.
@@ -10,15 +10,15 @@ Zur Übersetzung der eigenen Assembly-Sprache in Maschinencode, welche die CPU
 versteht, wurde ein eigener Assembler entwickelt. Der Assembler ist in der
 Interpretersprache Python geschrieben und erlaubt die Kompilierung von einer
 .easm-Datei, wobei eine Vorlage mit vordefinierten Funktionen als externe Datei
-auch noch übergeben werden kann. Die Ausgabe erfolgt durch das Schreiben der
+zusätzlich übergeben werden kann. Die Ausgabe erfolgt durch das Schreiben der
 einzelnen Bytes des Maschinencodes in eine Datei im .coe-Format. Der Grund für
 das .coe-Format ist, dass dieses genutzt werden kann, um den RAM-Block der EPU
 zu initialisieren.
 
 Der Aufbau der Befehle, welche der Assembler versteht, wurde einfach
 gehalten, um eine leicht zu verstehende Sprache zu erstellen, wobei viele
-Ähnlichkeiten zur x86-Assembly (genutzt in den meisten Desktopcomputern
-heutzutage) bestehen, da somit das anfängliche Verstehen der Befehle leichter
+Ähnlichkeiten zur x86-Assembly (heutzutage in den meisten Desktopcomputern
+genutzt) bestehen, da somit das anfängliche Verstehen der Befehle leichter
 wird. Der Aufbau eines Befehls richtet sich nach folgender Regel, wobei in
 eckigen Klammern eingerahmte Parameter optional sind bzw.\ nur bei bestimmten
 Befehlen notwendig sind:
@@ -34,8 +34,9 @@ Maschinencodes jedes Befehls zu sparen. An die Mnemonic kann eine Option nach
 einem Punkt angehängt werden. Dies ist befehlsspezifisch und muss für jeden
 Befehl nachgeschlagen werden. Je nach Befehl werden auch ein bis zwei weitere
 Operanden benötigt, welche selbst noch in verschiedenen Formen vorkommen können
-(abhängig von der gewählten Option). Um dies zu verdeutlichen, sollen ein
-paar Beispiele für den Befehlsaufbau gezeigt werden.
+(abhängig von der gewählten Option). Um dies zu verdeutlichen, werden ein
+paar Beispiele für den Befehlsaufbau gezeigt.
+\clearpage
 \begin{figure}
 	\begin{lstlisting}[basicstyle=]
 	load r1, 0xAFFE
@@ -57,12 +58,12 @@ In Abbildung~\ref{code:instruction_code} wird zuerst in Zeile 1 eine
 hexadezimale Konstante (Präfix "`0x"' steht für hexadezimal) in das Register R1
 geladen. Danach wird ein Sprungbefehl mit der Option "`i"' ausgeführt, wobei das
 "`i"' für "`Immediate"' bzw. Konstante steht und damit die Adresse, zu welcher
-gesprungen werden soll, im Befehl vorhanden ist.  Die Konstant ist hier mit dem
+gesprungen werden soll, im Befehl vorhanden ist.  Die Konstante ist hier mit dem
 Adressoperator "`\$"' vorangestellt, welcher die Adresse des \textbf{Labels}, hier
 "`test"' (Zeile 7), enthält. Dadurch wird die Ausführung in Zeile 8, also direkt
 nach der Definition des Labels, fortgeführt.
 
-Davor ist aber noch (in Zeile 5) eine sogennante \textbf{Assemblerdirektive}
+Davor ist aber (in Zeile 5) eine sogennante \textbf{Assemblerdirektive}
 zu sehen, welche an dem "`."' vor der Mnemonic zu erkennen ist.
 Assemblerdirektiven sind Anweisungen an den Assembler und werden nicht direkt in
 Maschinencode umgewandelt, sondern getrennt behandelt. In diesem Beispiel ist
@@ -81,7 +82,7 @@ wird hier nicht benötigt und daher null gesetzt, kann aber für einen Offset de
 Speicheradresse dienen.
 \pagebreak
 \section{Funktionsaufruf}
-In diesem Abschnitt soll der Aufruf von Funktionen demonstriert werden. Bei dem
+In diesem Abschnitt wird der Aufruf von Funktionen demonstriert. Bei dem
 Aufbau wurde eine ähnliche Methode wie beim x86-Befehlssatz verwendet. Die
 einfachste Methode des Funktionsaufrufs ist das Aufrufen einer Funktion ohne
 Parameter, wie unten in Abbildung~\ref{code:function_struct}  zu sehen ist.
@@ -133,7 +134,7 @@ entfernt (Zeile 9) und dann der Rückgabewert auf den Stack gelegt werden (Zeile
 Funktion kann wie gewohnt zurückkehren (Zeile 12).
 
 Durch die Nutzung des Stacks für den Rückgabewert ist es theoretisch möglich,
-mehrere Rückgabewert einer Funktion zuzuweisen. In dem Beispiel ist dies aber
+mehrere Rückgabewerte einer Funktion zuzuweisen. In dem Beispiel ist dies aber
 nicht der Fall. Dennoch ist zu erwähnen, dass über die Register auch ein oder
 mehrere Rückgabewerte theoretisch erfolgen können. Genauere Informationen sind
 der jeweiligen Funktion, welche man aufrufen möchte, zu entnehmen.
@@ -183,17 +184,17 @@ aus.
 	z.B. andere Farben zu verwenden oder den VGA-Ausgang zu deaktivieren.
 \end{labeling}
 Die Benutzung dieser Vorlage wird empfohlen, ist aber keine Voraussetzung. Denn
-die Vorlage definiert auch, dass der Start des eigentlichen Programms beim Label
-"`\_start"' stattfindet und dieser auch von der Vorlage aufgerufen wird. Wie
+die Vorlage definiert, dass der Start des eigentlichen Programms beim Label
+"`\_start"' stattfindet und dieser von der Vorlage aufgerufen wird. Wie
 bereits aufgefallen ist, starten bei der Erstellung der Vorlage
 alle genutzten Labels mit einem Unterstrich, was den Grund hat, alle
 vordefinierten Funktionen und die Funktionen des Programms visuell zu trennen.
-Daher ist es auch nicht empfohlen, dass im Programm Labels mit einem Unterstrich
+Daher ist es nicht empfohlen, dass im Programm Labels mit einem Unterstrich
 starten.
 \pagebreak
 \section{Debugging}
 Mithilfe des Debugging ist es möglich, Fehler in Programmen zu erkennen und
-diese auch zu beseitigen. Damit dies auch bei der \ac{EPU} möglich ist, soll
+diese zu beseitigen. Damit dies bei der \ac{EPU} möglich ist, soll
 dieser Abschnitt beispielhaft anhand eines Signal-Zeit-Diagrammes zeigen, wie die
 Ausführung eines Befehls aussieht.
 Der auszuführende Befehl sei folgender, wobei angenommen wird das Register R14
@@ -239,5 +240,5 @@ Rechenwerk aktiviert und legt in diesem Fall fest, dass kein Sprungbefehl
 ausgeführt werden muss. Danach wird "`en\_stack"' auf 1 gesetzt (t=8) und damit
 auch die "`Enable"'- und "`WriteEnable"'-Eingänge des Stacks aktiv. Der Stack
 übernimmt daraufhin den Wert von "`dataA"' und schreibt ihn als oberstes Element
-auf den Stapel. Zuletzt wird "`en\_regwrite"' aktiv, da aber dies ohne Bedeutung
+auf den Stapel. Zuletzt wird "`en\_regwrite"' aktiv, da dies ohne Bedeutung
 bei diesem Befehl ist, passiert hier nichts.

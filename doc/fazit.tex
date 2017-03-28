@@ -10,12 +10,12 @@ einfach zu lösen waren. Als es zur ersten Übertragung des Projektes auf den
 \ac{FPGA} kam, trat ein größeres Problem auf. Die Projektatei für den \ac{FPGA}
 konnte nicht übertagen werden, da der Hersteller nur ein Programm für Windows
 zur Übertragung anbietet, aber das Projekt vollständig auf Linux erstellt wurde.
-Nach gründlicher Recherche stellte sich heraus, dass jemand bereits dasselbe
-Problem für ein ähnliches Board des selben Herstellers hatte und seinen Code für
-ein Programm zur Übertragung der Datei auf den \ac{FPGA} veröffentlichte
-~\cite{numatoloader}. Dies war eine große Hilfe, da jetzt nur noch die
-Beschreibung des Boards im Code angepasst werden musste und anschließend auch
-die Übertagung funktionierte.
+Nach gründlicher Recherche stellte sich heraus, dass dieses Problem für ein
+ähnliches Board des selben Herstellers bereits erkannt wurde.  Der Code für ein
+Programm zur Übertragung der Datei auf den \ac{FPGA} wurde aus diesem Grund
+veröffentlicht. Diese Hilfe konnte genutzt werden, um die
+Beschreibung des Boards im Code anzupassen. Jetzt funktionierte die
+Übertragung.~\cite{numatoloader}
 
 Wenig später sollte auch der RAM-Block des \ac{FPGA} genutzt werden. Vorher
 wurde für die Simulation der Speicher aus Flip-Flops erstellt, was bei größeren
@@ -24,26 +24,26 @@ die Dokumentation des DDR-RAM-Chips auf dem Board nicht sehr ausführlich ist un
 keine große Hilfe bei der Implementierung bietet. Deshalb wurde kein DDR-RAM
 verwendet, sondern der interne Speicher des \ac{FPGA}-Chip. Da nur 64 Kilobyte
 Speicher für die 16-Bit-Adressierung der \ac{EPU} nötig sind, reicht dieser
-interne Speicher aus und vereinfacht damit auch den Aufbau der \ac{EPU}, da kein
-komplexer DDR-Speichercontroller implementiert werden musste.
+interne Speicher aus und vereinfacht damit den Aufbau der \ac{EPU}. Es musste
+kein komplexer DDR-Speichercontroller implementiert werden.
 
 Anfangs wurde überlegt, alle Grundrechenarten als eigene Befehle zu
 implementieren. Nach längerer Abwegung wurde dagegen entschieden und nur die
-Addition und Subtraktion in die Hardware implementiert. Der Gründ für diese
+Addition und Subtraktion in die Hardware implementiert. Der Grund für diese
 Entscheidung war, dass die anderen Rechenarten über die Software später
 implementiert werden können und nicht essentiell sind. Grundsätzlich lohnte sich
-nicht der Zeitaufwand einer Implementierung der Multiplikation und
-Division, da diese Befehle nicht häufig genug Anwendung finden.
+der Zeitaufwand einer Implementierung der Multiplikation und
+Division nicht, da diese Befehle keine häufige Anwendung finden.
 
 \section{Ziele und Lernerfolg}
 Hauptziel der besonderen Lernleistung war es, einen funktionsfähigen
-Mikrorechner zu produzieren und dieser Ziel ist sehr gut gelungen.
+Mikrorechner zu produzieren und dieses Ziel ist sehr gut gelungen.
 
 Außerdem sollte eine Ausgabe über einen Bildschirm als auch eine Eingabe über
 eine Tastatur möglich sein. Beide Vorgaben sind erfüllt und funktionsfähig.
 
 Andere anfangs übernommene Ziele, wie eine Netzwerkverbindung, Soundtreiber oder
-externer Speicher über den MicroSD-Kartenslot mussten aus Zeitgründen leider
+externer Speicher über den MicroSD-Kartenslot konnten aus Zeitgründen leider
 nicht umgesetzt werden. Dennoch sind diese Ziele als mögliche Erweiterungen zu
 sehen, welche im Nachhinein noch implementiert werden könnten.
 
