@@ -6,7 +6,9 @@ Struktur
 --------
 ```
 ├── doc (Dokumentation)
-│   └── img/ (Bilddateien der Dokumentation)
+│   ├── img/ (Bilddateien der Dokumentation)
+│   ├── *.tex (LaTeX-Dateien)
+│   └── master.pdf (Dokumentation im PDF-Format)
 ├── easm (Assembler)
 │   ├── easm.py (Assemblerskript, mehr Info mit folgender Befehl: ./easm.py --help)
 │   └── testfiles/ (Beispielprogramme)
