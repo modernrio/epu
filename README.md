@@ -12,6 +12,7 @@ Struktur
 ├── easm (Assembler)
 │   ├── easm.py (Assemblerskript, mehr Info mit folgender Befehl: ./easm.py --help)
 │   └── testfiles/ (Beispielprogramme)
+│       └── template.easm (Vordefinierte Funktionen als Vorlage)
 ├── ise (Dateien für die Entwicklungsumgebung)
 │   ├── ipcore_dir/ (Speicherblöcke)
 │   └── WaxwingSpartan6DevBoard.ucf (Pinbelegung des FPGA)
