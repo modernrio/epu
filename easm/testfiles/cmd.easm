@@ -51,6 +51,26 @@ main:
 	test r0
 	jz.i $setcolor
 
+	# Case add
+	load r3, $str_add
+	load r4, 0x3
+	push r4
+	push r3
+	push r8
+	call.i $_strcmp
+	test r0
+	jz.i $add
+
+	# Case sub
+	load r3, $str_sub
+	load r4, 0x3
+	push r4
+	push r3
+	push r8
+	call.i $_strcmp
+	test r0
+	jz.i $sub
+
 	# Clear prompt
 	load r0, 0d77
 	load r1, 0d3
@@ -69,6 +89,16 @@ setcolor:
 	call.i $cmd_setcolor
 	jmp.i $main
 
+# add cmd
+add:
+	call.i $cmd_add
+	jmp.i $main
+
+# sub cmd
+sub:
+	call.i $cmd_sub
+	jmp.i $main
+
 data:
 	.data 0x3E3E2000
 
@@ -80,6 +110,12 @@ str_echo:
 
 str_setcolor:
 	.data 0x736574636f6c6f7200
+
+str_add:
+	.data 0x61646400
+
+str_sub:
+	.data 0x73756200
 
 cmd_echo:
 	# Clear line
@@ -107,6 +143,8 @@ cmd_setcolor:
 
 	# Predefined vga flag register
 	load r9, 0b11110111
+
+	# Get pointer to argument
 	load r1, $inputdata
 	addi r1, r1, 0x9
 
@@ -138,6 +176,112 @@ cmd_setcolor:
 		push r9
 		call.i $_set_vga
 		ret
+
+cmd_add:
+	# Clear line
+	load r0, 0d80
+	push r0
+	push r0
+	call.i $_clear
+
+	# Clear result register
+	load r11, 0x0
+
+	# Get argument
+	load r1, $inputdata
+	addi r1, r1, 0x4
+
+	cmd_add_arg:
+		# Get integer from string
+		push r1
+		call.i $_str2int
+
+		# Add to result
+		add r11, r11, r0
+
+		# Get char
+		read.l r2, r1, 0x0
+
+		# Increase pointer
+		addi r1, r1, 0x1
+
+		# Check if end of arguments is reached
+		test r2
+		jnz.i $cmd_add_arg
+	
+	# Convert result to a string
+	load r12, $add_result
+	push r12
+	push r11
+	call.i $_int2str
+
+	# Print result string
+	load r1, 0d80
+	push r1
+	push r12
+	call.i $_print
+
+	ret
+
+cmd_sub:
+	# Clear line
+	load r0, 0d80
+	push r0
+	push r0
+	call.i $_clear
+
+	# Clear result register
+	load r11, 0x0
+
+	# Get argument
+	load r1, $inputdata
+	addi r1, r1, 0x4
+
+	# Get integer from string
+	push r1
+	call.i $_str2int
+	mov r11, r0
+	
+	jmp.i $cmd_sub_arg_loop
+
+	cmd_sub_arg:
+		# Get integer from string
+		push r1
+		call.i $_str2int
+
+		# Subtract from result
+		sub r11, r11, r0
+	
+	cmd_sub_arg_loop:
+		# Get char
+		read.l r2, r1, 0x0
+
+		# Increase pointer
+		addi r1, r1, 0x1
+
+		# Check if end of arguments is reached
+		test r2
+		jnz.i $cmd_sub_arg
+	
+	# Convert result to a string
+	load r12, $sub_result
+	push r12
+	push r11
+	call.i $_int2str
+
+	# Print result string
+	load r1, 0d80
+	push r1
+	push r12
+	call.i $_print
+
+	ret
+
+add_result:
+	.data 0x00000000000000000000000000000000
+
+sub_result:
+	.data 0x00000000000000000000000000000000
 
 inputdata:
 	.data 0x00000000000000000000000000000000

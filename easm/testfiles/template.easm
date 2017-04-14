@@ -16,7 +16,7 @@ _print:
 		read.h r3, r1, 0x0
 		test r3
 		jz.i $_print_end
-	
+
 	# Print the character
 	_print_byte:
 		write.h r0, r3, 0x0 # Move byte into VRAM
@@ -26,7 +26,7 @@ _print:
 
 	# Stop printing
 	_print_end:
-			ret	
+			ret
 
 _clear:
 	_clear_start:
@@ -35,11 +35,11 @@ _clear:
 		pop r2 # length
 		push r15
 		load r3, 0x20 # space
-		
+
 		# Calc VRAM addr
 		load r0, 0xF000	# Fixed VRAM addr
 		add r1, r1, r0
-	
+
 	_clear_write:
 		# Setup loop
 		test r2
@@ -48,12 +48,12 @@ _clear:
 
 		# Write to VRAM
 		write.l r1, r3, 0x0
-		
+
 		# Increase start
 		addi r1, r1, 0x1
-		
+
 		jmp.i $_clear_write
-		
+
 	_clear_end:
 		ret
 
@@ -65,11 +65,11 @@ _setcursor:
 		pop r2 # cursor y pos
 		push r15
 		load r0, 0xED00 # Cursor x pos addr
-	
+
 	_setcursor_write:
 		write.l r0, r1, 0x0 # Write x pos
 		write.l r0, r2, 0x1 # Write y pos
-	
+
 	_setcursor_end:
 		ret
 
@@ -77,10 +77,10 @@ _getinput:
 	_getinput_start:
 		load r0, 0xEF00
 		load r1, 0x0000
-	
+
 	_getinput_read:
 		read.l r1, r0, 0x0
-	
+
 	_getinput_end:
 		pop r15
 		push r1
@@ -173,7 +173,7 @@ _strcmp:
 		pop r2 # &str2
 		pop r3 # length
 		push r15
-	
+
 	_strcmp_loop:
 		# Check char
 		read.l r5, r1, 0x0
@@ -190,7 +190,7 @@ _strcmp:
 		load r4, 0x0
 		cmp r3, r4
 		jg.i $_strcmp_loop
-	
+
 	_strcmp_true:
 		load r0, 0x0
 		ret
@@ -212,6 +212,12 @@ _strlen:
 		read.l r2, r1, 0x0
 		test r2
 		jz.i $_strlen_end
+
+		# Check if current char is space
+		subi r2, r2, 0d32 # space ASCII value = 32
+		test r2
+		jz.i $_strlen_end
+
 		addi r0, r0, 0x1 # inc counter
 		addi r1, r1, 0x1 # inc str
 		jmp.i $_strlen_loop
@@ -225,11 +231,175 @@ _set_vga:
 		pop r1
 		push r15
 		load r0, 0xED02 # Fixed VGA Flag address
-	
+
 	_set_vga_write:
 		write.h r0, r1, 0x0
-	
+
 	_set_vga_end:
 		ret
-		
+
+# Returns integer value of string
+# Return value will be in R0
+_str2int:
+	_str2int_start:
+		pop r15
+		pop r1 # str
+		push r15
+
+		load r4, 0x0
+		load r5, 0x0
+		mov r9, r1 # move str to r9
+
+		push r9
+		call.i $_strlen
+
+		mov r10, r0
+
+	_str2int_convert:
+		# Check if end of string is reached
+		test r10
+		jz.i $_str2int_end
+
+		# Decrease counter
+		subi r10, r10, 0x1
+
+		# Get integer from char
+		read.l r4, r9, 0x0
+		subi r4, r4, 0d48 # Subtract ASCII fixed value
+
+		# Calculate power of 10 based on position
+		push r4
+		push r10
+		call.i $_power10
+		mov r4, r0
+
+		# Add to result
+		add r5, r5, r4
+		# Increase pointer to next char
+		addi r9, r9, 0x1
+		# Loop back
+		jmp.i $_str2int_convert
+
+	_str2int_end:
+		mov r0, r5 # R0 = Integer result
+		mov r1, r9 # R1 = Pointer to char *after* end of string
+
+		ret
+
+_int2str:
+	_int2str_start:
+		pop r15
+		pop r1 # int
+		pop r4 # str location
+		push r15
+
+		load r11, 0x0 # counter
+		mov r9, r1 # move int to r9
+
+		load r2, 0d10
+
+		mov r10, r0 # r10 = string length
+
+		_int2str_div:
+			# Divide by 10
+			push r2
+			push r9
+			call.i $_div
+
+			# Save remainder
+			push r1
+			addi r11, r11, 0x1 # inc counter
+			# Compare result with 10
+			cmp r0, r2
+			jl.i $_int2str_div_done
+
+			# Move result to divide again
+			mov r9, r0
+
+			# Loop
+			jmp.i $_int2str_div
+
+		_int2str_div_done:
+			# Save result from division
+			push r0
+			addi r11, r11, 0x1 # inc counter
+
+		_int2str_write:
+			test r11
+			jz.i $_int2str_end
+
+			# Get next digit
+			pop r0
+			addi r0, r0, 0d48 # Add fixed ASCII value to represent the digit as char
+			write.l r4, r0, 0x0
+
+			# Loop
+			addi r4, r4, 0x1
+			subi r11, r11, 0x1
+			jmp.i $_int2str_write
+
+		_int2str_end:
+			load r5, 0x0
+			write.l r4, r5, 0x0
+
+			ret
+
+
+# Divide r1/r2 (r1, r2 coming from the stack)
+# Result (rounded down): R0
+# Remainder			   : R1
+_div:
+	_div_start:
+		pop r15
+		pop r1 # numerator
+		pop r2 # denominator
+		push r15
+
+		load r0, 0x0 # counter
+
+	_div_loop:
+		cmp r1, r2
+		jl.i $_div_end
+
+		sub r1, r1, r2
+		addi r0, r0, 0x1
+		jmp.i $_div_loop
+
+	_div_end:
+		ret
+
+
+# r0 = factor * 10^(exponent)
+_power10:
+	_power10_start:
+		pop r15
+		pop r2 # exponent
+		pop r0 # factor
+		push r15
+
+		# Check if exponent is zero
+		test r2
+		jz.i $_power10_end
+
+	_power10_calc:
+		# R0 = 2*A
+		add r0, r0, r0
+		# R1 = 2*R0 = 4*A
+		add r1, r0, r0
+		# R1 = 2*R1 = 4*R0 = 8*A
+		add r1, r1, r1
+		# R0 = R0 + R1 = 2*A + 8*A = 10*A
+		add r0, r0, r1
+
+		# Decrease exponent & stop when zero is reached
+		subi r2, r2, 0x1
+		test r2
+		jz.i $_power10_end
+
+		# Loop
+		jmp.i $_power10_calc
+
+	_power10_end:
+		ret
+
 _code:
