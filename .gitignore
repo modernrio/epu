@@ -10,6 +10,8 @@ ise/ipcore_dir/*
 !ise/ipcore_dir/mem_text.ngc
 !ise/ipcore_dir/mem_font.vhd
 !ise/ipcore_dir/mem_font.ngc
+!ise/ipcore_dir/coregen.cgc
+!ise/ipcore_dir/coregen.cgp
 !ise/EPU.xise
 !ise/WaxwingSpartan6DevBoard.ucf
 /* ise/ipcore_dir */

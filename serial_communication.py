@@ -3,6 +3,7 @@
 from pynput.keyboard import Key, Listener
 import serial
 import time
+import sys
 
 device = "/dev/ttyUSB1" # Device for serial communication
 ser = serial.serial_for_url("spy://" + device + "?file=uart_log.txt", timeout=1, baudrate=9600)
@@ -31,3 +32,5 @@ with Listener(
         on_press=on_press,
         on_release=on_release) as listener:
     listener.join()
+
+sys.stdin.flush()
