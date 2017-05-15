@@ -292,8 +292,6 @@ begin
 		
 	PCIn <=	StackData when En_RegWrite = '1'
 			and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_RET else
-			ADDR_INT when En_RegWrite = '1'
-			and AluOp(IFO_REL_OPCODE_BEGIN downto IFO_REL_OPCODE_END) = OPCODE_INT else
 			Res;
 
 	uut_pc_unit : pc_unit port map (

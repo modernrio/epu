@@ -34,3 +34,4 @@ vhdl/sim/top_tb
 *.toc
 *.swo
 e~*
+.~lock*
